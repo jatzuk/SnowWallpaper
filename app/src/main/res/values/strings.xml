@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SnowWallpaper</string>
-    <string name="main_activity_label">Setup Wallpaper</string>
-    <string name="author">authorName</string>
+    <string name="setup_activity_label">Setup Wallpaper</string>
+    <string name="author">Jatzuk</string>
     <string name="descriptionText">description</string>
     <string name="wallpaperIcon">wallpaperThumbnail</string>
 </resources>
