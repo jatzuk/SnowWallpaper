@@ -48,7 +48,7 @@ object ShaderHelper {
         glCompileShader(shaderObjectId)
         val compileStatus = intArrayOf(0)
         glGetShaderiv(shaderObjectId, GL_COMPILE_STATUS, compileStatus, 0)
-        logging(" Results of compiling shader:\n${glGetShaderInfoLog(shaderObjectId)}", TAG)
+        logging("Results of compiling shader:\n$shaderCode${glGetShaderInfoLog(shaderObjectId)}", TAG)
 
         if (compileStatus[0] == 0) {
             glDeleteShader(shaderObjectId)
@@ -72,7 +72,7 @@ object ShaderHelper {
         glLinkProgram(programObjectId)
         val linkStatus = intArrayOf(0)
         glGetProgramiv(programObjectId, GL_LINK_STATUS, linkStatus, 0)
-        logging("Results of linking program:\n${glGetProgramInfoLog(programObjectId)}", TAG)
+        logging("Results of linking program:${linkStatus[0]}${glGetProgramInfoLog(programObjectId)}", TAG)
 
         if (linkStatus[0] == 0) {
             glDeleteProgram(programObjectId)
@@ -88,7 +88,7 @@ object ShaderHelper {
         val validateStatus = intArrayOf(0)
         glGetProgramiv(programObjectId, GL_VALIDATE_STATUS, validateStatus, 0)
         logging(
-            "Result of validating program:\n${validateStatus}\n${glGetProgramInfoLog(
+            "Result of validating program:${validateStatus[0]}${glGetProgramInfoLog(
                 programObjectId
             )}", TAG
         )
