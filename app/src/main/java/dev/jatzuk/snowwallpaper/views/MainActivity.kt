@@ -4,15 +4,23 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.opengl.GLSurfaceView
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import dev.jatzuk.snowwallpaper.SnowfallRenderer
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.atan2
 
 class MainActivity : Activity() {
+    private lateinit var sensorManager: SensorManager
+    private lateinit var sensorEventListener: SensorEventListener
     private lateinit var glSurfaceView: GLSurfaceView
     private lateinit var renderer: SnowfallRenderer
     private var isRendererSet = false
@@ -33,6 +41,25 @@ class MainActivity : Activity() {
 //            }
 //            startActivity(intent)
 //        }
+
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sensorEventListener = object : SensorEventListener {
+            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+            }
+
+            override fun onSensorChanged(event: SensorEvent?) {
+                event?.let {
+                    val x = it.values[0]
+                    val y = it.values[1]
+                    val azimuth = atan2(x, y) / PI / 180
+                    if (azimuth in -MAX_ANGLE..MAX_ANGLE) roll = azimuth.toFloat()
+                    val positiveY = abs(y)
+                    if (positiveY > 1.2f) pitch = positiveY
+//                    logging(SENSOR_DATA_TAG, "roll: $roll, pitch: $pitch")
+                }
+            }
+        }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -55,34 +82,56 @@ class MainActivity : Activity() {
             Toast.LENGTH_LONG
         ).show()
 
-        glSurfaceView.setOnTouchListener { v, event ->
-            val x = event.x
-            val y = event.y
-
-            event?.let {
-                when (event.action) {
-                    MotionEvent.ACTION_MOVE -> {
-                        val dx = x - previousX
-                        val dy = y - previousY
-                        previousX = x
-                        previousY = y
-                        glSurfaceView.queueEvent { renderer.handleTouchDrag(dx, dy) }
-                    }
-                }
-                true
-            } ?: false
-        }
+//        glSurfaceView.setOnTouchListener { v, event ->
+//            val x = event.x
+//            val y = event.y
+//
+//            event?.let {
+//                when (event.action) {
+//                    MotionEvent.ACTION_MOVE -> {
+//                        val dx = x - previousX
+//                        val dy = y - previousY
+//                        previousX = x
+//                        previousY = y
+//                        glSurfaceView.queueEvent {
+////                            todo
+//                        }
+//                    }
+//                }
+//                true
+//            } ?: false
+//        }
 
         setContentView(glSurfaceView)
     }
 
     override fun onPause() {
         super.onPause()
-        if (isRendererSet) glSurfaceView.onPause()
+        if (isRendererSet) {
+            sensorManager.unregisterListener(sensorEventListener)
+            glSurfaceView.onPause()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        if (isRendererSet) glSurfaceView.onResume()
+        if (isRendererSet) {
+            val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            sensorManager.registerListener(
+                sensorEventListener,
+                accelerometer,
+                SensorManager.SENSOR_DELAY_NORMAL
+            )
+            glSurfaceView.onResume()
+        }
+    }
+
+    companion object {
+        private const val SENSOR_INFO_TAG = "SENSOR_INFO"
+        private const val MAX_ANGLE = 45f
+        var height = 0
+        var width = 0
+        var roll = 0f
+        var pitch = 0f
     }
 }

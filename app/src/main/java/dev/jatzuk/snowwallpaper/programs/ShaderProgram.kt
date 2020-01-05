@@ -15,10 +15,15 @@ abstract class ShaderProgram(
     )
 
     protected val uMatrix = "u_Matrix"
+//    protected val uTime = "u_Time"
     protected val uColor = "u_Color"
+//    protected val uTextureUnit = "u_TextureUnit"
 
     protected val aPosition = "a_Position"
-    protected val aTextureCoordinates = "a_TextureCoordinates"
+//    protected val aColor = "a_Color"
+//    protected val aDirectionVector = "a_DirectionVector"
+//    protected val aSnowflakeStartTime = "a_SnowflakeStartTime"
+//    protected val aTextureCoordinates = "a_TextureCoordinates"
 
     fun useProgram() {
         glUseProgram(program)
