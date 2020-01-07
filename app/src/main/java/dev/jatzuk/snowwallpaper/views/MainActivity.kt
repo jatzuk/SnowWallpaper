@@ -14,6 +14,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import dev.jatzuk.snowwallpaper.SnowfallRenderer
+import dev.jatzuk.snowwallpaper.util.Logger.logging
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -51,11 +52,11 @@ class MainActivity : Activity() {
                 event?.let {
                     val x = it.values[0]
                     val y = it.values[1]
-                    val azimuth = atan2(x, y) / PI / 180
-                    if (azimuth in -MAX_ANGLE..MAX_ANGLE) roll = azimuth.toFloat()
-                    val positiveY = abs(y)
-                    if (positiveY > 1.2f) pitch = positiveY
-//                    logging(SENSOR_DATA_TAG, "roll: $roll, pitch: $pitch")
+                    val azimuth = atan2(x, y) / PI
+                    roll = azimuth.toFloat()
+                    val absoluteY = abs(y)
+                    if (absoluteY > 1.2f) pitch = absoluteY
+                    logging("roll: $roll, pitch: $pitch", SENSOR_INFO_TAG)
                 }
             }
         }
@@ -128,9 +129,11 @@ class MainActivity : Activity() {
 
     companion object {
         private const val SENSOR_INFO_TAG = "SENSOR_INFO"
-        private const val MAX_ANGLE = 45f
-        var height = 0
-        var width = 0
+        private val TAG = MainActivity::class.java.simpleName
+
+        var ratio = 0f
+
+//        todo(prob delete)
         var roll = 0f
         var pitch = 0f
     }

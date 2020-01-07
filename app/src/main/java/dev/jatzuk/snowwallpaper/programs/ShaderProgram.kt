@@ -17,7 +17,7 @@ abstract class ShaderProgram(
     protected val uMatrix = "u_Matrix"
 //    protected val uTime = "u_Time"
     protected val uColor = "u_Color"
-//    protected val uTextureUnit = "u_TextureUnit"
+    protected val uTextureUnit = "u_TextureUnit"
 
     protected val aPosition = "a_Position"
 //    protected val aColor = "a_Color"

@@ -1,6 +1,7 @@
 package dev.jatzuk.snowwallpaper
 
 import android.content.Context
+import android.graphics.Color
 import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix.*
@@ -9,7 +10,7 @@ import dev.jatzuk.snowwallpaper.objects.SnowfallBackground
 import dev.jatzuk.snowwallpaper.programs.SnowfallProgram
 import dev.jatzuk.snowwallpaper.util.Logger.logging
 import dev.jatzuk.snowwallpaper.util.loadTexture
-import dev.jatzuk.snowwallpaper.views.MainActivity
+import dev.jatzuk.snowwallpaper.views.MainActivity.Companion.ratio
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -29,13 +30,12 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
 
-//        glEnable(GL_BLEND)
-//        glBlendFunc(GL_ONE, GL_ONE)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_ONE, GL_ONE)
 
-        glEnable(GL_DEPTH_TEST)
+//        glEnable(GL_DEPTH_TEST)
 
         snowfallProgram = SnowfallProgram(context)
-        snowfallBackground = SnowfallBackground()
         textureId = loadTexture(context, R.drawable.snowflake_texture)
 
         snowfallProgram.useProgram()
@@ -43,12 +43,18 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         glViewport(0, 0, width, height)
-        MainActivity.width = width
-        MainActivity.height = height
+        ratio = width.toFloat() / height.toFloat()
 
-        perspectiveM(projectionMatrix, 0, 45f, width.toFloat() / height.toFloat(), 1f, 10f)
-        setIdentityM(viewMatrix, 0)
-        translateM(viewMatrix, 0, 0f, -1.5f, -5f)
+        // we need to initialize background after getting right aspect ratio from above
+        snowfallBackground = SnowfallBackground()
+
+//        perspectiveM(projectionMatrix, 0, 45f, 0f, 1f, 10f)
+//        setIdentityM(viewMatrix, 0)
+//        translateM(viewMatrix, 0, 0f, -1.5f, -5f)
+//        multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
+
+        frustumM(projectionMatrix, 0, ratio, -ratio, -1f, 1f, 3f, 7f)
+        setLookAtM(viewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
         multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
     }
 
@@ -58,7 +64,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
-        snowfallProgram.setUniforms(viewProjectionMatrix)
+        snowfallProgram.setUniforms(viewProjectionMatrix, Color.WHITE, textureId)
         snowfallBackground.bindData(snowfallProgram)
         snowfallBackground.draw()
     }
