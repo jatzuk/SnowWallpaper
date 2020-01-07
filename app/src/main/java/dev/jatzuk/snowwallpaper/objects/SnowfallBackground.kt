@@ -5,12 +5,12 @@ import android.opengl.GLES20.glDrawArrays
 import dev.jatzuk.snowwallpaper.data.VertexArray
 import dev.jatzuk.snowwallpaper.programs.SnowfallProgram
 
-class SnowfallBackground {
+class SnowfallBackground(private val snowfallProgram: SnowfallProgram) {
     private val snowflakesLimit = 150 // todo(load from preferences)
     private val snowflakes = Array(snowflakesLimit) { Snowflake() }
     private val vertexArray = VertexArray(snowflakes)
 
-    fun bindData(snowfallProgram: SnowfallProgram) {
+    fun bindData() {
         vertexArray.apply {
             updateBuffer()
             setVertexAttribPointer(
@@ -23,9 +23,11 @@ class SnowfallBackground {
     }
 
     fun draw() {
-        snowflakes.forEach { it.fall() }
-
-        glDrawArrays(GL_POINTS, 0, snowflakes.size)
+        snowflakes.forEachIndexed { index, snowflake ->
+            snowflake.fall()
+            snowfallProgram.applyPointSize(snowflake.radius)
+            glDrawArrays(GL_POINTS, 0, index + 1)
+        }
     }
 
     companion object {

@@ -36,7 +36,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 //        glEnable(GL_DEPTH_TEST)
 
         snowfallProgram = SnowfallProgram(context)
-        textureId = loadTexture(context, R.drawable.snowflake_texture)
+        textureId = loadTexture(context, R.drawable.background_snowflake_texture)
 
         snowfallProgram.useProgram()
     }
@@ -46,7 +46,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         ratio = width.toFloat() / height.toFloat()
 
         // we need to initialize background after getting right aspect ratio from above
-        snowfallBackground = SnowfallBackground()
+        snowfallBackground = SnowfallBackground(snowfallProgram)
 
 //        perspectiveM(projectionMatrix, 0, 45f, 0f, 1f, 10f)
 //        setIdentityM(viewMatrix, 0)
@@ -65,7 +65,13 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
         snowfallProgram.setUniforms(viewProjectionMatrix, Color.WHITE, textureId)
-        snowfallBackground.bindData(snowfallProgram)
+
+//        snowfallBackground.run {
+//            bindData()
+//            draw()
+//        }
+
+        snowfallBackground.bindData()
         snowfallBackground.draw()
     }
 

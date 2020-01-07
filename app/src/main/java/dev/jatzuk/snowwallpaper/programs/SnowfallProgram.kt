@@ -11,11 +11,9 @@ class SnowfallProgram(context: Context) :
     private val uMatrixLocation = glGetUniformLocation(program, uMatrix)
     private val uTextureUnitLocation = glGetUniformLocation(program, uTextureUnit)
     private val uColorLocation = glGetUniformLocation(program, uColor)
+    private val uPointSizeLocation = glGetUniformLocation(program, uPointSize)
 
     val aPositionLocation = glGetAttribLocation(program, aPosition)
-//    val aColorLocation = glGetAttribLocation(program, aColor)
-//    val aDirectionVectorLocation = glGetAttribLocation(program, aDirectionVector)
-//    val aSnowflakeStartTimeLocation = glGetAttribLocation(program, aSnowflakeStartTime)
 
     fun setUniforms(matrix: FloatArray, color: Int, textureId: Int) {
         glUniformMatrix4fv(uMatrixLocation, 1, false, matrix, 0)
@@ -31,5 +29,9 @@ class SnowfallProgram(context: Context) :
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, textureId)
         glUniform1i(uTextureUnitLocation, 0)
+    }
+
+    fun applyPointSize(snowflakeRadius: Float) {
+        glUniform1f(uPointSizeLocation, snowflakeRadius)
     }
 }

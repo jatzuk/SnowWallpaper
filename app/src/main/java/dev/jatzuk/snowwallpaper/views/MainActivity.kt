@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.content.res.Configuration
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -25,8 +26,7 @@ class MainActivity : Activity() {
     private lateinit var glSurfaceView: GLSurfaceView
     private lateinit var renderer: SnowfallRenderer
     private var isRendererSet = false
-    private var previousX = 0f
-    private var previousY = 0f
+    private var orientation = 1
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,8 +52,18 @@ class MainActivity : Activity() {
                 event?.let {
                     val x = it.values[0]
                     val y = it.values[1]
-                    val azimuth = atan2(x, y) / PI
-                    roll = azimuth.toFloat()
+
+                    val azimuth = atan2(x, y) / PI / 180
+                    roll = azimuth.toFloat() * 5f
+                    when (orientation) {
+                        Configuration.ORIENTATION_PORTRAIT -> {
+
+                        }
+                        Configuration.ORIENTATION_LANDSCAPE -> {
+
+                        }
+                    }
+
                     val absoluteY = abs(y)
                     if (absoluteY > 1.2f) pitch = absoluteY
                     logging("roll: $roll, pitch: $pitch", SENSOR_INFO_TAG)
@@ -83,26 +93,6 @@ class MainActivity : Activity() {
             Toast.LENGTH_LONG
         ).show()
 
-//        glSurfaceView.setOnTouchListener { v, event ->
-//            val x = event.x
-//            val y = event.y
-//
-//            event?.let {
-//                when (event.action) {
-//                    MotionEvent.ACTION_MOVE -> {
-//                        val dx = x - previousX
-//                        val dy = y - previousY
-//                        previousX = x
-//                        previousY = y
-//                        glSurfaceView.queueEvent {
-////                            todo
-//                        }
-//                    }
-//                }
-//                true
-//            } ?: false
-//        }
-
         setContentView(glSurfaceView)
     }
 
@@ -127,13 +117,18 @@ class MainActivity : Activity() {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        orientation = newConfig.orientation
+    }
+
     companion object {
         private const val SENSOR_INFO_TAG = "SENSOR_INFO"
         private val TAG = MainActivity::class.java.simpleName
 
         var ratio = 0f
 
-//        todo(prob delete)
+        //        todo(prob delete)
         var roll = 0f
         var pitch = 0f
     }
