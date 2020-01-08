@@ -6,7 +6,7 @@ import dev.jatzuk.snowwallpaper.data.VertexArray
 import dev.jatzuk.snowwallpaper.programs.SnowfallProgram
 
 class SnowfallBackground(private val snowfallProgram: SnowfallProgram) {
-    private val snowflakesLimit = 1 // todo(load from preferences)
+    private val snowflakesLimit = 100 // todo(load from preferences)
     private val snowflakes = Array(snowflakesLimit) { Snowflake() }
     private val vertexArray = VertexArray(snowflakes)
 
@@ -23,6 +23,7 @@ class SnowfallBackground(private val snowfallProgram: SnowfallProgram) {
     }
 
     fun draw() {
+//        todo(set background)
         snowflakes.forEachIndexed { index, snowflake ->
             snowflake.fall()
             snowfallProgram.setPointSize(snowflake.radius)

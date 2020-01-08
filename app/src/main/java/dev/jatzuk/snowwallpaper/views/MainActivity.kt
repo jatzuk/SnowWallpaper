@@ -19,7 +19,6 @@ import dev.jatzuk.snowwallpaper.util.Logger.logging
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
-import kotlin.math.atanh
 
 class MainActivity : Activity() {
     private lateinit var sensorManager: SensorManager
@@ -54,12 +53,10 @@ class MainActivity : Activity() {
                     val x = it.values[0]
                     val y = it.values[1]
 
-                    roll = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        (atan2(x, y) / PI / 180).toFloat()
-                    } else {
-                        if (x > 0) -(atan2(y, x) / PI / 180).toFloat()
-                        else (atan2(x, y) / PI / 180).toFloat()
-                    }
+                    roll =
+                        if (orientation == Configuration.ORIENTATION_LANDSCAPE && x > 0)
+                            -calculateRoll(y, x)
+                        else calculateRoll(x, y)
 
                     val absoluteY = abs(y) / 10_000f
                     if (absoluteY > 0.5f) pitch = absoluteY
@@ -114,6 +111,8 @@ class MainActivity : Activity() {
         }
     }
 
+    private fun calculateRoll(x: Float, y: Float) = (atan2(x, y) / PI / 180).toFloat()
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         orientation = newConfig.orientation
@@ -122,7 +121,6 @@ class MainActivity : Activity() {
     companion object {
         private const val SENSOR_INFO_TAG = "SENSOR_INFO"
         private val TAG = MainActivity::class.java.simpleName
-
         var ratio = 0f
 
         //        todo(prob delete)

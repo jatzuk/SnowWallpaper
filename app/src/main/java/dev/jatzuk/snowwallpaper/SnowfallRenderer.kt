@@ -66,13 +66,10 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         snowfallProgram.setUniforms(viewProjectionMatrix, Color.WHITE, textureId)
 
-//        snowfallBackground.run {
-//            bindData()
-//            draw()
-//        }
-
-        snowfallBackground.bindData()
-        snowfallBackground.draw()
+        snowfallBackground.run {
+            bindData()
+            draw()
+        }
     }
 
     private fun limitFrameRate(@Suppress("SameParameterValue") framesPerSecond: Int) {

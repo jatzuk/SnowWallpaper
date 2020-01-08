@@ -12,6 +12,8 @@ class Snowflake {
     var x = (Random.nextFloat() * 2f - ratio) * ratio
     var y = Random.nextFloat() + 1f
     var radius = assignRadius()
+    private val minRadius = 5f // todo(load from prefs)
+    private val maxRadius = 30f // todo(load from prefs)
     private var angle = assignDefaultAngle()
     private var velocity = Random.nextFloat(INCREMENT_LOWER, INCREMENT_UPPER)
     private var velocityFactor = 2f // todo(load from prefs)
@@ -26,19 +28,20 @@ class Snowflake {
         y -= velocity * sin(angle)
     }
 
-    private fun isOutside() = x < -1.1f * ratio /** radius / 1000 */|| x > 1f * ratio || y < -1f //todo(apply snowflake radius)
+    private fun isOutside() =
+        x < -1.1f * ratio - (radius / 2) || x > 1.1f * ratio + (radius / 2) || y < -1f
 
     private fun reset() {
         x = (Random.nextFloat() * 2f - 1f) * ratio
         y = Random.nextFloat() + 1f
         radius = assignRadius()
-        angle = assignDefaultAngle() //+ roll * ANGLE_FACTOR
+        angle = assignDefaultAngle()
         velocity = Random.nextFloat(INCREMENT_LOWER, INCREMENT_UPPER)
         degrees = 0f
 //        degreeIncrement = Random.nextFloat(DEGREE_INCREMENT_LOWER, DEGREE_INCREMENT_UPPER)
     }
 
-    private fun assignRadius() = Random.nextFloat() * 30f + 5f // todo(let user choose min max values)
+    private fun assignRadius() = Random.nextFloat() * maxRadius + minRadius
 //        Random.nextFloat(BACKGROUND_SNOWFLAKE_LOWER, BACKGROUND_SNOWFLAKE_UPPER)
 //        if (isSnowfall) Random.nextFloat(BACKGROUND_SNOWFLAKE_LOWER, BACKGROUND_SNOWFLAKE_UPPER)
 //        else //300f
@@ -52,7 +55,6 @@ class Snowflake {
     companion object {
         private val TAG = Snowflake::class.java.simpleName
         private const val ANGE_RANGE = 0.2f
-        private const val ANGLE_FACTOR = 2f
         private const val HALF_ANGLE_RANGE = ANGE_RANGE / 2f
         private const val HALF_PI = PI.toFloat() / 2f
         private const val ANGLE_SEED = 25f
