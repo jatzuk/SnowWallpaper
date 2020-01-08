@@ -19,6 +19,7 @@ import dev.jatzuk.snowwallpaper.util.Logger.logging
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.atanh
 
 class MainActivity : Activity() {
     private lateinit var sensorManager: SensorManager
@@ -26,7 +27,7 @@ class MainActivity : Activity() {
     private lateinit var glSurfaceView: GLSurfaceView
     private lateinit var renderer: SnowfallRenderer
     private var isRendererSet = false
-    private var orientation = 1
+    private var orientation = Configuration.ORIENTATION_PORTRAIT
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,20 +54,16 @@ class MainActivity : Activity() {
                     val x = it.values[0]
                     val y = it.values[1]
 
-                    val azimuth = atan2(x, y) / PI / 180
-                    roll = azimuth.toFloat() * 5f
-                    when (orientation) {
-                        Configuration.ORIENTATION_PORTRAIT -> {
-
-                        }
-                        Configuration.ORIENTATION_LANDSCAPE -> {
-
-                        }
+                    roll = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        (atan2(x, y) / PI / 180).toFloat()
+                    } else {
+                        if (x > 0) -(atan2(y, x) / PI / 180).toFloat()
+                        else (atan2(x, y) / PI / 180).toFloat()
                     }
 
-                    val absoluteY = abs(y)
-                    if (absoluteY > 1.2f) pitch = absoluteY
-                    logging("roll: $roll, pitch: $pitch", SENSOR_INFO_TAG)
+                    val absoluteY = abs(y) / 10_000f
+                    if (absoluteY > 0.5f) pitch = absoluteY
+                    logging("pitch: $absoluteY", SENSOR_INFO_TAG)
                 }
             }
         }

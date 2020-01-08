@@ -31,7 +31,7 @@ class SnowfallProgram(context: Context) :
         glUniform1i(uTextureUnitLocation, 0)
     }
 
-    fun applyPointSize(snowflakeRadius: Float) {
+    fun setPointSize(snowflakeRadius: Float) {
         glUniform1f(uPointSizeLocation, snowflakeRadius)
     }
 }

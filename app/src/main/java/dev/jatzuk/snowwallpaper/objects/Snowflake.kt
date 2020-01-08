@@ -1,6 +1,8 @@
 package dev.jatzuk.snowwallpaper.objects
 
+import dev.jatzuk.snowwallpaper.views.MainActivity.Companion.pitch
 import dev.jatzuk.snowwallpaper.views.MainActivity.Companion.ratio
+import dev.jatzuk.snowwallpaper.views.MainActivity.Companion.roll
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -12,12 +14,14 @@ class Snowflake {
     var radius = assignRadius()
     private var angle = assignDefaultAngle()
     private var velocity = Random.nextFloat(INCREMENT_LOWER, INCREMENT_UPPER)
+    private var velocityFactor = 2f // todo(load from prefs)
     private var degrees = 0f
 //    private var degreeIncrement = Random.nextFloat(DEGREE_INCREMENT_LOWER, DEGREE_INCREMENT_UPPER)
 
     fun fall() {
         if (isOutside()) reset()
-//        angle += roll // todo(fix landscape orientation)
+        angle += roll
+        velocity += pitch * velocityFactor
         x += velocity * cos(angle)
         y -= velocity * sin(angle)
     }
@@ -27,13 +31,14 @@ class Snowflake {
     private fun reset() {
         x = (Random.nextFloat() * 2f - 1f) * ratio
         y = Random.nextFloat() + 1f
+        radius = assignRadius()
         angle = assignDefaultAngle() //+ roll * ANGLE_FACTOR
         velocity = Random.nextFloat(INCREMENT_LOWER, INCREMENT_UPPER)
         degrees = 0f
 //        degreeIncrement = Random.nextFloat(DEGREE_INCREMENT_LOWER, DEGREE_INCREMENT_UPPER)
     }
 
-    private fun assignRadius() = Random.nextFloat() * 50f + 10f // todo(let user choose min max values)
+    private fun assignRadius() = Random.nextFloat() * 30f + 5f // todo(let user choose min max values)
 //        Random.nextFloat(BACKGROUND_SNOWFLAKE_LOWER, BACKGROUND_SNOWFLAKE_UPPER)
 //        if (isSnowfall) Random.nextFloat(BACKGROUND_SNOWFLAKE_LOWER, BACKGROUND_SNOWFLAKE_UPPER)
 //        else //300f

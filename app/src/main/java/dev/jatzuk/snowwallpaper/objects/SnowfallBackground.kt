@@ -6,7 +6,7 @@ import dev.jatzuk.snowwallpaper.data.VertexArray
 import dev.jatzuk.snowwallpaper.programs.SnowfallProgram
 
 class SnowfallBackground(private val snowfallProgram: SnowfallProgram) {
-    private val snowflakesLimit = 150 // todo(load from preferences)
+    private val snowflakesLimit = 1 // todo(load from preferences)
     private val snowflakes = Array(snowflakesLimit) { Snowflake() }
     private val vertexArray = VertexArray(snowflakes)
 
@@ -25,7 +25,7 @@ class SnowfallBackground(private val snowfallProgram: SnowfallProgram) {
     fun draw() {
         snowflakes.forEachIndexed { index, snowflake ->
             snowflake.fall()
-            snowfallProgram.applyPointSize(snowflake.radius)
+            snowfallProgram.setPointSize(snowflake.radius)
             glDrawArrays(GL_POINTS, 0, index + 1)
         }
     }
@@ -33,8 +33,7 @@ class SnowfallBackground(private val snowfallProgram: SnowfallProgram) {
     companion object {
         private val TAG = SnowfallBackground::class.java.simpleName
         const val POSITION_COMPONENT_COUNT = 2
-        private const val COLOR_COMPONENT_COUNT = 2
-        private const val TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT
-        private const val STRIDE = 0//TOTAL_COMPONENT_COUNT * BYTES_PER_FLOAT
+        const val TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT
+        private const val STRIDE = 0
     }
 }
