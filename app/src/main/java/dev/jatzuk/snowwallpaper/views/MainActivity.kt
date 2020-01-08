@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.PixelFormat
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -14,6 +15,7 @@ import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.util.Logger.logging
 import kotlin.math.PI
@@ -78,9 +80,15 @@ class MainActivity : Activity() {
         val isSupportingES2 = configurationInfo.reqGlEsVersion >= 0x20000
 
         if (isSupportingES2) {
-            glSurfaceView.setEGLContextClientVersion(2)
             isRendererSet = true
-            glSurfaceView.setRenderer(renderer)
+            glSurfaceView.run {
+                setEGLContextClientVersion(2)
+                setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+                holder.setFormat(PixelFormat.TRANSLUCENT)
+                setBackgroundResource(loadBackgroundImage())
+                setZOrderOnTop(true)
+                setRenderer(renderer)
+            }
         } else Toast.makeText(
             this,
             "This device does not support OpenGL ES 2.0",
@@ -113,6 +121,8 @@ class MainActivity : Activity() {
 
     private fun calculateRoll(x: Float, y: Float) = (atan2(x, y) / PI / 180).toFloat()
 
+    private fun loadBackgroundImage() = R.drawable.background_image // todo(load from prefs)
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         orientation = newConfig.orientation
@@ -122,8 +132,6 @@ class MainActivity : Activity() {
         private const val SENSOR_INFO_TAG = "SENSOR_INFO"
         private val TAG = MainActivity::class.java.simpleName
         var ratio = 0f
-
-        //        todo(prob delete)
         var roll = 0f
         var pitch = 0f
     }

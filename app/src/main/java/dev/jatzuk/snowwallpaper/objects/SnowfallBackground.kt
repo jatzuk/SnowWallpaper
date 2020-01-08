@@ -23,7 +23,6 @@ class SnowfallBackground(private val snowfallProgram: SnowfallProgram) {
     }
 
     fun draw() {
-//        todo(set background)
         snowflakes.forEachIndexed { index, snowflake ->
             snowflake.fall()
             snowfallProgram.setPointSize(snowflake.radius)
