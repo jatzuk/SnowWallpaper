@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.PixelFormat
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -15,9 +18,11 @@ import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.util.Logger.logging
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -34,6 +39,14 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+
+        setContentView(R.layout.activity_main)
+
 //        setContentView(R.layout.activity_main)
 //        button_set_wallpaper.setOnClickListener {
 //            val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
@@ -44,6 +57,14 @@ class MainActivity : Activity() {
 //            }
 //            startActivity(intent)
 //        }
+
+        button_open_preferences.setOnClickListener {
+            startActivity(Intent(this, PreferencesActivity::class.java))
+        }
+
+        button_set_wallpaper.setOnClickListener {
+            startLiveWallpaper()
+        }
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorEventListener = object : SensorEventListener {
@@ -66,36 +87,6 @@ class MainActivity : Activity() {
                 }
             }
         }
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
-
-        glSurfaceView = GLSurfaceView(this)
-        renderer = SnowfallRenderer(this)
-        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val configurationInfo = activityManager.deviceConfigurationInfo
-        val isSupportingES2 = configurationInfo.reqGlEsVersion >= 0x20000
-
-        if (isSupportingES2) {
-            isRendererSet = true
-            glSurfaceView.run {
-                setEGLContextClientVersion(2)
-                setEGLConfigChooser(8, 8, 8, 8, 16, 0)
-                holder.setFormat(PixelFormat.TRANSLUCENT)
-                setBackgroundResource(loadBackgroundImage())
-                setZOrderOnTop(true)
-                setRenderer(renderer)
-            }
-        } else Toast.makeText(
-            this,
-            "This device does not support OpenGL ES 2.0",
-            Toast.LENGTH_LONG
-        ).show()
-
-        setContentView(glSurfaceView)
     }
 
     override fun onPause() {
@@ -115,22 +106,104 @@ class MainActivity : Activity() {
                 accelerometer,
                 SensorManager.SENSOR_DELAY_NORMAL
             )
+
             glSurfaceView.onResume()
         }
     }
 
     private fun calculateRoll(x: Float, y: Float) = (atan2(x, y) / PI / 180).toFloat()
 
-    private fun loadBackgroundImage() = R.drawable.background_image // todo(load from prefs)
-
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         orientation = newConfig.orientation
     }
 
+    private fun startLiveWallpaper() {
+        glSurfaceView = GLSurfaceView(this)
+        renderer = SnowfallRenderer(this)
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val configurationInfo = activityManager.deviceConfigurationInfo
+        val isSupportingES2 = configurationInfo.reqGlEsVersion >= 0x20000
+
+        scaleBitmap()
+
+        if (isSupportingES2) {
+            isRendererSet = true
+            glSurfaceView.run {
+                setEGLContextClientVersion(2)
+                setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+                holder.setFormat(PixelFormat.TRANSLUCENT)
+                setZOrderOnTop(true)
+                setRenderer(renderer)
+            }
+        } else Toast.makeText(
+            this,
+            "This device does not support OpenGL ES 2.0",
+            Toast.LENGTH_LONG
+        ).show()
+
+        setContentView(glSurfaceView)
+    }
+
+    private fun scaleBitmap() {
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.background_image)
+        val scaledBitmap = if (bitmap.width >= bitmap.height) {
+            Bitmap.createBitmap(
+                bitmap,
+                bitmap.width / 2 - bitmap.height / 2,
+                0,
+                bitmap.height,
+                bitmap.height
+            )
+        } else {
+            Bitmap.createBitmap(
+                bitmap,
+                0,
+                bitmap.height / 2 - bitmap.width / 2,
+                bitmap.width,
+                bitmap.width
+            )
+        }
+
+        glSurfaceView.background = scaledBitmap.toDrawable(resources)
+
+
+//        val getIntent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
+//        val pickIntent = Intent(
+//            Intent.ACTION_PICK,
+//            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//        ).apply { type = "image/*" }
+//
+//        val chooserIntent = Intent.createChooser(getIntent, "Select Background Picture").apply {
+//            putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(pickIntent))
+//        }
+//
+//        startActivityForResult(chooserIntent, SELECT_BACKGROUND_IMAGE)
+    }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if (resultCode == RESULT_OK) {
+//            when (requestCode) {
+//                SELECT_BACKGROUND_IMAGE -> {
+//                    data?.let {
+//                        val inp = applicationContext.contentResolver.openInputStream(it.data!!)
+//                        val bitmap = BitmapFactory.decodeStream(inp)
+//                        val name = bitmap.config.name
+//                        FileOutputStream(File(name)).use { fos ->
+//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+//                        }
+//                    } ?: return
+//                }
+//            }
+//        }
+//    }
+
+
     companion object {
         private const val SENSOR_INFO_TAG = "SENSOR_INFO"
         private val TAG = MainActivity::class.java.simpleName
+//        private const val SELECT_BACKGROUND_IMAGE = 1
+
         var ratio = 0f
         var roll = 0f
         var pitch = 0f
