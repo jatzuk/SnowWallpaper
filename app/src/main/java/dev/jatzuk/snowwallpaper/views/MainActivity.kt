@@ -1,6 +1,5 @@
 package dev.jatzuk.snowwallpaper.views
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
@@ -19,12 +18,12 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.graphics.drawable.toDrawable
+import androidx.preference.PreferenceManager
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.SnowfallRenderer
-import dev.jatzuk.snowwallpaper.util.Logger.logging
+import dev.jatzuk.snowwallpaper.views.preferences.PreferencesActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.PI
-import kotlin.math.abs
 import kotlin.math.atan2
 
 class MainActivity : Activity() {
@@ -35,7 +34,6 @@ class MainActivity : Activity() {
     private var isRendererSet = false
     private var orientation = Configuration.ORIENTATION_PORTRAIT
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,7 +42,6 @@ class MainActivity : Activity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-
         setContentView(R.layout.activity_main)
 
 //        setContentView(R.layout.activity_main)
@@ -80,10 +77,6 @@ class MainActivity : Activity() {
                         if (orientation == Configuration.ORIENTATION_LANDSCAPE && x > 0)
                             -calculateRoll(y, x)
                         else calculateRoll(x, y)
-
-                    val absoluteY = abs(y) / 10_000f
-                    if (absoluteY > 0.5f) pitch = absoluteY
-                    logging("pitch: $absoluteY", SENSOR_INFO_TAG)
                 }
             }
         }
@@ -100,13 +93,7 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         if (isRendererSet) {
-            val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-            sensorManager.registerListener(
-                sensorEventListener,
-                accelerometer,
-                SensorManager.SENSOR_DELAY_NORMAL
-            )
-
+            registerSensorListener()
             glSurfaceView.onResume()
         }
     }
@@ -121,21 +108,25 @@ class MainActivity : Activity() {
     private fun startLiveWallpaper() {
         glSurfaceView = GLSurfaceView(this)
         renderer = SnowfallRenderer(this)
+        registerSensorListener() // android wouldn't register the same listener twice
         val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val configurationInfo = activityManager.deviceConfigurationInfo
         val isSupportingES2 = configurationInfo.reqGlEsVersion >= 0x20000
 
-        scaleBitmap()
-
         if (isSupportingES2) {
-            isRendererSet = true
+            val isBackgroundImageEnabled = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(getString(R.string.background_image_global_switcher_key), true)
             glSurfaceView.run {
                 setEGLContextClientVersion(2)
-                setEGLConfigChooser(8, 8, 8, 8, 16, 0)
-                holder.setFormat(PixelFormat.TRANSLUCENT)
-                setZOrderOnTop(true)
+                if (isBackgroundImageEnabled) {
+                    scaleBitmap()
+                    setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+                    holder.setFormat(PixelFormat.TRANSLUCENT)
+                    setZOrderOnTop(true)
+                }
                 setRenderer(renderer)
             }
+            isRendererSet = true
         } else Toast.makeText(
             this,
             "This device does not support OpenGL ES 2.0",
@@ -166,46 +157,21 @@ class MainActivity : Activity() {
         }
 
         glSurfaceView.background = scaledBitmap.toDrawable(resources)
-
-
-//        val getIntent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
-//        val pickIntent = Intent(
-//            Intent.ACTION_PICK,
-//            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-//        ).apply { type = "image/*" }
-//
-//        val chooserIntent = Intent.createChooser(getIntent, "Select Background Picture").apply {
-//            putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(pickIntent))
-//        }
-//
-//        startActivityForResult(chooserIntent, SELECT_BACKGROUND_IMAGE)
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (resultCode == RESULT_OK) {
-//            when (requestCode) {
-//                SELECT_BACKGROUND_IMAGE -> {
-//                    data?.let {
-//                        val inp = applicationContext.contentResolver.openInputStream(it.data!!)
-//                        val bitmap = BitmapFactory.decodeStream(inp)
-//                        val name = bitmap.config.name
-//                        FileOutputStream(File(name)).use { fos ->
-//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-//                        }
-//                    } ?: return
-//                }
-//            }
-//        }
-//    }
-
+    private fun registerSensorListener() {
+        sensorManager.registerListener(
+            sensorEventListener,
+            sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
+    }
 
     companion object {
-        private const val SENSOR_INFO_TAG = "SENSOR_INFO"
+        private const val SENSOR_INFO_TAG = "SENSOR_INFO_TAG"
         private val TAG = MainActivity::class.java.simpleName
-//        private const val SELECT_BACKGROUND_IMAGE = 1
 
         var ratio = 0f
         var roll = 0f
-        var pitch = 0f
     }
 }

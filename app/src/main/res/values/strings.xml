@@ -1,7 +1,56 @@
 <resources>
     <string name="app_name">SnowWallpaper</string>
+
+    <string name="background_snowflakes">Background Snowflakes</string>
+    <string name="background_image">Background Image</string>
+
+    <string name="settings">Settings</string>
     <string name="setup_activity_label">Setup Wallpaper</string>
+
+<!--    live wallpaper-->
     <string name="author">Jatzuk</string>
-    <string name="descriptionText">description</string>
-    <string name="wallpaperIcon">wallpaperThumbnail</string>
+    <string name="description_text">description</string>
+    <string name="wallpaper_icon">wallpaperThumbnail</string>
+
+    <string name="background_snowflakes_switcher">Enabled</string>
+    <string name="snowflakes_limit">Snowflakes Limit</string>
+    <string name="snowflake_min_radius">Minimum radius</string>
+    <string name="snowflake_max_radius">Maximum radius</string>
+    <string name="snowflake_velocity_factor">Velocity factor</string>
+
+    <string name="background_snowflakes_switcher_summary">Snowflakes appearance</string>
+    <string name="background_snowflakes_limit_summary">Amount of snowflakes that falling in the background</string>
+    <string name="background_snowflakes_category_key">background_snowflakes_category_key</string>
+
+    <string name="background_snowflakes_randomize_radius">Unique radius</string>
+    <string name="background_snowflakes_randomize_radius_summary">Each snowflake will set own radius from followed interval</string>
+
+    <string name="background_snowflakes_category_summary">Snowflakes in the background</string>
+    <string name="background_image_category_summary">Background image</string>
+
+    <string name="foreground_snowflakes_category">Snowflakes in the foreground</string>
+    <string name="foreground_snowflakes_category_summary">Snowflakes that looks bigger!</string>
+
+    <string name="background_image_switcher">Background Enabled</string>
+    <string name="background_image_switcher_summary">Background Enabled</string>
+
+    <string name="renderer_frame_limit">Frames per second</string>
+
+    <string name="preference_switcher_enabled">Enabled</string>
+    <string name="preference_switcher_disabled">Disabled</string>
+
+    <string name="preference_general_category">General</string>
+
+    <!--    keys-->
+    <string name="background_snowflakes_global_switcher_key">background_snowflakes_global_switcher_key</string>
+    <string name="background_snowflakes_limit_key">background_snowflakes_limit_key</string>
+    <string name="background_snowflakes_random_radius_key">background_snowflakes_random_radius_key</string>
+    <string name="background_snowflakes_min_radius_key">background_snowflakes_min_radius_key</string>
+    <string name="background_snowflakes_max_radius_key">background_snowflakes_max_radius_key</string>
+    <string name="background_snowflakes_velocity_factor_key">background_snowflakes_velocity_factor_key</string>
+
+    <string name="foreground_snowflakes_category_key">foreground_snowflakes_category_key</string>
+
+    <string name="background_image_global_switcher_key">background_image_category_key</string>
+
 </resources>

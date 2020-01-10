@@ -6,6 +6,7 @@ import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix.*
 import android.os.SystemClock
+import androidx.preference.PreferenceManager
 import dev.jatzuk.snowwallpaper.objects.SnowfallBackground
 import dev.jatzuk.snowwallpaper.programs.SnowfallProgram
 import dev.jatzuk.snowwallpaper.util.Logger.logging
@@ -22,10 +23,14 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private lateinit var snowfallProgram: SnowfallProgram
     private lateinit var snowfallBackground: SnowfallBackground
     private var textureId = 0
-
     private var frameStartMs = 0L
+
     private var startTimeMs = 0L
     private var frames = 0
+
+    private val isSnowfallBackgroundProgramUsed =
+        PreferenceManager.getDefaultSharedPreferences(context)
+            .getBoolean(context.getString(R.string.background_snowflakes_global_switcher_key), true)
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
@@ -45,13 +50,12 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         glViewport(0, 0, width, height)
         ratio = width.toFloat() / height.toFloat()
 
-        // we need to initialize background after getting right aspect ratio from above
-        snowfallBackground = SnowfallBackground(snowfallProgram)
-
-//        perspectiveM(projectionMatrix, 0, 45f, 0f, 1f, 10f)
-//        setIdentityM(viewMatrix, 0)
-//        translateM(viewMatrix, 0, 0f, -1.5f, -5f)
-//        multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
+        if (isSnowfallBackgroundProgramUsed) {
+            // we need to initialize background after getting right aspect ratio from above
+            snowfallBackground = SnowfallBackground(snowfallProgram, context)
+        } else {
+            logging("snowfall program is not using", TAG)
+        }
 
         frustumM(projectionMatrix, 0, ratio, -ratio, -1f, 1f, 3f, 7f)
         setLookAtM(viewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
@@ -64,11 +68,12 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
-        snowfallProgram.setUniforms(viewProjectionMatrix, Color.WHITE, textureId)
-
-        snowfallBackground.run {
-            bindData()
-            draw()
+        if (isSnowfallBackgroundProgramUsed) {
+            snowfallProgram.setUniforms(viewProjectionMatrix, Color.WHITE, textureId)
+            snowfallBackground.run {
+                bindData()
+                draw()
+            }
         }
     }
 

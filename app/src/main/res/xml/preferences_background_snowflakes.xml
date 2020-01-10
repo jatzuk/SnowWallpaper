@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:summary="@string/background_snowflakes_switcher_summary"
+        android:title="@string/preference_switcher_enabled"
+        app:key="@string/background_snowflakes_global_switcher_key" />
+
+    <SeekBarPreference
+        android:defaultValue="80"
+        android:max="200"
+        android:summary="@string/background_snowflakes_limit_summary"
+        android:title="@string/snowflakes_limit"
+        app:key="@string/background_snowflakes_limit_key"
+        app:min="1"
+        app:showSeekBarValue="true" />
+
+    <SeekBarPreference
+        android:defaultValue="3"
+        android:max="10"
+        android:title="@string/snowflake_velocity_factor"
+        app:key="@string/background_snowflakes_velocity_factor_key"
+        app:min="1"
+        app:seekBarIncrement="1"
+        app:showSeekBarValue="true" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:summary="@string/background_snowflakes_randomize_radius_summary"
+        android:title="@string/background_snowflakes_randomize_radius"
+        app:key="@string/background_snowflakes_random_radius_key" />
+
+    <SeekBarPreference
+        android:defaultValue="5"
+        android:max="14"
+        android:title="@string/snowflake_min_radius"
+        app:key="@string/background_snowflakes_min_radius_key"
+        app:min="1"
+        app:seekBarIncrement="10"
+        app:showSeekBarValue="true" />
+
+    <SeekBarPreference
+        android:defaultValue="30"
+        android:max="50"
+        android:title="@string/snowflake_max_radius"
+        app:key="@string/background_snowflakes_max_radius_key"
+        app:min="15"
+        app:seekBarIncrement="10"
+        app:showSeekBarValue="true" />
+</PreferenceScreen>

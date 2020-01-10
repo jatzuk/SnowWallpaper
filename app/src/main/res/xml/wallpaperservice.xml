@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wallpaper xmlns:android="http://schemas.android.com/apk/res/android"
-    settingsActivity="dev.jatzuk.snowwallpaper.views.PreferencesActivity"
+    settingsActivity="dev.jatzuk.snowwallpaper.views.preferences.PreferencesActivity"
     android:author="@string/author"
     android:description="@string/description_text"
     android:thumbnail="@string/wallpaper_icon">

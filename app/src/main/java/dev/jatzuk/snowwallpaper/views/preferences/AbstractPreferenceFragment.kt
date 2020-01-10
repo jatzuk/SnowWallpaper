@@ -1,0 +1,39 @@
+package dev.jatzuk.snowwallpaper.views.preferences
+
+import android.content.SharedPreferences
+import android.os.Bundle
+import androidx.annotation.XmlRes
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
+
+abstract class AbstractPreferenceFragment(@XmlRes private val xmlRes: Int) :
+    PreferenceFragmentCompat() {
+    protected abstract val preferencesListener: SharedPreferences.OnSharedPreferenceChangeListener
+
+    final override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(xmlRes, rootKey)
+        setUp()
+    }
+
+    final override fun onResume() {
+        super.onResume()
+        preferenceManager.sharedPreferences
+            .registerOnSharedPreferenceChangeListener(preferencesListener)
+    }
+
+    final override fun onPause() {
+        super.onPause()
+        preferenceManager.sharedPreferences
+            .unregisterOnSharedPreferenceChangeListener(preferencesListener)
+    }
+
+    protected abstract fun setUp()
+
+    protected fun switchDependentPreferences(state: Boolean, offset: Int) {
+        repeat(preferenceScreen.preferenceCount - offset) { i ->
+            val preference = preferenceScreen.getPreference(i + offset)
+            preference.isEnabled = state
+            if (state && preference is SwitchPreferenceCompat && !preference.isChecked) return
+        }
+    }
+}

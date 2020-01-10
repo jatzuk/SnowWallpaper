@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:icon="@android:drawable/btn_star_big_on"
+    android:summary="@string/foreground_snowflakes_category_summary"
+    android:title="@string/foreground_snowflakes_category">
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:summary="@string/background_snowflakes_switcher_summary"
+        android:title="@string/preference_switcher_enabled" />
+
+    <SeekBarPreference
+        app:min="1"
+        app:seekBarIncrement="1"
+        app:showSeekBarValue="true"
+        android:defaultValue="5"
+        android:max="10"
+        android:summary="@string/background_snowflakes_limit_summary"
+        android:title="@string/snowflakes_limit" />
+</PreferenceScreen>
