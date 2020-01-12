@@ -16,6 +16,7 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
+
     private val viewMatrix = FloatArray(16)
     private val projectionMatrix = FloatArray(16)
     private val viewProjectionMatrix = FloatArray(16)

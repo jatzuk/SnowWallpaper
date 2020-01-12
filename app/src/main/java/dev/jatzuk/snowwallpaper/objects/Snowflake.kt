@@ -12,6 +12,7 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 class Snowflake(context: Context) {
+
     var x = (Random.nextFloat() * 2f - ratio) * ratio
     var y = Random.nextFloat() + 1f
     private var isRadiusUnique = PreferenceManager.getDefaultSharedPreferences(context)

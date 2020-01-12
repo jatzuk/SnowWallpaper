@@ -9,6 +9,7 @@ abstract class ShaderProgram(
     vertexShaderResourceId: Int,
     fragmentShaderResourceId: Int
 ) {
+
     protected val program = ShaderHelper.buildProgram(
         ShaderHelper.readShaderCodeFromResource(context, vertexShaderResourceId),
         ShaderHelper.readShaderCodeFromResource(context, fragmentShaderResourceId)

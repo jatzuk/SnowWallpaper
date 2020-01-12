@@ -10,6 +10,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 object ShaderHelper {
+
     private const val TAG = "ShaderHelper"
 
     fun readShaderCodeFromResource(context: Context, resourceId: Int) = buildString {

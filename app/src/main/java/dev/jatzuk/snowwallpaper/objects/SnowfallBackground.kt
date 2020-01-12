@@ -9,6 +9,7 @@ import dev.jatzuk.snowwallpaper.data.VertexArray
 import dev.jatzuk.snowwallpaper.programs.SnowfallProgram
 
 class SnowfallBackground(private val snowfallProgram: SnowfallProgram, context: Context) {
+
     private val snowflakesLimit = PreferenceManager.getDefaultSharedPreferences(context).getInt(
         context.getString(R.string.background_snowflakes_limit_key), 80
     )

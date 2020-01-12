@@ -9,6 +9,7 @@ import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
 class VertexArray(private val snowflakes: Array<Snowflake>) {
+
     private val floatBuffer: FloatBuffer =
         ByteBuffer.allocateDirect(snowflakes.size * TOTAL_COMPONENT_COUNT * BYTES_PER_FLOAT)
             .order(ByteOrder.nativeOrder())

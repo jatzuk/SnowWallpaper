@@ -3,6 +3,7 @@ package dev.jatzuk.snowwallpaper.util
 import android.util.Log
 
 object Logger {
+
     private const val TAG = "Logger"
     var isLogging = true
 

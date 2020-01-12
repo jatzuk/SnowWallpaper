@@ -3,6 +3,7 @@ package dev.jatzuk.snowwallpaper.util
 import kotlin.math.sqrt
 
 sealed class Geometry {
+
     class Point(var x: Float, var y: Float, var z: Float) {
         fun translateY(distance: Float) = Point(x, y + distance, z)
 
