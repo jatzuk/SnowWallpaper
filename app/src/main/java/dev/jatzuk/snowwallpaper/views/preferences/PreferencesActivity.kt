@@ -1,19 +1,26 @@
 package dev.jatzuk.snowwallpaper.views.preferences
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import dev.jatzuk.snowwallpaper.R
-import java.io.File
-import java.io.FileOutputStream
+import dev.jatzuk.snowwallpaper.views.imagepicker.*
 
-class PreferencesActivity : AppCompatActivity(),
-    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+private const val NUM_PAGES = 5
+
+class PreferencesActivity : AppCompatActivity()/*FragmentActivity()*/,
+    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback,
+    BackgroundImageFragment.OnListFragmentInteractionListener {
+
+    private lateinit var viewPager: ViewPager2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -21,7 +28,32 @@ class PreferencesActivity : AppCompatActivity(),
         supportFragmentManager.beginTransaction()
             .replace(R.id.preferences_container, PreferencesFragment())
             .commit()
+
+//        actionBar?.setDisplayHomeAsUpEnabled(true)
+//        setContentView(R.layout.fragment_image_viewer)
+//        viewPager = findViewById(R.id.pager)
+//        val pagerAdapter = ScreenSlidePagerAdapter(this)
+//        viewPager.apply {
+//            adapter = pagerAdapter
+//            setPageTransformer(ZoomOutPageTransformer())
+//        }
     }
+
+//    inner class ScreenSlidePagerAdapter(fa: FragmentActivity): FragmentStateAdapter(fa) {
+//        override fun getItemCount(): Int {
+//            return NUM_PAGES
+//        }
+//
+//        override fun createFragment(position: Int): Fragment {
+//            return ScreenSlidePageFragment()
+//        }
+//    }
+
+//    override fun onBackPressed() {
+//        if (viewPager.currentItem == 0)
+//            super.onBackPressed()
+//        else viewPager.currentItem = viewPager.currentItem - 1
+//    }
 
     override fun onPreferenceStartFragment(
         caller: PreferenceFragmentCompat?,
@@ -43,6 +75,18 @@ class PreferencesActivity : AppCompatActivity(),
         return true
     }
 
+    override fun onListFragmentInteraction(item: BackgroundImage) {
+//        supportFragmentManager.popBackStack()
+//        Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show()
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.preferences_container,
+                ImageViewerFragment.newInstance(R.drawable.background_image)
+            )
+            .addToBackStack(null)
+            .commit()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> onBackPressed()
@@ -50,31 +94,8 @@ class PreferencesActivity : AppCompatActivity(),
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            when (requestCode) {
-                SELECT_CUSTOM_BACKGROUND_IMAGE -> {
-                    data?.let {
-                        val inp = applicationContext.contentResolver.openInputStream(it.data!!)
-                        val bitmap = BitmapFactory.decodeStream(inp)
-                        val name = bitmap.config.name
-                        FileOutputStream(File(name)).use { fos ->
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-                        }
-                    } ?: return
-                }
-                SELECT_PREDEFINED_BACKGROUND_IMAGE -> {
-
-                }
-            }
-        }
-    }
-
     companion object {
         private const val TAG = "PreferencesActivity"
-        private const val SELECT_PREDEFINED_BACKGROUND_IMAGE = 1
-        private const val SELECT_CUSTOM_BACKGROUND_IMAGE = 2
     }
 
     class PreferencesFragment : PreferenceFragmentCompat() {

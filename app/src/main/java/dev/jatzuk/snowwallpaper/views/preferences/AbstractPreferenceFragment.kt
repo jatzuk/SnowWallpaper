@@ -6,12 +6,15 @@ import androidx.annotation.XmlRes
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 
-abstract class AbstractPreferenceFragment(@XmlRes private val xmlRes: Int) :
-    PreferenceFragmentCompat() {
+abstract class AbstractPreferenceFragment(
+    @XmlRes private val xmlRes: Int
+) : PreferenceFragmentCompat() {
+
     protected abstract val preferencesListener: SharedPreferences.OnSharedPreferenceChangeListener
 
     final override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(xmlRes, rootKey)
+        retainInstance = true
         setUp()
     }
 

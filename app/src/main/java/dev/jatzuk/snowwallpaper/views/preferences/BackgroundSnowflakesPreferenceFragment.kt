@@ -7,6 +7,7 @@ import dev.jatzuk.snowwallpaper.R
 @Suppress("unused")
 class BackgroundSnowflakesPreferenceFragment :
     AbstractPreferenceFragment(R.xml.preferences_background_snowflakes) {
+
     override val preferencesListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             val globalSwitcher = getString(R.string.background_snowflakes_global_switcher_key)

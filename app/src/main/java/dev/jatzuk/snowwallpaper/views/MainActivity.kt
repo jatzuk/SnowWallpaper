@@ -27,6 +27,7 @@ import kotlin.math.PI
 import kotlin.math.atan2
 
 class MainActivity : Activity() {
+
     private lateinit var sensorManager: SensorManager
     private lateinit var sensorEventListener: SensorEventListener
     private lateinit var glSurfaceView: GLSurfaceView

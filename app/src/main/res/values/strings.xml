@@ -7,7 +7,7 @@
     <string name="settings">Settings</string>
     <string name="setup_activity_label">Setup Wallpaper</string>
 
-<!--    live wallpaper-->
+    <!--    live wallpaper-->
     <string name="author">Jatzuk</string>
     <string name="description_text">description</string>
     <string name="wallpaper_icon">wallpaperThumbnail</string>
@@ -52,5 +52,8 @@
     <string name="foreground_snowflakes_category_key">foreground_snowflakes_category_key</string>
 
     <string name="background_image_global_switcher_key">background_image_category_key</string>
+    <string name="background_image_pick_predefined_image_key">background_image_pick_predefined_image_key</string>
+
+    <string name="background_image_pick_custom_image_key">background_image_pick_custom_image_key</string>
 
 </resources>
