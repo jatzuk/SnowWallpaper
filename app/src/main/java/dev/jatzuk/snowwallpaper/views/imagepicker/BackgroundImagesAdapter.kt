@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.views.imagepicker.BackgroundImageFragment.OnListFragmentInteractionListener
+import dev.jatzuk.snowwallpaper.views.imagepicker.BackgroundImagesFragment.OnListFragmentInteractionListener
 import kotlinx.android.synthetic.main.fragment_background_image_item.view.*
 
-class BackgroundImageAdapter(
+class BackgroundImagesAdapter(
     private val images: List<BackgroundImage>,
     private val listener: OnListFragmentInteractionListener?
-) : RecyclerView.Adapter<BackgroundImageAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<BackgroundImagesAdapter.ViewHolder>() {
 
     private val onClickListener = View.OnClickListener {
         val item = it.tag as BackgroundImage

@@ -7,6 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/images_margin"
-    app:layoutManager="LinearLayoutManager"
-    tools:context=".views.imagepicker.BackgroundImageFragment"
+    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+    tools:context=".views.imagepicker.BackgroundImagesFragment"
     tools:listitem="@layout/fragment_background_image_item" />

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -47,6 +48,11 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
         }
 
         return v
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.images)
     }
 
     inner class ScreenSlidePagerAdapter(f: Fragment): FragmentStateAdapter(f) {

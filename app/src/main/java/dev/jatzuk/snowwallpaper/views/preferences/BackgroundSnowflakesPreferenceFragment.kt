@@ -1,6 +1,7 @@
 package dev.jatzuk.snowwallpaper.views.preferences
 
 import android.content.SharedPreferences
+import android.os.Bundle
 import androidx.preference.SwitchPreferenceCompat
 import dev.jatzuk.snowwallpaper.R
 
@@ -50,5 +51,10 @@ class BackgroundSnowflakesPreferenceFragment :
             getString(R.string.background_snowflakes_random_radius_key)
         )!!.isChecked
         switchDependentPreferences(isUniqueRadiusChecked, 4)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        appBarTitleViewModel.title.value = getString(R.string.background_snowflakes) // todo(change attrib name)
     }
 }

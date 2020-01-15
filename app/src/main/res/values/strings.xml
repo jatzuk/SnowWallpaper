@@ -5,7 +5,12 @@
     <string name="background_image">Background Image</string>
 
     <string name="settings">Settings</string>
+    <string name="preferences">Preferences</string>
     <string name="setup_activity_label">Setup Wallpaper</string>
+
+    <string name="background_image_settings">Background Settings</string>
+    <string name="images">Images</string>
+    <string name="pick_image_menu_text">Pick image</string>
 
     <!--    live wallpaper-->
     <string name="author">Jatzuk</string>

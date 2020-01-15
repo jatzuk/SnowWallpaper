@@ -3,19 +3,29 @@ package dev.jatzuk.snowwallpaper.views.preferences
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.annotation.XmlRes
+import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import dev.jatzuk.snowwallpaper.util.AppBarTitleViewModel
 
 abstract class AbstractPreferenceFragment(
     @XmlRes private val xmlRes: Int
 ) : PreferenceFragmentCompat() {
 
     protected abstract val preferencesListener: SharedPreferences.OnSharedPreferenceChangeListener
+    protected lateinit var appBarTitleViewModel: AppBarTitleViewModel
 
     final override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(xmlRes, rootKey)
         retainInstance = true
         setUp()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        activity?.run {
+            appBarTitleViewModel = ViewModelProviders.of(this).get(AppBarTitleViewModel::class.java)
+        }
     }
 
     final override fun onResume() {

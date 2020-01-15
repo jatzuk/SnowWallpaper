@@ -4,12 +4,13 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.views.imagepicker.BackgroundImageFragment
+import dev.jatzuk.snowwallpaper.views.imagepicker.BackgroundImagesFragment
 import java.io.File
 import java.io.FileOutputStream
 
@@ -41,11 +42,16 @@ class BackgroundImagePreferenceFragment :
         )
         predefinedImagePicker?.setOnPreferenceClickListener {
             fragmentManager?.beginTransaction()
-                ?.replace(R.id.preferences_container, BackgroundImageFragment.newInstance(2))
+                ?.replace(R.id.preferences_container, BackgroundImagesFragment.newInstance(2))
                 ?.addToBackStack(null)
                 ?.commit()
             true
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        appBarTitleViewModel.title.value = (getString(R.string.background_image))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

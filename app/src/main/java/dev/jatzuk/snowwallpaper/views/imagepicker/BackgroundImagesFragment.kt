@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
 
-class BackgroundImageFragment : Fragment() {
+class BackgroundImagesFragment : Fragment() {
 
     // TODO: Customize parameters
     private var columnCount = 1
@@ -37,7 +37,7 @@ class BackgroundImageFragment : Fragment() {
                     if (columnCount < 2) LinearLayoutManager(context)
                     else GridLayoutManager(context, columnCount)
 
-                adapter = BackgroundImageAdapter(getPredefinedImages(), listener)
+                adapter = BackgroundImagesAdapter(getPredefinedImages(), listener)
             }
         }
 
@@ -89,7 +89,7 @@ class BackgroundImageFragment : Fragment() {
     companion object {
         const val ARG_COLUMN_COUNT = "columnCount"
 
-        fun newInstance(columnCount: Int) = BackgroundImageFragment().apply {
+        fun newInstance(columnCount: Int) = BackgroundImagesFragment().apply {
             arguments = Bundle().apply { putInt(ARG_COLUMN_COUNT, columnCount) }
         }
     }

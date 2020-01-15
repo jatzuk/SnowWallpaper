@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="fff">
 
     <Preference
         android:icon="@android:drawable/btn_star_big_on"
@@ -10,19 +11,17 @@
         app:key="@string/background_snowflakes_category_key" />
 
     <Preference
-        app:key="@string/foreground_snowflakes_category_key"
-        app:fragment="dev.jatzuk.snowwallpaper.views.preferences.ForegroundSnowflakesPreferenceFragment"
         android:icon="@android:drawable/btn_star_big_on"
         android:summary="@string/foreground_snowflakes_category_summary"
-        android:title="@string/foreground_snowflakes_category">
-    </Preference>
+        android:title="@string/foreground_snowflakes_category"
+        app:fragment="dev.jatzuk.snowwallpaper.views.preferences.ForegroundSnowflakesPreferenceFragment"
+        app:key="@string/foreground_snowflakes_category_key" />
 
     <Preference
-        app:key="@string/background_image_global_switcher_key"
-        app:fragment="dev.jatzuk.snowwallpaper.views.preferences.BackgroundImagePreferenceFragment"
         android:title="@string/background_image"
-        app:icon="@drawable/ic_background_image">
-    </Preference>
+        app:fragment="dev.jatzuk.snowwallpaper.views.preferences.BackgroundImagePreferenceFragment"
+        app:icon="@drawable/ic_background_image"
+        app:key="@string/background_image_global_switcher_key" />
 
     <PreferenceCategory
         android:title="@string/preference_general_category"

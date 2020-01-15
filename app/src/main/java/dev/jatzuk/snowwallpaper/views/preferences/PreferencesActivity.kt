@@ -2,23 +2,24 @@ package dev.jatzuk.snowwallpaper.views.preferences
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.util.AppBarTitleViewModel
 import dev.jatzuk.snowwallpaper.views.imagepicker.*
 
 private const val NUM_PAGES = 5
 
-class PreferencesActivity : AppCompatActivity()/*FragmentActivity()*/,
+class PreferencesActivity :
+    AppCompatActivity()/*FragmentActivity()*/,
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback,
-    BackgroundImageFragment.OnListFragmentInteractionListener {
+    BackgroundImagesFragment.OnListFragmentInteractionListener {
 
+    private lateinit var appBarTitleViewModel: AppBarTitleViewModel
     private lateinit var viewPager: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,11 @@ class PreferencesActivity : AppCompatActivity()/*FragmentActivity()*/,
         supportFragmentManager.beginTransaction()
             .replace(R.id.preferences_container, PreferencesFragment())
             .commit()
+
+        appBarTitleViewModel = ViewModelProviders.of(this).get(AppBarTitleViewModel::class.java)
+        appBarTitleViewModel.title.observe(this, Observer {
+            supportActionBar?.title = it
+        })
 
 //        actionBar?.setDisplayHomeAsUpEnabled(true)
 //        setContentView(R.layout.fragment_image_viewer)
@@ -96,11 +102,5 @@ class PreferencesActivity : AppCompatActivity()/*FragmentActivity()*/,
 
     companion object {
         private const val TAG = "PreferencesActivity"
-    }
-
-    class PreferencesFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.preferences_main, rootKey)
-        }
     }
 }
