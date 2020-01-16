@@ -29,7 +29,7 @@ class BackgroundImagesAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = images[position]
-        holder.imageView.setImageResource(item.resourceId)
+        holder.imageView.setImageResource(item.resourceId) // todo
 
         holder.view.apply {
             tag = item

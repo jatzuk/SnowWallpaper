@@ -57,7 +57,9 @@ class BackgroundImagesFragment : Fragment() {
 
     private fun getPredefinedImages() = listOf(
         BackgroundImage(R.drawable.background_image),
-        BackgroundImage(R.drawable.background_image)
+        BackgroundImage(R.drawable.b0),
+        BackgroundImage(R.drawable.b1),
+        BackgroundImage(R.drawable.b2)
     )
 
 //    private fun getBackgroundImageUri(resourceId: Int): String {

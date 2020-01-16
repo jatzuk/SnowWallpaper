@@ -15,16 +15,24 @@ import dev.jatzuk.snowwallpaper.views.imagepicker.viewpager.ImageSlidePageFragme
 class ImageViewerFragment : Fragment() { // view pager2 content home
 
     @DrawableRes
-    private var imageResourceId = -1
+    private var imageId = 0
+    private var position = 0
     private lateinit var viewPager: ViewPager2
+    private val imagesIds = listOf(
+        R.drawable.background_image,
+        R.drawable.b0,
+        R.drawable.b1,
+        R.drawable.b2
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        retainInstance = true
 
-//        arguments?.let {
-//            imageResourceId = it.getInt(EXTRA_IMAGE_VIEW)
-//        } ?: throw RuntimeException("no image provided")
+        arguments?.let {
+            imageId = it.getInt(EXTRA_IMAGE_ID)
+            position = imagesIds.indexOf(imageId)
+        }
     }
 
     override fun onCreateView(
@@ -32,7 +40,11 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_image_viewer /*fragment_screen_slide_page*/, container, false)
+        val v = inflater.inflate(
+            R.layout.fragment_image_viewer /*fragment_screen_slide_page*/,
+            container,
+            false
+        )
 
 //        val webView = v.findViewById<WebView>(R.id.web_view)
 //        webView.apply {
@@ -50,26 +62,35 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
         return v
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewPager.postDelayed({ viewPager.currentItem = position }, 50)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.images)
     }
 
-    inner class ScreenSlidePagerAdapter(f: Fragment): FragmentStateAdapter(f) {
+    inner class ScreenSlidePagerAdapter(f: Fragment) : FragmentStateAdapter(f) {
+
         override fun getItemCount(): Int {
-            return 3
+            return imagesIds.size
         }
 
         override fun createFragment(position: Int): Fragment {
-         return ImageSlidePageFragment.newInstance(position)
+            viewPager.currentItem = imagesIds[position]
+            return ImageSlidePageFragment.newInstance(imagesIds[position])
         }
     }
 
     companion object {
-        const val EXTRA_IMAGE_VIEW = "extraImageView"
+        private const val EXTRA_IMAGE_ID = "extraImageId"
+        private const val EXTRA_IMAGE_POSITION = "extraImagePosition"
 
-        fun newInstance(@DrawableRes resourceId: Int) = ImageViewerFragment().apply {
-            arguments = Bundle().apply { putInt(EXTRA_IMAGE_VIEW, resourceId) }
-        }
+        fun newInstance(@DrawableRes resourceId: Int) =
+            ImageViewerFragment().apply {
+                arguments = Bundle().apply { putInt(EXTRA_IMAGE_ID, resourceId) }
+            }
     }
 }

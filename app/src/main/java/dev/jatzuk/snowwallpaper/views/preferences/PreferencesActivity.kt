@@ -87,7 +87,7 @@ class PreferencesActivity :
         supportFragmentManager.beginTransaction()
             .replace(
                 R.id.preferences_container,
-                ImageViewerFragment.newInstance(R.drawable.background_image)
+                ImageViewerFragment.newInstance(item.resourceId)
             )
             .addToBackStack(null)
             .commit()

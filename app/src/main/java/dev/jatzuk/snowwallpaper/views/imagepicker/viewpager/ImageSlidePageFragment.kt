@@ -3,6 +3,7 @@ package dev.jatzuk.snowwallpaper.views.imagepicker.viewpager
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -11,7 +12,8 @@ import dev.jatzuk.snowwallpaper.util.Logger.logging
 
 class ImageSlidePageFragment : Fragment() {
 
-    private var position = 0
+    @DrawableRes
+    private var imageId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -19,10 +21,10 @@ class ImageSlidePageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        arguments?.let { position = it.getInt(ARG_POSITION) }
+        arguments?.let { imageId = it.getInt(ARG_POSITION) }
         val v = inflater.inflate(R.layout.fragment_screen_slide_page, container, false)
         val imageView = v.findViewById<ImageView>(R.id.image_view)
-        imageView.setImageResource(R.drawable.background_image) // todo(setDrawable)
+        imageView.setImageResource(imageId) // todo(setDrawable)
         return v
     }
 
@@ -64,6 +66,8 @@ class ImageSlidePageFragment : Fragment() {
         private const val TAG = "ImageSlidePageFragment"
         private const val ARG_POSITION = "position"
 
-        fun newInstance(position: Int) = ImageSlidePageFragment()
+        fun newInstance(position: Int) = ImageSlidePageFragment().apply {
+            arguments = Bundle().apply { putInt(ARG_POSITION, position) }
+        }
     }
 }
