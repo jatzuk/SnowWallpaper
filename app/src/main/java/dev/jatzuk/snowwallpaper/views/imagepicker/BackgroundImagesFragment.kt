@@ -1,20 +1,19 @@
 package dev.jatzuk.snowwallpaper.views.imagepicker
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
 
 class BackgroundImagesFragment : Fragment() {
 
-    // TODO: Customize parameters
-    private var columnCount = 1
+    private var columnCount = 2
     private var listener: OnListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,16 +27,29 @@ class BackgroundImagesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_background_image_list, container, false)
+        val view = inflater.inflate(R.layout.background_image_list, container, false)
 
         if (view is RecyclerView) {
             view.apply {
                 setHasFixedSize(true)
-                layoutManager =
-                    if (columnCount < 2) LinearLayoutManager(context)
-                    else GridLayoutManager(context, columnCount)
-
+                layoutManager = GridLayoutManager(context, columnCount)
                 adapter = BackgroundImagesAdapter(getPredefinedImages(), listener)
+                addItemDecoration(object : RecyclerView.ItemDecoration() {
+                    override fun getItemOffsets(
+                        outRect: Rect,
+                        view: View,
+                        parent: RecyclerView,
+                        state: RecyclerView.State
+                    ) {
+                        val spacing = resources.getDimensionPixelSize(R.dimen.grid_layout_spacing)
+                        outRect.apply {
+                            left = spacing
+                            right = spacing
+                            bottom = spacing
+                            top = spacing
+                        }
+                    }
+                })
             }
         }
 
@@ -62,30 +74,8 @@ class BackgroundImagesFragment : Fragment() {
         BackgroundImage(R.drawable.b2)
     )
 
-//    private fun getBackgroundImageUri(resourceId: Int): String {
-//        val uri = Uri.parse(
-//            ContentResolver.SCHEME_ANDROID_RESOURCE +
-//                    "://${resources.getResourcePackageName(resourceId)}" +
-//                    "/${resources.getResourceTypeName(resourceId)}" +
-//                    "/${resources.getResourceEntryName(resourceId)}"
-//        )
-//        return uri.path!!
-//    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson
-     * [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
     interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: BackgroundImage)
+        fun onListFragmentInteraction(image: BackgroundImage)
     }
 
     companion object {

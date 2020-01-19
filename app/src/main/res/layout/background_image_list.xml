@@ -6,7 +6,6 @@
     android:name="dev.jatzuk.snowwallpaper.views.imageviewer.BackgroundImageFragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/images_margin"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
     tools:context=".views.imagepicker.BackgroundImagesFragment"
-    tools:listitem="@layout/fragment_background_image_item" />
+    tools:listitem="@layout/background_image_list_item" />

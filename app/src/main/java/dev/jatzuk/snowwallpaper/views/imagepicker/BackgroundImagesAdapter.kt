@@ -7,7 +7,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.views.imagepicker.BackgroundImagesFragment.OnListFragmentInteractionListener
-import kotlinx.android.synthetic.main.fragment_background_image_item.view.*
+import kotlinx.android.synthetic.main.background_image_list_item.view.*
 
 class BackgroundImagesAdapter(
     private val images: List<BackgroundImage>,
@@ -23,7 +23,7 @@ class BackgroundImagesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_background_image_item, parent, false)
+            .inflate(R.layout.background_image_list_item, parent, false)
         return ViewHolder(view)
     }
 

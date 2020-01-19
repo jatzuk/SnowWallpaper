@@ -2,6 +2,7 @@ package dev.jatzuk.snowwallpaper.views.preferences
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -41,8 +42,13 @@ class BackgroundImagePreferenceFragment :
             getString(R.string.background_image_pick_predefined_image_key)
         )
         predefinedImagePicker?.setOnPreferenceClickListener {
+            val columnCount =
+                if (resources.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
             fragmentManager?.beginTransaction()
-                ?.replace(R.id.preferences_container, BackgroundImagesFragment.newInstance(2))
+                ?.replace(
+                    R.id.preferences_container,
+                    BackgroundImagesFragment.newInstance(columnCount)
+                )
                 ?.addToBackStack(null)
                 ?.commit()
             true
