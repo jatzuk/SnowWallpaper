@@ -28,7 +28,7 @@ abstract class AbstractPreferenceFragment(
         }
     }
 
-    final override fun onResume() {
+    override fun onResume() {
         super.onResume()
         preferenceManager.sharedPreferences
             .registerOnSharedPreferenceChangeListener(preferencesListener)

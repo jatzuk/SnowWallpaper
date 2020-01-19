@@ -2,6 +2,7 @@ package dev.jatzuk.snowwallpaper.views.imagepicker
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.util.ImageProvider
 import dev.jatzuk.snowwallpaper.views.imagepicker.viewpager.ImageSlidePageFragment
 import dev.jatzuk.snowwallpaper.views.imagepicker.viewpager.ZoomOutPageTransformer
 
@@ -70,6 +72,13 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.choose_background_image -> {
+                val result =
+                    ImageProvider.saveBackgroundImage(imagesIds[viewPager.currentItem], context!!)
+                if (!result) Toast.makeText(
+                    context,
+                    "we have some problems storing image",
+                    Toast.LENGTH_SHORT
+                ).show()
                 activity?.supportFragmentManager?.popBackStack(
                     null,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE

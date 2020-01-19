@@ -15,8 +15,8 @@ object Logger {
         lowLevelLog(message, tag + TAG, logLevel)
     }
 
-    fun errorLog(message: String, tag: String = TAG) {
-        lowLevelLog(message, tag, Log.ERROR)
+    fun errorLog(message: String, tag: String = TAG, e: Throwable? = null) {
+        Log.e(tag, message, e)
     }
 
     private fun lowLevelLog(message: String, tag: String, logLevel: Int) {

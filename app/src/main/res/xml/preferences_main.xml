@@ -20,7 +20,6 @@
     <Preference
         android:title="@string/background_image"
         app:fragment="dev.jatzuk.snowwallpaper.views.preferences.BackgroundImagePreferenceFragment"
-        app:icon="@drawable/ic_background_image"
         app:key="@string/background_image_global_switcher_key" />
 
     <PreferenceCategory

@@ -1,8 +1,12 @@
 package dev.jatzuk.snowwallpaper.views.preferences
 
 import android.content.SharedPreferences
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import androidx.core.graphics.drawable.toDrawable
+import androidx.preference.Preference
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.util.ImageProvider
 
 class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     override val preferencesListener =
@@ -14,4 +18,17 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     }
 
     override fun setUp() {} // stub
+
+    override fun onResume() {
+        super.onResume()
+        preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(
+            preferencesListener
+        )
+        val bitmap = ImageProvider.loadThumbnailImage(context!!)
+        val thumbnailIcon = bitmap?.toDrawable(resources) ?: BitmapDrawable(resources, bitmap)
+        val backgroundImage =
+            findPreference<Preference>(getString(R.string.background_image_global_switcher_key))
+        backgroundImage?.icon = thumbnailIcon
+
+    }
 }

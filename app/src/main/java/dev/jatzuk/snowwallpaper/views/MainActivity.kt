@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.PixelFormat
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -21,6 +20,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.preference.PreferenceManager
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.SnowfallRenderer
+import dev.jatzuk.snowwallpaper.util.ImageProvider
 import dev.jatzuk.snowwallpaper.views.preferences.PreferencesActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.PI
@@ -120,10 +120,12 @@ class MainActivity : Activity() {
             glSurfaceView.run {
                 setEGLContextClientVersion(2)
                 if (isBackgroundImageEnabled) {
-                    scaleBitmap()
-                    setEGLConfigChooser(8, 8, 8, 8, 16, 0)
-                    holder.setFormat(PixelFormat.TRANSLUCENT)
-                    setZOrderOnTop(true)
+                    ImageProvider.loadBackgroundImage(this@MainActivity)?.let {
+                        scaleBitmap(it)
+                        setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+                        holder.setFormat(PixelFormat.TRANSLUCENT)
+                        setZOrderOnTop(true)
+                    }
                 }
                 setRenderer(renderer)
             }
@@ -137,8 +139,7 @@ class MainActivity : Activity() {
         setContentView(glSurfaceView)
     }
 
-    private fun scaleBitmap() {
-        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.background_image)
+    private fun scaleBitmap(bitmap: Bitmap) {
         val scaledBitmap = if (bitmap.width >= bitmap.height) {
             Bitmap.createBitmap(
                 bitmap,
