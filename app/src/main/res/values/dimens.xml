@@ -4,7 +4,7 @@
     <dimen name="default_margin">4dp</dimen>
 
     <dimen name="image_height">320dp</dimen>
-    <dimen name="thumbnail_size">24dp</dimen>
+    <dimen name="thumbnail_size">64dp</dimen>
 
     <dimen name="grid_layout_spacing">2dp</dimen>
 </resources>

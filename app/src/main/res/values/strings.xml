@@ -61,4 +61,10 @@
 
     <string name="background_image_pick_custom_image_key">background_image_pick_custom_image_key</string>
 
+    <!--    actions-->
+    <string name="action_choose_image">Choose an Image</string>
+    <string name="image_storage_successed">Image successfully stored</string>
+    <string name="image_storage_failed">We got some troubles storing this image as background</string>
+    <!--    actions-->
+
 </resources>

@@ -3,17 +3,14 @@ package dev.jatzuk.snowwallpaper.views.preferences
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.util.ImageProvider
 import dev.jatzuk.snowwallpaper.views.imagepicker.BackgroundImagesFragment
-import java.io.File
-import java.io.FileOutputStream
 
 @Suppress("unused")
 class BackgroundImagePreferenceFragment :
@@ -53,6 +50,30 @@ class BackgroundImagePreferenceFragment :
                 ?.commit()
             true
         }
+
+        val customImagePicker = findPreference<Preference>(
+            getString(R.string.background_image_pick_custom_image_key)
+        )
+        customImagePicker?.setOnPreferenceClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "image/*"
+            }
+            val pickIntent = Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            ).apply {
+                type = "image/*"
+            }
+            val chooser =
+                Intent.createChooser(intent, getString(R.string.action_choose_image)).apply {
+                    putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(pickIntent))
+                }
+
+            intent.resolveActivity(context?.packageManager!!)?.let {
+                startActivityForResult(chooser, SELECT_CUSTOM_BACKGROUND_IMAGE_REQUEST_CODE)
+            }
+            true
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -63,19 +84,18 @@ class BackgroundImagePreferenceFragment :
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == AppCompatActivity.RESULT_OK) {
             when (requestCode) {
-                SELECT_PREDEFINED_BACKGROUND_IMAGE_REQUEST_CODE -> {
-                    val d = data?.getStringExtra("dummyContent")
-                    Toast.makeText(context, d, Toast.LENGTH_SHORT).show()
-                }
                 SELECT_CUSTOM_BACKGROUND_IMAGE_REQUEST_CODE -> {
                     data?.let {
-                        val inp = context?.contentResolver?.openInputStream(it.data!!)
-                        val bitmap = BitmapFactory.decodeStream(inp)
-                        val name = bitmap.config.name
-                        FileOutputStream(File(name)).use { fos ->
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-                        }
-                    } ?: return
+                        val cr = context?.contentResolver
+                        val stringType = cr?.getType(it.data!!)
+                        if (stringType?.substringBefore("/") == "image")
+                            ImageProvider.saveBackgroundImage(context!!, it.data!!)
+                        else Toast.makeText(
+                            context,
+                            "ff",
+                            Toast.LENGTH_SHORT
+                        ).show()//todo(not image)
+                    }
                 }
             }
         }
@@ -83,7 +103,6 @@ class BackgroundImagePreferenceFragment :
 
     companion object {
         private const val TAG = "BackgroundImagePreferenceFragment"
-        private const val SELECT_PREDEFINED_BACKGROUND_IMAGE_REQUEST_CODE = 1
         private const val SELECT_CUSTOM_BACKGROUND_IMAGE_REQUEST_CODE = 2
     }
 }

@@ -1,5 +1,6 @@
 package dev.jatzuk.snowwallpaper.views.preferences
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +11,9 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.viewpager2.widget.ViewPager2
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.util.AppBarTitleViewModel
-import dev.jatzuk.snowwallpaper.views.imagepicker.*
+import dev.jatzuk.snowwallpaper.views.imagepicker.BackgroundImage
+import dev.jatzuk.snowwallpaper.views.imagepicker.BackgroundImagesFragment
+import dev.jatzuk.snowwallpaper.views.imagepicker.ImageViewerFragment
 
 private const val NUM_PAGES = 5
 
@@ -81,14 +84,9 @@ class PreferencesActivity :
         return true
     }
 
-    override fun onListFragmentInteraction(item: BackgroundImage) {
-//        supportFragmentManager.popBackStack()
-//        Toast.makeText(this, item.toString(), Toast.LENGTH_SHORT).show()
+    override fun onListFragmentInteraction(image: BackgroundImage) {
         supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.preferences_container,
-                ImageViewerFragment.newInstance(item.resourceId)
-            )
+            .replace(R.id.preferences_container, ImageViewerFragment.newInstance(image.resourceId))
             .addToBackStack(null)
             .commit()
     }
@@ -101,6 +99,7 @@ class PreferencesActivity :
     }
 
     companion object {
+        private const val PICK_CUSTOM_IMAGE = 2
         private const val TAG = "PreferencesActivity"
     }
 }

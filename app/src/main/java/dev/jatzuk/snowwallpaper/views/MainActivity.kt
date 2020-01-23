@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.opengl.GLSurfaceView
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
@@ -139,26 +140,27 @@ class MainActivity : Activity() {
         setContentView(glSurfaceView)
     }
 
-    private fun scaleBitmap(bitmap: Bitmap) {
-        val scaledBitmap = if (bitmap.width >= bitmap.height) {
-            Bitmap.createBitmap(
-                bitmap,
-                bitmap.width / 2 - bitmap.height / 2,
-                0,
-                bitmap.height,
-                bitmap.height
-            )
-        } else {
-            Bitmap.createBitmap(
-                bitmap,
-                0,
-                bitmap.height / 2 - bitmap.width / 2,
-                bitmap.width,
-                bitmap.width
-            )
-        }
-
-        glSurfaceView.background = scaledBitmap.toDrawable(resources)
+    private fun scaleBitmap(bitmap: Bitmap) { // todo
+//        val scaledBitmap = if (bitmap.width >= bitmap.height) {
+//            Bitmap.createBitmap(
+//                bitmap,
+//                bitmap.width / 2 - bitmap.height / 2,
+//                0,
+//                bitmap.height,
+//                bitmap.height
+//            )
+//        } else {
+//            Bitmap.createBitmap(
+//                bitmap,
+//                0,
+//                bitmap.height / 2 - bitmap.width / 2,
+//                bitmap.width,
+//                bitmap.width
+//            )
+//        }
+//
+//        glSurfaceView.background = scaledBitmap.toDrawable(resources)
+        glSurfaceView.background = bitmap.toDrawable(resources)
     }
 
     private fun registerSensorListener() {
