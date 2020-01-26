@@ -56,7 +56,7 @@
 
     <string name="foreground_snowflakes_category_key">foreground_snowflakes_category_key</string>
 
-    <string name="background_image_global_switcher_key">background_image_category_key</string>
+    <string name="background_image_global_switcher_key">PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED</string>
     <string name="background_image_pick_predefined_image_key">background_image_pick_predefined_image_key</string>
 
     <string name="background_image_pick_custom_image_key">background_image_pick_custom_image_key</string>
