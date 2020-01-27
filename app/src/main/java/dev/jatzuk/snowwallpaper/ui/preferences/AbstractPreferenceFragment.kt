@@ -1,51 +1,41 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.XmlRes
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
-import dev.jatzuk.snowwallpaper.data.preferences.SharedPreferenceRepository
+import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
 abstract class AbstractPreferenceFragment(
     @XmlRes private val xmlRes: Int
-) : PreferenceFragmentCompat(), LifecycleObserver {
+) : PreferenceFragmentCompat() {
 
-    protected abstract val preferencesListener: SharedPreferences.OnSharedPreferenceChangeListener
     protected lateinit var appBarTitleViewModel: AppBarTitleViewModel
-    protected lateinit var preferenceRepository: SharedPreferenceRepository
 
     final override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(xmlRes, rootKey)
-        retainInstance = true
-        setUp()
+    }
+
+    final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        attachObserver()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        logging("onActivityCreated()")
         activity?.run {
             appBarTitleViewModel = ViewModelProviders.of(this).get(AppBarTitleViewModel::class.java)
-            preferenceRepository = SharedPreferenceRepository.getInstance(context!!)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        preferenceManager.sharedPreferences
-            .registerOnSharedPreferenceChangeListener(preferencesListener)
-    }
-
-    final override fun onPause() {
-        super.onPause()
-        preferenceManager.sharedPreferences
-            .unregisterOnSharedPreferenceChangeListener(preferencesListener)
+        setUp()
     }
 
     protected abstract fun setUp()
+
+    protected abstract fun attachObserver()
 
     protected fun switchDependentPreferences(state: Boolean, offset: Int) {
         repeat(preferenceScreen.preferenceCount - offset) { i ->

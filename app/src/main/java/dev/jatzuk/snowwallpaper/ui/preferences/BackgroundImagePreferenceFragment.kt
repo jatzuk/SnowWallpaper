@@ -1,7 +1,6 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Toast
@@ -10,33 +9,13 @@ import androidx.lifecycle.Observer
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.data.preferences.SharedPreferenceRepository
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.imagepicker.BackgroundImagesFragment
+import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
 @Suppress("unused")
 class BackgroundImagePreferenceFragment :
     AbstractPreferenceFragment(R.xml.preferences_background_image) {
-
-    override val preferencesListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            val globalSwitcher = SharedPreferenceRepository.PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED
-
-            when (key) {
-                globalSwitcher -> {
-//                    val isEnabled = sharedPreferences.getBoolean(globalSwitcher, true)
-//                    sharedPreferences.edit().putBoolean(globalSwitcher, isEnabled).apply()
-//                    switchDependentPreferences(isEnabled, 1)
-
-                    preferenceRepository.run {
-                        getBackgroundImageSharedPreference().observe(viewLifecycleOwner, Observer {
-//                            setBackgroundImageEnabled(it)
-                            switchDependentPreferences(it, 1)
-                        })
-                    }
-                }
-            }
-        }
 
     override fun setUp() {
         val isEnabled = findPreference<SwitchPreferenceCompat>(
@@ -81,6 +60,11 @@ class BackgroundImagePreferenceFragment :
             }
             true
         }
+    }
+
+    override fun attachObserver() {
+        PreferenceRepository.getInstance(context!!).backgroundImagePreference
+            .observe(viewLifecycleOwner, Observer { switchDependentPreferences(it, 1) })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

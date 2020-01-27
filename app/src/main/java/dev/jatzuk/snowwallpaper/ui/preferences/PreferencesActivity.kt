@@ -9,10 +9,13 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.viewpager2.widget.ViewPager2
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceLiveData
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 import dev.jatzuk.snowwallpaper.ui.imagepicker.BackgroundImage
 import dev.jatzuk.snowwallpaper.ui.imagepicker.BackgroundImagesFragment
 import dev.jatzuk.snowwallpaper.ui.imagepicker.ImageViewerFragment
+import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 
 class PreferencesActivity :
     AppCompatActivity()/*FragmentActivity()*/,

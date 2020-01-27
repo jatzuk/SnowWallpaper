@@ -15,8 +15,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toDrawable
+import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.data.preferences.SharedPreferenceRepository
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.ui.preferences.PreferencesActivity
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var renderer: SnowfallRenderer
     private var isRendererSet = false
     private var orientation = Configuration.ORIENTATION_PORTRAIT
-//    private var isBackgroundImageEnabled = true
+    private var isBackgroundImageEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +80,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        PreferenceRepository.getInstance(this).backgroundImagePreference.observe(this, Observer {
+            isBackgroundImageEnabled = it
+        })
     }
 
     override fun onPause() {
@@ -113,9 +118,6 @@ class MainActivity : AppCompatActivity() {
         val isSupportingES2 = configurationInfo.reqGlEsVersion >= 0x20000
 
         if (isSupportingES2) {
-            val isBackgroundImageEnabled =
-                SharedPreferenceRepository.getInstance(this).isBackgroundImageEnabled()
-
             glSurfaceView.run {
                 setEGLContextClientVersion(2)
                 if (isBackgroundImageEnabled) {

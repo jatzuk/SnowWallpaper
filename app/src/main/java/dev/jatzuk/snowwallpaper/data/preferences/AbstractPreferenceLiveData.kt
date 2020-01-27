@@ -5,11 +5,11 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
 
-abstract class AbstractSharedPreferenceLiveData<T>(
+abstract class AbstractPreferenceLiveData<T : Any>(
     context: Context,
     private val key: String,
     private val defaultValue: T
-) : LiveData<T>() {
+) : LiveData<T>() , MainPreference {
 
     protected val sharedPreferences: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context)
@@ -21,15 +21,17 @@ abstract class AbstractSharedPreferenceLiveData<T>(
 
     abstract fun getValue(key: String, defaultValue: T): T
 
-    protected fun putValue(key: String, value: T) {
-        when(value) {
+    protected fun putValue(/*key: String, */value: T) {
+        when (value) {
             is Boolean -> sharedPreferences.edit().putBoolean(key, value).apply()
             is Int -> sharedPreferences.edit().putInt(key, value).apply()
+            else -> throw IllegalArgumentException("illegal argument value of type ${value::class.java}")
         }
     }
 
     override fun onActive() {
         super.onActive()
+        sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceListener)
         value = getValue(key, defaultValue)
     }
 
