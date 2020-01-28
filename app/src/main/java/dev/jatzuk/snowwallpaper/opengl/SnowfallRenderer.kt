@@ -8,6 +8,7 @@ import android.opengl.Matrix.*
 import android.os.SystemClock
 import androidx.preference.PreferenceManager
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.objects.SnowfallBackground
 import dev.jatzuk.snowwallpaper.opengl.programs.SnowfallProgram
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
@@ -32,7 +33,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     private val isSnowfallBackgroundProgramUsed =
         PreferenceManager.getDefaultSharedPreferences(context)
-            .getBoolean(context.getString(R.string.background_snowflakes_global_switcher_key), true)
+            .getBoolean(PreferenceRepository.PREF_KEY_IS_SNOWFALL_ENABLED, false)
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
@@ -59,9 +60,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
             // we need to initialize background after getting right aspect ratio from above
             snowfallBackground = SnowfallBackground(snowfallProgram, context)
         } else {
-            logging("snowfall program is not using",
-                TAG
-            )
+            logging("snowfall program is not using", TAG)
         }
 
         frustumM(projectionMatrix, 0, ratio, -ratio, -1f, 1f, 3f, 7f)
@@ -84,7 +83,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         }
     }
 
-    private fun limitFrameRate(@Suppress("SameParameterValue") framesPerSecond: Int) {
+    private fun limitFrameRate(@Suppress("SameParameterValue") framesPerSecond: Int) { // todo
         val elapsedMs = SystemClock.elapsedRealtime() - frameStartMs
         val expectedMs = 1000 / framesPerSecond
         val sleepTime = expectedMs - elapsedMs
@@ -98,9 +97,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         val elapsedSec = (elapsedMs - startTimeMs) / 1000
 
         if (elapsedSec >= 1) {
-            logging("FPS: ${frames / elapsedSec}",
-                TAG
-            )
+            logging("FPS: ${frames / elapsedSec}", TAG)
             startTimeMs = SystemClock.elapsedRealtime()
             frames = 0
         }

@@ -18,7 +18,14 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
         appBarTitleViewModel.title.value = getString(R.string.preferences)
     }
 
-    override fun setUp() {} // stub
+    override fun setUp() {
+        val bitmap = ImageProvider.loadThumbnailImage(context!!)
+        val thumbnailIcon = bitmap?.toDrawable(resources) ?: BitmapDrawable(resources, bitmap)
+        val backgroundImage =
+            findPreference<Preference>(getString(R.string.background_image_global_switcher_key))
+        backgroundImage?.icon = thumbnailIcon
+
+    } // stub
 
     override fun attachObserver() {
         PreferenceRepository.getInstance(context!!).backgroundImagePreference.observe(
@@ -26,12 +33,13 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
             Observer { isBackgroundImageEnabled = it })
     }
 
-    override fun onResume() {
-        super.onResume()
-        val bitmap = ImageProvider.loadThumbnailImage(context!!)
-        val thumbnailIcon = bitmap?.toDrawable(resources) ?: BitmapDrawable(resources, bitmap)
-        val backgroundImage =
-            findPreference<Preference>(getString(R.string.background_image_global_switcher_key))
-        backgroundImage?.icon = thumbnailIcon
-    }
+//    override fun onResume() {
+//        super.onResume()
+//
+//        val bitmap = ImageProvider.loadThumbnailImage(context!!)
+//        val thumbnailIcon = bitmap?.toDrawable(resources) ?: BitmapDrawable(resources, bitmap)
+//        val backgroundImage =
+//            findPreference<Preference>(getString(R.string.background_image_global_switcher_key))
+//        backgroundImage?.icon = thumbnailIcon
+//    }
 }

@@ -9,7 +9,7 @@ abstract class AbstractPreferenceLiveData<T : Any>(
     context: Context,
     private val key: String,
     private val defaultValue: T
-) : LiveData<T>() , MainPreference {
+) : LiveData<T>() {
 
     protected val sharedPreferences: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context)

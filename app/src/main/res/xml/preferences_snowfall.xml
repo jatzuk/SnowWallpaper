@@ -5,14 +5,14 @@
         android:defaultValue="true"
         android:summary="@string/background_snowflakes_switcher_summary"
         android:title="@string/preference_switcher_enabled"
-        app:key="@string/background_snowflakes_global_switcher_key" />
+        app:key="PREF_KEY_IS_SNOWFALL_ENABLED" />
 
     <SeekBarPreference
         android:defaultValue="80"
         android:max="200"
         android:summary="@string/background_snowflakes_limit_summary"
         android:title="@string/snowflakes_limit"
-        app:key="@string/background_snowflakes_limit_key"
+        app:key="PREF_KEY_SNOWFALL_LIMIT"
         app:min="1"
         app:showSeekBarValue="true" />
 
@@ -20,31 +20,29 @@
         android:defaultValue="3"
         android:max="10"
         android:title="@string/snowflake_velocity_factor"
-        app:key="@string/background_snowflakes_velocity_factor_key"
+        app:key="PREF_KEY_SNOWFALL_VELOCITY_FACTOR"
         app:min="1"
-        app:seekBarIncrement="1"
         app:showSeekBarValue="true" />
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:summary="@string/background_snowflakes_randomize_radius_summary"
         android:title="@string/background_snowflakes_randomize_radius"
-        app:key="@string/background_snowflakes_random_radius_key" />
+        app:key="PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED" />
 
     <SeekBarPreference
         android:defaultValue="5"
-        android:max="14"
+        android:max="15"
         android:title="@string/snowflake_min_radius"
-        app:key="@string/background_snowflakes_min_radius_key"
+        app:key="PREF_KEY_BACKGROUND_SNOWFLAKES_MIN_RADIUS"
         app:min="1"
-        app:seekBarIncrement="10"
         app:showSeekBarValue="true" />
 
     <SeekBarPreference
         android:defaultValue="30"
         android:max="50"
         android:title="@string/snowflake_max_radius"
-        app:key="@string/background_snowflakes_max_radius_key"
+        app:key="PREF_KEY_BACKGROUND_SNOWFLAKES_MAX_RADIUS"
         app:min="15"
         app:seekBarIncrement="10"
         app:showSeekBarValue="true" />

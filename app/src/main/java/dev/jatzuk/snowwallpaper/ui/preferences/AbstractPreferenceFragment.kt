@@ -19,18 +19,17 @@ abstract class AbstractPreferenceFragment(
         setPreferencesFromResource(xmlRes, rootKey)
     }
 
-    final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        attachObserver()
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        logging("onActivityCreated()")
         activity?.run {
             appBarTitleViewModel = ViewModelProviders.of(this).get(AppBarTitleViewModel::class.java)
         }
         setUp()
+    }
+
+    final override fun onResume() {
+        super.onResume()
+        attachObserver()
     }
 
     protected abstract fun setUp()

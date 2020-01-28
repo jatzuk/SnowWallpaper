@@ -5,7 +5,7 @@
         android:defaultValue="true"
         android:summary="@string/background_image_switcher_summary"
         android:title="@string/preference_switcher_enabled"
-        app:key="@string/background_image_global_switcher_key" />
+        app:key="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED" />
 
     <Preference
         android:key="@string/background_image_pick_predefined_image_key"

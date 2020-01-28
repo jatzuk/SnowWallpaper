@@ -43,9 +43,7 @@ class BackgroundImagePreferenceFragment :
             getString(R.string.background_image_pick_custom_image_key)
         )
         customImagePicker?.setOnPreferenceClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "image/*"
-            }
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
             val pickIntent = Intent(
                 Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
