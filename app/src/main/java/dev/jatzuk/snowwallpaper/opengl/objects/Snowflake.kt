@@ -1,11 +1,10 @@
 package dev.jatzuk.snowwallpaper.opengl.objects
 
 import android.content.Context
-import androidx.preference.PreferenceManager
-import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.MainActivity.Companion.ratio
 import dev.jatzuk.snowwallpaper.ui.MainActivity.Companion.roll
+import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -13,16 +12,15 @@ import kotlin.random.Random
 
 class Snowflake(context: Context) {
 
+    private val preferenceRepository = PreferenceRepository.getInstance(context)
     var x = (Random.nextFloat() * 2f - ratio) * ratio
     var y = Random.nextFloat() + 1f
-    private var isRadiusUnique = PreferenceManager.getDefaultSharedPreferences(context)
-        .getBoolean(context.getString(R.string.background_snowflakes_random_radius_key), true)
+    private var isRadiusUnique = preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
     private val minRadius: Float
     private val maxRadius: Float
     var radius: Float
     private var angle = assignDefaultAngle()
-    private var velocityFactor = PreferenceManager.getDefaultSharedPreferences(context)
-        .getInt(context.getString(R.string.background_snowflakes_velocity_factor_key), 2) * 0.1f
+    private var velocityFactor = preferenceRepository.getSnowfallVelocityFactor() * 0.1f
     private val incrementLower = velocityFactor * 0.04f
     private val incrementUpper = incrementLower * 1.5f
     private var velocity = Random.nextFloat(incrementLower, incrementUpper)
@@ -31,14 +29,10 @@ class Snowflake(context: Context) {
 
     init {
         if (isRadiusUnique) {
-            minRadius = PreferenceManager.getDefaultSharedPreferences(context)
-                .getInt(context.getString(R.string.background_snowflakes_min_radius_key), 5)
-                .toFloat()
-            maxRadius = PreferenceManager.getDefaultSharedPreferences(context)
-                .getInt(context.getString(R.string.background_snowflakes_max_radius_key), 30)
-                .toFloat()
+            minRadius = preferenceRepository.getSnowfallMinRadius()
+            maxRadius = preferenceRepository.getSnowfallMaxRadius()
         } else {
-            minRadius = 1f
+            minRadius = 8f
             maxRadius = 30f
         }
         logging("Unique radius set to: $isRadiusUnique", TAG)

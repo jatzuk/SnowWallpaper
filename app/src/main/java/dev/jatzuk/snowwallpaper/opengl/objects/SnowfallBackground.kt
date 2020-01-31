@@ -5,14 +5,13 @@ import android.opengl.GLES20.GL_POINTS
 import android.opengl.GLES20.glDrawArrays
 import androidx.preference.PreferenceManager
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.data.VertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.SnowfallProgram
 
 class SnowfallBackground(private val snowfallProgram: SnowfallProgram, context: Context) {
 
-    private val snowflakesLimit = PreferenceManager.getDefaultSharedPreferences(context).getInt(
-        context.getString(R.string.background_snowflakes_limit_key), 80
-    )
+    private val snowflakesLimit = PreferenceRepository.getInstance(context).getSnowfallLimit()
     private val snowflakes = Array(snowflakesLimit) { Snowflake(context) }
     private val vertexArray = VertexArray(snowflakes)
 
@@ -37,7 +36,7 @@ class SnowfallBackground(private val snowfallProgram: SnowfallProgram, context: 
     }
 
     companion object {
-        private val TAG = SnowfallBackground::class.java.simpleName
+        private const val TAG = "SnowfallBackground"
         const val POSITION_COMPONENT_COUNT = 2
         const val TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT
         private const val STRIDE = 0

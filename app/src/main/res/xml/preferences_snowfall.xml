@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:background="@drawable/background_image"
         android:summary="@string/background_snowflakes_switcher_summary"
         android:title="@string/preference_switcher_enabled"
         app:key="PREF_KEY_IS_SNOWFALL_ENABLED" />
@@ -31,10 +32,10 @@
         app:key="PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED" />
 
     <SeekBarPreference
-        android:defaultValue="5"
+        android:defaultValue="8"
         android:max="15"
         android:title="@string/snowflake_min_radius"
-        app:key="PREF_KEY_BACKGROUND_SNOWFLAKES_MIN_RADIUS"
+        app:key="PREF_KEY_SNOWFALL_MIN_RADIUS"
         app:min="1"
         app:showSeekBarValue="true" />
 
@@ -42,7 +43,7 @@
         android:defaultValue="30"
         android:max="50"
         android:title="@string/snowflake_max_radius"
-        app:key="PREF_KEY_BACKGROUND_SNOWFLAKES_MAX_RADIUS"
+        app:key="PREF_KEY_SNOWFALL_MAX_RADIUS"
         app:min="15"
         app:seekBarIncrement="10"
         app:showSeekBarValue="true" />

@@ -19,6 +19,8 @@ import javax.microedition.khronos.opengles.GL10
 
 class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
+    private val preferenceRepository = PreferenceRepository.getInstance(context)
+
     private val viewMatrix = FloatArray(16)
     private val projectionMatrix = FloatArray(16)
     private val viewProjectionMatrix = FloatArray(16)
@@ -28,12 +30,11 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private var textureId = 0
     private var frameStartMs = 0L
 
+    private var frameLimit = preferenceRepository.getRendererFrameLimit()
     private var startTimeMs = 0L
     private var frames = 0
 
-    private val isSnowfallBackgroundProgramUsed =
-        PreferenceManager.getDefaultSharedPreferences(context)
-            .getBoolean(PreferenceRepository.PREF_KEY_IS_SNOWFALL_ENABLED, false)
+    private val isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
@@ -44,10 +45,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 //        glEnable(GL_DEPTH_TEST)
 
         snowfallProgram = SnowfallProgram(context)
-        textureId = loadTexture(
-            context,
-            R.drawable.background_snowflake_texture
-        )
+        textureId = loadTexture(context, R.drawable.background_snowflake_texture)
 
         snowfallProgram.useProgram()
     }
@@ -69,7 +67,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        limitFrameRate(FRAME_LIMIT)
+        limitFrameRate()
         logFrameRate()
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
@@ -83,9 +81,9 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         }
     }
 
-    private fun limitFrameRate(@Suppress("SameParameterValue") framesPerSecond: Int) { // todo
+    private fun limitFrameRate() {
         val elapsedMs = SystemClock.elapsedRealtime() - frameStartMs
-        val expectedMs = 1000 / framesPerSecond
+        val expectedMs = 1000 / frameLimit
         val sleepTime = expectedMs - elapsedMs
 
         if (sleepTime > 0) SystemClock.sleep(sleepTime)
@@ -106,7 +104,6 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     }
 
     companion object {
-        private val TAG = SnowfallRenderer::class.java.simpleName
-        private const val FRAME_LIMIT = 30 //todo(load from prefs)
+        private const val TAG = "SnowfallRenderer"
     }
 }

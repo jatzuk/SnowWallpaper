@@ -1,5 +1,6 @@
 package dev.jatzuk.snowwallpaper.ui
 
+import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
@@ -12,20 +13,20 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.opengl.GLSurfaceView
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toDrawable
-import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.ui.preferences.PreferencesActivity
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.PI
 import kotlin.math.atan2
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     private lateinit var sensorManager: SensorManager
     private lateinit var sensorEventListener: SensorEventListener
@@ -33,16 +34,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var renderer: SnowfallRenderer
     private var isRendererSet = false
     private var orientation = Configuration.ORIENTATION_PORTRAIT
-    private var isBackgroundImageEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-//        requestWindowFeature(Window.FEATURE_NO_TITLE)
-//        window.setFlags(
-//            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//            WindowManager.LayoutParams.FLAG_FULLSCREEN
-//        )
         setContentView(R.layout.activity_main)
 
 //        button_set_wallpaper.setOnClickListener {
@@ -80,10 +74,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        PreferenceRepository.getInstance(this).backgroundImagePreference.observe(this, Observer {
-            isBackgroundImageEnabled = it
-        })
     }
 
     override fun onPause() {
@@ -100,6 +90,7 @@ class MainActivity : AppCompatActivity() {
             registerSensorListener()
             glSurfaceView.onResume()
         }
+        listPrefs()
     }
 
     private fun calculateRoll(x: Float, y: Float) = (atan2(x, y) / PI / 180).toFloat()
@@ -117,7 +108,14 @@ class MainActivity : AppCompatActivity() {
         val configurationInfo = activityManager.deviceConfigurationInfo
         val isSupportingES2 = configurationInfo.reqGlEsVersion >= 0x20000
 
+        val isBackgroundImageEnabled =
+            PreferenceRepository.getInstance(this).getIsBackgroundImageEnabled()
+
         if (isSupportingES2) {
+            window.setFlags( // todo remove after live wallpaper impl
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
             glSurfaceView.run {
                 setEGLContextClientVersion(2)
                 if (isBackgroundImageEnabled) {
@@ -128,9 +126,9 @@ class MainActivity : AppCompatActivity() {
                         setZOrderOnTop(true)
                     }
                 }
+                isRendererSet = true
                 setRenderer(renderer)
             }
-            isRendererSet = true
         } else Toast.makeText(
             this,
             "This device does not support OpenGL ES 2.0",
@@ -170,9 +168,23 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private fun listPrefs() {
+        PreferenceRepository.getInstance(this).run {
+            listOf(
+                getIsSnowfallEnabled(),
+                getSnowfallLimit(),
+                getSnowfallVelocityFactor(),
+                getIsSnowfallUniqueRadiusEnabled(),
+                getSnowfallMinRadius(),
+                getSnowfallMaxRadius(),
+                getIsBackgroundImageEnabled()
+            ).forEach { logging("$it") }
+        }
+    }
+
     companion object {
         private const val SENSOR_INFO_TAG = "SENSOR_INFO_TAG"
-        private val TAG = MainActivity::class.java.simpleName
+        private const val TAG = "MainActivity"
 
         var ratio = 0f
         var roll = 0f
