@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AbstractBackgroundPreference">
+        <attr name="preferenceTitle" format="string" />
+        <attr name="preferenceSummary" format="string" />
+        <attr name="preferenceDefaultValue" format="string|boolean" />
+    </declare-styleable>
+</resources>

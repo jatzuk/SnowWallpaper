@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--    <style name="PreferenceTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">-->
+    <!--        <item name="android:background">#FFEB3B</item>-->
+    <!--    </style>-->
+
+    <style name="PreferenceTheme" parent="@style/AppTheme">
+        <item name="android:background">#673AB7</item>
+    </style>
+
 </resources>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <SwitchPreferenceCompat
-        android:defaultValue="true"
         android:background="@drawable/background_image"
+        android:defaultValue="true"
         android:summary="@string/background_snowflakes_switcher_summary"
         android:title="@string/preference_switcher_enabled"
         app:key="PREF_KEY_IS_SNOWFALL_ENABLED" />
@@ -13,6 +14,7 @@
         android:max="200"
         android:summary="@string/background_snowflakes_limit_summary"
         android:title="@string/snowflakes_limit"
+        app:iconSpaceReserved="false"
         app:key="PREF_KEY_SNOWFALL_LIMIT"
         app:min="1"
         app:showSeekBarValue="true" />
@@ -47,4 +49,14 @@
         app:min="15"
         app:seekBarIncrement="10"
         app:showSeekBarValue="true" />
+
+    <dev.jatzuk.snowwallpaper.ui.preferences.CustomSeekBarPreference
+        app:preferenceDefaultValue="50"
+        app:preferenceSummary="summary from xml"
+        app:preferenceTitle="title from xml" />
+
+    <dev.jatzuk.snowwallpaper.ui.preferences.CustomSwitchPreference
+        app:preferenceDefaultValue="true"
+        app:preferenceSummary="another summary from xml"
+        app:preferenceTitle="another title from xml" />
 </PreferenceScreen>
