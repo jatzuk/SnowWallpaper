@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
 import androidx.annotation.ColorInt
 import androidx.annotation.XmlRes
 import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
 abstract class AbstractPreferenceFragment(
@@ -65,7 +65,7 @@ abstract class AbstractPreferenceFragment(
         repeat(preferenceScreen.preferenceCount - offset) { i ->
             val preference = preferenceScreen.getPreference(i + offset)
             preference.isEnabled = state
-            if (state && preference is SwitchPreferenceCompat && !preference.isChecked) return
+            if (state && preference is CustomSwitchPreference && !preference.isChecked) return
         }
     }
 }

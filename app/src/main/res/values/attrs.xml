@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="AbstractBackgroundPreference">
+    <declare-styleable name="AbstractPreference">
         <attr name="preferenceTitle" format="string" />
         <attr name="preferenceSummary" format="string" />
         <attr name="preferenceDefaultValue" format="string|boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomSeekBarPreference">
+        <attr name="preferenceMin" format="integer" />
+        <attr name="preferenceMax" format="integer" />
     </declare-styleable>
 </resources>

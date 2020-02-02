@@ -1,19 +1,14 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.content.SharedPreferences
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
-import androidx.core.graphics.drawable.toDrawable
-import androidx.preference.SwitchPreferenceCompat
-import androidx.recyclerview.widget.DividerItemDecoration
+import android.widget.ListView
 import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
@@ -39,13 +34,13 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
         }
 
     override fun setUp() {
-        val isCategoryEnabled = findPreference<SwitchPreferenceCompat>(
+        val isCategoryEnabled = findPreference<CustomSwitchPreference>(
             PreferenceRepository.PREF_KEY_IS_SNOWFALL_ENABLED
         )!!.isChecked
         switchDependentPreferences(isCategoryEnabled, 1)
 
         if (isCategoryEnabled) {
-            val isUniqueRadiusChecked = findPreference<SwitchPreferenceCompat>(
+            val isUniqueRadiusChecked = findPreference<CustomSwitchPreference>(
                 PreferenceRepository.PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED
             )!!.isChecked
             switchDependentPreferences(isUniqueRadiusChecked, 4)
@@ -69,7 +64,7 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
             .unregisterOnSharedPreferenceChangeListener(preferencesListener)
     }
 
-//    override fun provideBackground(): Drawable? =
+    override fun provideBackground(): Drawable? = null
 //        BitmapFactory.decodeResource(resources, R.drawable.b2).toDrawable(resources)
 
     override fun provideBackgroundColor(): Int = Color.CYAN
@@ -80,7 +75,7 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
         savedInstanceState: Bundle?
     ): RecyclerView {
         val recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState)
-        recyclerView.addItemDecoration(Divider(50))
+        recyclerView.addItemDecoration(Divider(60)) // todo from dimens
         return recyclerView
     }
 
@@ -93,7 +88,8 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
         ) {
 //            if (parent.getChildAdapterPosition(view) != parent.adapter!!.itemCount - 1)
             outRect.apply {
-                bottom = spaceHeight
+                top = spaceHeight / 2
+//                bottom = spaceHeight / 2
                 left = spaceHeight / 2
                 right = spaceHeight / 2
             }
