@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <dev.jatzuk.snowwallpaper.ui.preferences.CustomSwitchPreference
         app:key="PREF_KEY_IS_SNOWFALL_ENABLED"
@@ -8,6 +9,7 @@
         app:preferenceTitle="@string/preference_switcher_enabled" />
 
     <dev.jatzuk.snowwallpaper.ui.preferences.CustomSeekBarPreference
+        android:dependency="PREF_KEY_IS_SNOWFALL_ENABLED"
         app:key="PREF_KEY_SNOWFALL_LIMIT"
         app:preferenceDefaultValue="80"
         app:preferenceMax="200"
@@ -16,6 +18,7 @@
         app:preferenceTitle="@string/snowflakes_limit" />
 
     <dev.jatzuk.snowwallpaper.ui.preferences.CustomSeekBarPreference
+        android:dependency="PREF_KEY_IS_SNOWFALL_ENABLED"
         app:key="PREF_KEY_SNOWFALL_VELOCITY_FACTOR"
         app:preferenceDefaultValue="3"
         app:preferenceMax="10"
@@ -23,12 +26,14 @@
         app:preferenceTitle="@string/snowflake_velocity_factor" />
 
     <dev.jatzuk.snowwallpaper.ui.preferences.CustomSwitchPreference
+        android:dependency="PREF_KEY_IS_SNOWFALL_ENABLED"
         app:key="PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED"
         app:preferenceDefaultValue="true"
         app:preferenceSummary="@string/background_snowflakes_randomize_radius_summary"
         app:preferenceTitle="@string/background_snowflakes_randomize_radius" />
 
     <dev.jatzuk.snowwallpaper.ui.preferences.CustomSeekBarPreference
+        android:dependency="PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED"
         app:key="PREF_KEY_SNOWFALL_MIN_RADIUS"
         app:preferenceDefaultValue="8"
         app:preferenceMax="15"
@@ -36,6 +41,7 @@
         app:preferenceTitle="@string/snowflake_min_radius" />
 
     <dev.jatzuk.snowwallpaper.ui.preferences.CustomSeekBarPreference
+        android:dependency="PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED"
         app:key="PREF_KEY_SNOWFALL_MAX_RADIUS"
         app:preferenceDefaultValue="30"
         app:preferenceMax="50"
@@ -43,3 +49,4 @@
         app:preferenceTitle="@string/snowflake_max_radius" />
 
 </PreferenceScreen>
+

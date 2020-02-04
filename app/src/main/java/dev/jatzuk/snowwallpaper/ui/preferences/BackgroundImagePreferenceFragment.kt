@@ -18,10 +18,10 @@ class BackgroundImagePreferenceFragment :
     AbstractPreferenceFragment(R.xml.preferences_background_image) {
 
     override fun setUp() {
-        val isEnabled = findPreference<SwitchPreferenceCompat>(
-            getString(R.string.background_image_global_switcher_key)
-        )!!.isChecked
-        switchDependentPreferences(isEnabled, 1)
+//        val isEnabled = findPreference<SwitchPreferenceCompat>(
+//            getString(R.string.background_image_global_switcher_key)
+//        )!!.isChecked
+//        switchDependentPreferences(isEnabled, 1)
 
         val predefinedImagePicker = findPreference<Preference>(
             getString(R.string.background_image_pick_predefined_image_key)
@@ -61,8 +61,9 @@ class BackgroundImagePreferenceFragment :
     }
 
     override fun attachObserver() {
-        PreferenceRepository.getInstance(context!!).backgroundImagePreference
-            .observe(viewLifecycleOwner, Observer { switchDependentPreferences(it, 1) })
+//        done with xml
+//        PreferenceRepository.getInstance(context!!).backgroundImagePreference
+//            .observe(viewLifecycleOwner, Observer { switchDependentPreferences(it, 1) })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

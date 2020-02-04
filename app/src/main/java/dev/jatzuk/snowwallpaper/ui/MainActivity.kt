@@ -171,13 +171,14 @@ class MainActivity : Activity() {
     private fun listPrefs() {
         PreferenceRepository.getInstance(this).run {
             listOf(
-                getIsSnowfallEnabled(),
-                getSnowfallLimit(),
-                getSnowfallVelocityFactor(),
-                getIsSnowfallUniqueRadiusEnabled(),
-                getSnowfallMinRadius(),
-                getSnowfallMaxRadius(),
-                getIsBackgroundImageEnabled()
+                getIsSnowfallEnabled()
+//                ,
+//                getSnowfallLimit(),
+//                getSnowfallVelocityFactor(),
+//                getIsSnowfallUniqueRadiusEnabled(),
+//                getSnowfallMinRadius(),
+//                getSnowfallMaxRadius(),
+//                getIsBackgroundImageEnabled()
             ).forEach { logging("$it") }
         }
     }

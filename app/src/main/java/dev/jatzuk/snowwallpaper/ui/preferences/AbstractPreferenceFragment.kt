@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
 import androidx.annotation.ColorInt
 import androidx.annotation.XmlRes
 import androidx.lifecycle.ViewModelProviders
@@ -60,12 +59,4 @@ abstract class AbstractPreferenceFragment(
     protected open fun provideBackgroundColor(): Int = Color.TRANSPARENT
 
     protected open fun provideBackground(): Drawable? = null
-
-    protected fun switchDependentPreferences(state: Boolean, offset: Int) {
-        repeat(preferenceScreen.preferenceCount - offset) { i ->
-            val preference = preferenceScreen.getPreference(i + offset)
-            preference.isEnabled = state
-            if (state && preference is CustomSwitchPreference && !preference.isChecked) return
-        }
-    }
 }

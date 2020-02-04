@@ -1,37 +1,37 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.SwitchCompat
-import androidx.preference.Preference
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 
 class CustomSwitchPreference(
     context: Context,
     attributeSet: AttributeSet?
 ) : AbstractPreference(context, attributeSet) {
 
-    override val clickListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            logging("onClick registered inside switch - key: $key")
-        }
-
-    var isChecked = false
-        private set // todo private set ?
-
     override fun setupPreference(view: View) {
         view.run {
-
-            isChecked = defaultValuePreference?.toBoolean() ?: false
-
-            val switcher = findViewById<SwitchCompat>(R.id.switchWidget)
-            switcher.isChecked = isChecked
-            switcher.setOnClickListener {
-                (it as SwitchCompat)
-                logging("current switcher value: ${it.isChecked}", TAG)
+            findViewById<SwitchCompat>(R.id.switchWidget).run {
+                isChecked = when (key) {
+                    PreferenceRepository.PREF_KEY_IS_SNOWFALL_ENABLED -> {
+                        preferenceRepository.getIsSnowfallEnabled()
+                    }
+                    PreferenceRepository.PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED -> {
+                        preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
+                    }
+                    PreferenceRepository.PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED -> {
+                        preferenceRepository.getIsBackgroundImageEnabled()
+                    }
+                    else -> true
+                }
+                setOnClickListener {
+                    notifyDependencyChange(shouldDisableDependents())
+                    sharedPreferences.edit().putBoolean(key, isChecked).apply()
+                    notifyDependencyChange(shouldDisableDependents())
+                }
             }
         }
     }

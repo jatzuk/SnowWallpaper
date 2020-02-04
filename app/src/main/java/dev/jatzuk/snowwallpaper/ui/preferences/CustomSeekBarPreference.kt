@@ -1,29 +1,22 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.AttributeSet
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 
 class CustomSeekBarPreference(
     context: Context,
     attributeSet: AttributeSet?
 ) : AbstractPreference(context, attributeSet) {
 
-    override val clickListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            logging("onClick registered inside seekBar - key: $key")
-        }
-
     private lateinit var progressTextView: TextView
     private val seekBarMinValue =
-        attributeSet?.getAttributeValue(NAMESPACE, "preferenceMin")?.toInt() ?: 1
+        attributeSet?.getAttributeValue(NAMESPACE, PREFERENCE_MIN)?.toInt() ?: 1
     private val seekBarMaxValue =
-        attributeSet?.getAttributeValue(NAMESPACE, "preferenceMax")?.toInt() ?: 1
+        attributeSet?.getAttributeValue(NAMESPACE, PREFERENCE_MAX)?.toInt() ?: 30
 
     override fun provideLayout(): Int = R.layout.layout_preference_seekbar
 
@@ -31,8 +24,8 @@ class CustomSeekBarPreference(
         view.run {
 
             progressTextView = findViewById(R.id.progress)
-            val progressStartValue = defaultValuePreference?.toInt() ?: 0
-            progressTextView.text = "$progressStartValue"
+            val progressStartValue = defaultValuePreference?.toInt() ?: 0 // todo pref value ?: def
+            updateProgress(progressStartValue)
 
             findViewById<SeekBar>(R.id.seekbar).run {
                 progress = progressStartValue
@@ -49,7 +42,9 @@ class CustomSeekBarPreference(
 
                     override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
-                    override fun onStopTrackingTouch(seekBar: SeekBar) {}
+                    override fun onStopTrackingTouch(seekBar: SeekBar) {
+                        sharedPreferences.edit().putInt(key, seekBar.progress).apply()
+                    }
                 })
             }
         }
@@ -61,5 +56,7 @@ class CustomSeekBarPreference(
 
     companion object {
         private const val TAG = "CustomSeekBarPreference"
+        private const val PREFERENCE_MIN = "preferenceMin"
+        private const val PREFERENCE_MAX = "preferenceMax"
     }
 }

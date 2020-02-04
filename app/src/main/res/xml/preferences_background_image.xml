@@ -8,11 +8,13 @@
         app:key="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED" />
 
     <Preference
+        android:dependency="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
         android:key="@string/background_image_pick_predefined_image_key"
         android:summary="Picks background image from presets"
         android:title="Pick Background Image" />
 
     <Preference
+        android:dependency="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
         android:key="@string/background_image_pick_custom_image_key"
         android:summary="Pick own background image"
         android:title="Choose custom Background Image" />
