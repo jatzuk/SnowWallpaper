@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 
 class CustomSeekBarPreference(
     context: Context,
@@ -13,23 +14,24 @@ class CustomSeekBarPreference(
 ) : AbstractPreference(context, attributeSet) {
 
     private lateinit var progressTextView: TextView
+    private lateinit var seekBar: SeekBar
     private val seekBarMinValue =
-        attributeSet?.getAttributeValue(NAMESPACE, PREFERENCE_MIN)?.toInt() ?: 1
+        attributeSet?.getAttributeValue(NAMESPACE, PREFERENCE_MIN)!!.toInt()
     private val seekBarMaxValue =
-        attributeSet?.getAttributeValue(NAMESPACE, PREFERENCE_MAX)?.toInt() ?: 30
+        attributeSet?.getAttributeValue(NAMESPACE, PREFERENCE_MAX)!!.toInt()
+    private var currentProgress = initPropertyValue()
 
     override fun provideLayout(): Int = R.layout.layout_preference_seekbar
 
     override fun setupPreference(view: View) {
         view.run {
-
             progressTextView = findViewById(R.id.progress)
-            val progressStartValue = defaultValuePreference?.toInt() ?: 0 // todo pref value ?: def
-            updateProgress(progressStartValue)
 
-            findViewById<SeekBar>(R.id.seekbar).run {
-                progress = progressStartValue
-                max = seekBarMaxValue
+            seekBar = findViewById(R.id.seekbar)
+            seekBar.run {
+                max = seekBarMaxValue - seekBarMinValue
+                progress = currentProgress - seekBarMinValue
+                updateProgressTextView()
 
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(
@@ -37,21 +39,30 @@ class CustomSeekBarPreference(
                         progress: Int,
                         fromUser: Boolean
                     ) {
-                        if (progress >= seekBarMinValue) updateProgress(progress)
+                        if (fromUser) currentProgress = seekBarMinValue + progress
+                        updateProgressTextView()
                     }
 
                     override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
                     override fun onStopTrackingTouch(seekBar: SeekBar) {
-                        sharedPreferences.edit().putInt(key, seekBar.progress).apply()
+                        sharedPreferences.edit().putInt(key, currentProgress).apply()
                     }
                 })
             }
         }
     }
 
-    private fun updateProgress(progress: Int) {
-        progressTextView.text = "$progress"
+    private fun initPropertyValue(): Int = when (key) {
+        PreferenceRepository.PREF_KEY_SNOWFALL_LIMIT -> preferenceRepository.getSnowfallLimit()
+        PreferenceRepository.PREF_KEY_SNOWFALL_VELOCITY_FACTOR -> preferenceRepository.getSnowfallVelocityFactor()
+        PreferenceRepository.PREF_KEY_SNOWFALL_MIN_RADIUS -> preferenceRepository.getSnowfallMinRadius().toInt()
+        PreferenceRepository.PREF_KEY_SNOWFALL_MAX_RADIUS -> preferenceRepository.getSnowfallMaxRadius().toInt()
+        else -> defaultValuePreference!!.toInt()
+    }
+
+    private fun updateProgressTextView() {
+        progressTextView.text = "$currentProgress"
     }
 
     companion object {

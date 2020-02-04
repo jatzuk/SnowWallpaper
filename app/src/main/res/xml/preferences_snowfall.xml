@@ -45,7 +45,7 @@
         app:key="PREF_KEY_SNOWFALL_MAX_RADIUS"
         app:preferenceDefaultValue="30"
         app:preferenceMax="50"
-        app:preferenceMin="15"
+        app:preferenceMin="16"
         app:preferenceTitle="@string/snowflake_max_radius" />
 
 </PreferenceScreen>
