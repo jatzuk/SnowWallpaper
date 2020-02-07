@@ -12,10 +12,15 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.opengl.GLSurfaceView
+import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
-import android.widget.Toast
+import android.util.TypedValue
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.*
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.setPadding
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
@@ -37,7 +42,7 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.layout_demo)
 
 //        button_set_wallpaper.setOnClickListener {
 //            val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
@@ -49,13 +54,13 @@ class MainActivity : Activity() {
 //            startActivity(intent)
 //        }
 
-        button_open_preferences.setOnClickListener {
-            startActivity(Intent(this, PreferencesActivity::class.java))
-        }
-
-        button_set_wallpaper.setOnClickListener {
-            startLiveWallpaper()
-        }
+//        button_open_preferences.setOnClickListener {
+//            startActivity(Intent(this, PreferencesActivity::class.java))
+//        }
+//
+//        button_set_wallpaper.setOnClickListener {
+//            startLiveWallpaper()
+//        }
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorEventListener = object : SensorEventListener {
@@ -74,6 +79,7 @@ class MainActivity : Activity() {
                 }
             }
         }
+//        startLiveWallpaper()
     }
 
     override fun onPause() {
@@ -81,16 +87,17 @@ class MainActivity : Activity() {
         if (isRendererSet) {
             sensorManager.unregisterListener(sensorEventListener)
             glSurfaceView.onPause()
+            logging("mainActivity onPause()")
         }
     }
 
     override fun onResume() {
         super.onResume()
         if (isRendererSet) {
+            logging("mainActivity onResume()")
             registerSensorListener()
             glSurfaceView.onResume()
         }
-        listPrefs()
     }
 
     private fun calculateRoll(x: Float, y: Float) = (atan2(x, y) / PI / 180).toFloat()
@@ -112,10 +119,10 @@ class MainActivity : Activity() {
             PreferenceRepository.getInstance(this).getIsBackgroundImageEnabled()
 
         if (isSupportingES2) {
-            window.setFlags( // todo remove after live wallpaper impl
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
+//            window.setFlags( // todo remove after live wallpaper impl
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN
+//            )
             glSurfaceView.run {
                 setEGLContextClientVersion(2)
                 if (isBackgroundImageEnabled) {
@@ -136,6 +143,8 @@ class MainActivity : Activity() {
         ).show()
 
         setContentView(glSurfaceView)
+
+        demoMode()
     }
 
     private fun scaleBitmap(bitmap: Bitmap) {
@@ -168,19 +177,29 @@ class MainActivity : Activity() {
         )
     }
 
-    private fun listPrefs() {
-        PreferenceRepository.getInstance(this).run {
-            listOf(
-                getIsSnowfallEnabled()
-//                ,
-//                getSnowfallLimit(),
-//                getSnowfallVelocityFactor(),
-//                getIsSnowfallUniqueRadiusEnabled(),
-//                getSnowfallMinRadius(),
-//                getSnowfallMaxRadius(),
-//                getIsBackgroundImageEnabled()
-            ).forEach { logging("$it") }
+    private fun demoMode() {
+
+        val buttonsLayout = LayoutInflater.from(this).inflate(
+            R.layout.layout_demo, null
+        ).apply {
+            (this as RelativeLayout).gravity = Gravity.BOTTOM
+
+            findViewById<ImageButton>(R.id.button_open_preferences).setOnClickListener {
+                startActivity(Intent(this@MainActivity, PreferencesActivity::class.java))
+            }
+
+            findViewById<ImageButton>(R.id.button_set_wallpaper).setOnClickListener {
+                startLiveWallpaper()
+            }
         }
+
+        addContentView(
+            buttonsLayout,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
     }
 
     companion object {
