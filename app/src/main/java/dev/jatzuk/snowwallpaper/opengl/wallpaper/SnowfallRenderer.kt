@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.opengl
+package dev.jatzuk.snowwallpaper.opengl.wallpaper
 
 import android.content.Context
 import android.graphics.Color
@@ -6,14 +6,13 @@ import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix.*
 import android.os.SystemClock
-import androidx.preference.PreferenceManager
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.objects.SnowfallBackground
 import dev.jatzuk.snowwallpaper.opengl.programs.SnowfallProgram
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import dev.jatzuk.snowwallpaper.opengl.util.loadTexture
-import dev.jatzuk.snowwallpaper.ui.MainActivity.Companion.ratio
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.ratio
+import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 

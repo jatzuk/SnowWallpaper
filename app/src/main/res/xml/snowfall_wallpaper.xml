@@ -3,6 +3,4 @@
     settingsActivity="dev.jatzuk.snowwallpaper.ui.preferences.PreferencesActivity"
     android:author="@string/author"
     android:description="@string/description_text"
-    android:thumbnail="@string/wallpaper_icon">
-
-</wallpaper>
+    android:thumbnail="@string/wallpaper_icon" />
