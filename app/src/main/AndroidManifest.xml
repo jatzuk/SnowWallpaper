@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.jatzuk.snowwallpaper">
 
-    <uses-feature android:name="android.software.live_wallpaper"/>
+    <uses-feature android:name="android.software.live_wallpaper" />
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -22,15 +22,18 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.preferences.PreferencesActivity" />
+        <activity android:name=".ui.preferences.PreferencesActivity"
+            android:exported="true"/>
 
         <service
             android:name=".opengl.wallpaper.OpenGLWallpaperService"
-            android:permission="android.permission.BIND_WALLPAPER" >
+            android:enabled="true"
+            android:permission="android.permission.BIND_WALLPAPER">
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
             </intent-filter>

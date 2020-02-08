@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.opengl.wallpaper
+package dev.jatzuk.snowwallpaper.opengl
 
 import android.content.Context
 import android.graphics.Color
@@ -33,7 +33,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private var startTimeMs = 0L
     private var frames = 0
 
-    private val isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
+    private var isSnowfallBackgroundProgramUsed = false
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
@@ -44,7 +44,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 //        glEnable(GL_DEPTH_TEST)
 
         snowfallProgram = SnowfallProgram(context)
-        textureId = loadTexture(context, R.drawable.background_snowflake_texture)
+        textureId = loadTexture(context, R.drawable.texture_snowfall)
 
         snowfallProgram.useProgram()
     }
@@ -53,6 +53,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         glViewport(0, 0, width, height)
         ratio = width.toFloat() / height.toFloat()
 
+        isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
         if (isSnowfallBackgroundProgramUsed) {
             // we need to initialize background after getting right aspect ratio from above
             snowfallBackground = SnowfallBackground(snowfallProgram, context)

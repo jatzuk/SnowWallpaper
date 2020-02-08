@@ -1,6 +1,5 @@
 package dev.jatzuk.snowwallpaper.opengl.wallpaper
 
-import android.app.ActivityManager
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -12,12 +11,12 @@ import android.hardware.SensorManager
 import android.opengl.GLSurfaceView
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
-import android.widget.Toast
 import androidx.core.graphics.drawable.toDrawable
-import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import kotlin.math.PI
 import kotlin.math.atan2
+
 
 class OpenGLWallpaperService : WallpaperService() {
 
@@ -64,42 +63,22 @@ class OpenGLWallpaperService : WallpaperService() {
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
 
-            registerSensorListener()
-
             glSurfaceView = WallpaperGLSurfaceView(this@OpenGLWallpaperService)
             renderer = SnowfallRenderer(this@OpenGLWallpaperService)
 
-            val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val configurationInfo = activityManager.deviceConfigurationInfo
-            val ifSupportsES2 = configurationInfo.reqGlEsVersion >= 0x20000
+            glSurfaceView.run {
+                setEGLContextClientVersion(2)
+                preserveEGLContextOnPause = true
 
-            val isBackgroundImageEnabled =
-                PreferenceRepository.getInstance(this@OpenGLWallpaperService)
-                    .getIsBackgroundImageEnabled()
-
-            if (ifSupportsES2) {
                 glSurfaceView.run {
-                    setEGLContextClientVersion(2)
-                    preserveEGLContextOnPause = true
-
-                    if (isBackgroundImageEnabled) {
-                        ImageProvider.loadBackgroundImage(this@OpenGLWallpaperService)!!.let {
-                            scaleBitmap(it)
-                            setEGLConfigChooser(8, 8, 8, 8, 16, 0)
-                            holder.setFormat(PixelFormat.TRANSLUCENT)
-                            setZOrderOnTop(true)
-                        }
-                    }
-
-                    setRenderer(SnowfallRenderer(this@OpenGLWallpaperService))
-                    isRendererSet = true
+                    setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+                    holder.setFormat(PixelFormat.TRANSLUCENT)
+                    setBackgroundResource(R.drawable.b0)
+                    setZOrderOnTop(true)
                 }
-            } else {
-                Toast.makeText(
-                    this@OpenGLWallpaperService,
-                    "This device does not support OpenGL ES 2.0",
-                    Toast.LENGTH_LONG
-                ).show()
+
+                setRenderer(renderer)
+                isRendererSet = true
             }
         }
 
@@ -107,8 +86,13 @@ class OpenGLWallpaperService : WallpaperService() {
             super.onVisibilityChanged(visible)
 
             if (isRendererSet) {
-                if (visible) glSurfaceView.onResume()
-                else glSurfaceView.onPause()
+                if (visible) {
+                    registerSensorListener()
+                    glSurfaceView.onResume()
+                } else {
+                    unregisterSensorListener()
+                    glSurfaceView.onPause()
+                }
             }
         }
 
@@ -123,6 +107,10 @@ class OpenGLWallpaperService : WallpaperService() {
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL
             )
+        }
+
+        private fun unregisterSensorListener() {
+            sensorManager.unregisterListener(sensorEventListener)
         }
 
         private fun scaleBitmap(bitmap: Bitmap) {
@@ -146,7 +134,6 @@ class OpenGLWallpaperService : WallpaperService() {
 
             glSurfaceView.background = scaledBitmap.toDrawable(resources)
         }
-
 
         private inner class WallpaperGLSurfaceView(context: Context) : GLSurfaceView(context) {
 

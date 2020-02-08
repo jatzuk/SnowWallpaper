@@ -7,18 +7,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.viewpager2.widget.ViewPager2
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.data.preferences.PreferenceLiveData
-import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 import dev.jatzuk.snowwallpaper.ui.imagepicker.BackgroundImage
 import dev.jatzuk.snowwallpaper.ui.imagepicker.BackgroundImagesFragment
 import dev.jatzuk.snowwallpaper.ui.imagepicker.ImageViewerFragment
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
+import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
-class PreferencesActivity :
-    AppCompatActivity()/*FragmentActivity()*/,
+class PreferencesActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback,
     BackgroundImagesFragment.OnListFragmentInteractionListener {
 
@@ -27,6 +22,7 @@ class PreferencesActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportFragmentManager.beginTransaction()
             .replace(R.id.preferences_container, PreferencesFragment())
@@ -36,32 +32,7 @@ class PreferencesActivity :
         appBarTitleViewModel.title.observe(this, Observer {
             supportActionBar?.title = it
         })
-
-//        actionBar?.setDisplayHomeAsUpEnabled(true)
-//        setContentView(R.layout.fragment_image_viewer)
-//        viewPager = findViewById(R.id.pager)
-//        val pagerAdapter = ScreenSlidePagerAdapter(this)
-//        viewPager.apply {
-//            adapter = pagerAdapter
-//            setPageTransformer(ZoomOutPageTransformer())
-//        }
     }
-
-//    inner class ScreenSlidePagerAdapter(fa: FragmentActivity): FragmentStateAdapter(fa) {
-//        override fun getItemCount(): Int {
-//            return NUM_PAGES
-//        }
-//
-//        override fun createFragment(position: Int): Fragment {
-//            return ScreenSlidePageFragment()
-//        }
-//    }
-
-//    override fun onBackPressed() {
-//        if (viewPager.currentItem == 0)
-//            super.onBackPressed()
-//        else viewPager.currentItem = viewPager.currentItem - 1
-//    }
 
     override fun onPreferenceStartFragment(
         caller: PreferenceFragmentCompat?,
