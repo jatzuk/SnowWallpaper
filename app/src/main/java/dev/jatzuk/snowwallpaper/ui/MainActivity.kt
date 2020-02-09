@@ -74,6 +74,7 @@ class MainActivity : Activity() {
                 }
             }
         }
+        startLiveWallpaper()
     }
 
     override fun onPause() {

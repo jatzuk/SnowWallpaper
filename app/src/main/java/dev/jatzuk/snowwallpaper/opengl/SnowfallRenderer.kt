@@ -1,18 +1,14 @@
 package dev.jatzuk.snowwallpaper.opengl
 
 import android.content.Context
-import android.graphics.Color
 import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix.*
 import android.os.SystemClock
-import androidx.preference.PreferenceManager
-import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.objects.SnowfallBackground
-import dev.jatzuk.snowwallpaper.opengl.programs.SnowfallProgram
+import dev.jatzuk.snowwallpaper.opengl.objects.Triangle
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
-import dev.jatzuk.snowwallpaper.opengl.util.loadTexture
 import dev.jatzuk.snowwallpaper.ui.MainActivity.Companion.ratio
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -25,9 +21,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private val projectionMatrix = FloatArray(16)
     private val viewProjectionMatrix = FloatArray(16)
 
-    private lateinit var snowfallProgram: SnowfallProgram
     private lateinit var snowfallBackground: SnowfallBackground
-    private var textureId = 0
     private var frameStartMs = 0L
 
     private var frameLimit = preferenceRepository.getRendererFrameLimit()
@@ -36,18 +30,16 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     private val isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
 
+    private lateinit var triangle: Triangle
+
+    private val triangleMVPMatrix = FloatArray(16)
+
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
 
-        glEnable(GL_BLEND)
         glBlendFunc(GL_ONE, GL_ONE)
 
-//        glEnable(GL_DEPTH_TEST)
-
-        snowfallProgram = SnowfallProgram(context)
-        textureId = loadTexture(context, R.drawable.background_snowflake_texture)
-
-        snowfallProgram.useProgram()
+        triangle = Triangle(context)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -55,8 +47,8 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         ratio = width.toFloat() / height.toFloat()
 
         if (isSnowfallBackgroundProgramUsed) {
-            // we need to initialize background after getting right aspect ratio from above
-            snowfallBackground = SnowfallBackground(snowfallProgram, context)
+//         we need to initialize background after getting right aspect ratio from above
+            snowfallBackground = SnowfallBackground(context)
         } else {
             logging("snowfall program is not using", TAG)
         }
@@ -72,13 +64,19 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
+        triangle.draw(triangleMVPMatrix)
+        updateMatrices()
+
         if (isSnowfallBackgroundProgramUsed) {
-            snowfallProgram.setUniforms(viewProjectionMatrix, Color.WHITE, textureId)
-            snowfallBackground.run {
-                bindData()
-                draw()
-            }
+//            multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
+            snowfallBackground.draw(viewProjectionMatrix)
         }
+    }
+
+    private fun updateMatrices() {
+//        update after rotations
+        multiplyMM(viewProjectionMatrix, 0, viewMatrix, 0, triangleMVPMatrix, 0)
+        multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewProjectionMatrix, 0)
     }
 
     private fun limitFrameRate() {
