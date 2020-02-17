@@ -3,6 +3,8 @@ package dev.jatzuk.snowwallpaper.opengl.objects
 import android.content.Context
 import android.graphics.Color
 import android.opengl.GLES20.*
+import android.opengl.Matrix.multiplyMM
+import android.opengl.Matrix.setIdentityM
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.data.VertexArray
@@ -34,12 +36,14 @@ class SnowfallBackground(context: Context) {
         glDisableVertexAttribArray(snowfallProgram.aPositionLocation)
     }
 
-    fun draw(mvpMatrix: FloatArray) {
-        bindData()
+    fun draw(mvpMatrix: FloatArray, modelMatrix: FloatArray, viewProjectionMatrix: FloatArray) {
+        setIdentityM(modelMatrix, 0)
+        multiplyMM(mvpMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0)
         snowfallProgram.run {
             useProgram()
             setUniforms(mvpMatrix, Color.WHITE, textureId)
         }
+        bindData()
         glEnable(GL_BLEND)
         snowflakes.forEachIndexed { index, snowflake ->
             snowflake.fall()

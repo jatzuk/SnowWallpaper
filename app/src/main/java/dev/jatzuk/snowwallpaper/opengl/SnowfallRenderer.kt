@@ -8,8 +8,8 @@ import android.os.SystemClock
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.objects.SnowfallBackground
 import dev.jatzuk.snowwallpaper.opengl.objects.Triangle
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import dev.jatzuk.snowwallpaper.ui.MainActivity.Companion.ratio
+import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -17,34 +17,65 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     private val preferenceRepository = PreferenceRepository.getInstance(context)
 
-    private val viewMatrix = FloatArray(16)
     private val projectionMatrix = FloatArray(16)
+    private val viewMatrix = FloatArray(16)
+    private val modelMatrix = FloatArray(16)
+    private val mvpMatrix = FloatArray(16)
     private val viewProjectionMatrix = FloatArray(16)
 
     private lateinit var snowfallBackground: SnowfallBackground
-    private var frameStartMs = 0L
 
+    private var frameStartMs = 0L
     private var frameLimit = preferenceRepository.getRendererFrameLimit()
     private var startTimeMs = 0L
+
     private var frames = 0
 
     private val isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
+//    private val isSnowflakeProgramUsed = preferenceRepository.isSnowflakeProgramUsed()
 
     private lateinit var triangle: Triangle
 
-    private val triangleMVPMatrix = FloatArray(16)
-
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
-
         glBlendFunc(GL_ONE, GL_ONE)
 
         triangle = Triangle(context)
+
+        val eyeX = 0f
+        val eyeY = 0f
+        val eyeZ = 2f
+
+        val centerX = 0f
+        val centerY = 0f
+        val centerZ = 0f
+
+        val upX = 0f
+        val upY = 1f
+        val upZ = 0f
+
+        setLookAtM(viewMatrix, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         glViewport(0, 0, width, height)
-        ratio = width.toFloat() / height.toFloat()
+
+        var left = -1f
+        var right = 1f
+        var bottom = -1f
+        var top = 1f
+        val near = 0f
+        val far = 10f
+
+        if (width > height) {
+            ratio = width.toFloat() / height
+            left *= ratio
+            right *= ratio
+        } else {
+            ratio = height.toFloat() / width
+            top *= ratio
+            bottom *= ratio
+        }
 
         if (isSnowfallBackgroundProgramUsed) {
 //         we need to initialize background after getting right aspect ratio from above
@@ -53,9 +84,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
             logging("snowfall program is not using", TAG)
         }
 
-        frustumM(projectionMatrix, 0, ratio, -ratio, -1f, 1f, 3f, 7f)
-        setLookAtM(viewMatrix, 0, 0f, 0f, -3f, 0f, 0f, 0f, 0f, 1.0f, 0.0f)
-        multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
+        orthoM(projectionMatrix, 0, left, right, bottom, top, near, far)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -63,20 +92,15 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         logFrameRate()
 
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
-
-        triangle.draw(triangleMVPMatrix)
-        updateMatrices()
+        multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
         if (isSnowfallBackgroundProgramUsed) {
-//            multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
-            snowfallBackground.draw(viewProjectionMatrix)
+            snowfallBackground.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
         }
-    }
 
-    private fun updateMatrices() {
-//        update after rotations
-        multiplyMM(viewProjectionMatrix, 0, viewMatrix, 0, triangleMVPMatrix, 0)
-        multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewProjectionMatrix, 0)
+//        if (isSnowflakeProgramUsed) {
+        triangle.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
+//        }
     }
 
     private fun limitFrameRate() {
