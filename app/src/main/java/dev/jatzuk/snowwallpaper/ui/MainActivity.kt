@@ -67,14 +67,14 @@ class MainActivity : Activity() {
                     val x = it.values[0]
                     val y = it.values[1]
 
-                    roll =
-                        if (orientation == Configuration.ORIENTATION_LANDSCAPE && x > 0)
-                            -calculateRoll(y, x)
-                        else calculateRoll(x, y)
+//                    roll =
+//                        if (orientation == Configuration.ORIENTATION_LANDSCAPE && x > 0)
+//                            -calculateRoll(y, x)
+//                        else calculateRoll(x, y)
                 }
             }
         }
-        startLiveWallpaper()
+//        startLiveWallpaper()
     }
 
     override fun onPause() {
@@ -188,7 +188,5 @@ class MainActivity : Activity() {
         private const val SENSOR_INFO_TAG = "SENSOR_INFO_TAG"
         private const val TAG = "MainActivity"
 
-        var ratio = 0f
-        var roll = 0f
     }
 }

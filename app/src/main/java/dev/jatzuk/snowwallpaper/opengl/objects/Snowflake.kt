@@ -2,8 +2,7 @@ package dev.jatzuk.snowwallpaper.opengl.objects
 
 import android.content.Context
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.ui.MainActivity.Companion.ratio
-import dev.jatzuk.snowwallpaper.ui.MainActivity.Companion.roll
+import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer.Companion.roll
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import kotlin.math.PI
 import kotlin.math.cos
@@ -13,8 +12,8 @@ import kotlin.random.Random
 class Snowflake(context: Context) {
 
     private val preferenceRepository = PreferenceRepository.getInstance(context)
-    var x = (Random.nextFloat() * 2f - ratio) * ratio
-    var y = Random.nextFloat() + 1f
+    var x = getRandomX()
+    var y = getRandomY()
     private var isRadiusUnique = preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
     private val minRadius: Float
     private val maxRadius: Float
@@ -36,7 +35,7 @@ class Snowflake(context: Context) {
             maxRadius = 30f
         }
         logging("Unique radius set to: $isRadiusUnique", TAG)
-        radius = assignRadius()
+        radius = getRandomRadius()
     }
 
     fun fall() {
@@ -44,22 +43,26 @@ class Snowflake(context: Context) {
         angle += roll
         x += velocity * cos(angle)
         y -= velocity * sin(angle)
+//      logging("$x, $y", TAG)
     }
 
-    private fun isOutside() =
-        x < -1.1f * ratio - (radius / 2) || x > 1.1f * ratio + (radius / 2) || y < -1f
+    private fun isOutside() = x < -1 || x > 1 || y < -1
 
     private fun reset() {
-        x = (Random.nextFloat() * 2f - 1f) * ratio
-        y = Random.nextFloat() + 1f
-        radius = assignRadius()
+        x = getRandomX()
+        y = getRandomY()
+        radius = getRandomRadius()
         angle = assignDefaultAngle()
         velocity = Random.nextFloat(incrementLower, incrementUpper)
         degrees = 0f
 //        degreeIncrement = Random.nextFloat(DEGREE_INCREMENT_LOWER, DEGREE_INCREMENT_UPPER)
     }
 
-    private fun assignRadius() =
+    private fun getRandomX() = Random.nextFloat() * 2 - 1
+
+    private fun getRandomY() = Random.nextFloat() + 1
+
+    private fun getRandomRadius() =
         if (isRadiusUnique) Random.nextFloat() * maxRadius + minRadius else maxRadius
 //        Random.nextFloat(BACKGROUND_SNOWFLAKE_LOWER, BACKGROUND_SNOWFLAKE_UPPER)
 //        if (isSnowfall) Random.nextFloat(BACKGROUND_SNOWFLAKE_LOWER, BACKGROUND_SNOWFLAKE_UPPER)

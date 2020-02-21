@@ -11,7 +11,7 @@ class PreferenceRepository private constructor(context: Context) {
         PreferenceLiveData(
             context,
             PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED,
-            IS_BACKGROUND_IMAGE_ENABLED_DEFAULT_VALUE
+            BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE
         )
 
     fun getIsSnowfallEnabled(): Boolean =
@@ -47,10 +47,16 @@ class PreferenceRepository private constructor(context: Context) {
             SNOWFALL_MAX_RADIUS_DEFAULT_VALUE
         ).toFloat()
 
+    fun getIsSnowflakeEnabled(): Boolean =
+        preferenceManager.getBoolean(
+            PREF_KEY_IS_SNOWFLAKE_ENABLED,
+            SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE
+        )
+
     fun getIsBackgroundImageEnabled(): Boolean =
         preferenceManager.getBoolean(
             PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED,
-            IS_BACKGROUND_IMAGE_ENABLED_DEFAULT_VALUE
+            BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE
         )
 
     fun getRendererFrameLimit(): Int = preferenceManager.getInt(PREF_KEY_RENDERER_FRAME_LIMIT, 30)
@@ -65,7 +71,8 @@ class PreferenceRepository private constructor(context: Context) {
         private const val SNOWFALL_IS_UNIQUE_RADIUS_ENABLED = true
         private const val SNOWFALL_MIN_RADIUS_DEFAULT_VALUE = 8
         private const val SNOWFALL_MAX_RADIUS_DEFAULT_VALUE = 30
-        private const val IS_BACKGROUND_IMAGE_ENABLED_DEFAULT_VALUE = false
+        private const val SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE = true
+        private const val BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE = false
 
         const val PREF_KEY_IS_SNOWFALL_ENABLED =
             "PREF_KEY_IS_SNOWFALL_ENABLED"
@@ -84,6 +91,9 @@ class PreferenceRepository private constructor(context: Context) {
 
         const val PREF_KEY_SNOWFALL_MAX_RADIUS =
             "PREF_KEY_SNOWFALL_MAX_RADIUS"
+
+        const val PREF_KEY_IS_SNOWFLAKE_ENABLED =
+            "PREF_KEY_IS_SNOWFLAKE_ENABLED"
 
         const val PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED =
             "PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"

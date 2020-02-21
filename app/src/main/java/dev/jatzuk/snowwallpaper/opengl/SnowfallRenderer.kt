@@ -1,6 +1,7 @@
 package dev.jatzuk.snowwallpaper.opengl
 
 import android.content.Context
+import android.content.res.Configuration
 import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix.*
@@ -8,14 +9,11 @@ import android.os.SystemClock
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.objects.SnowfallBackground
 import dev.jatzuk.snowwallpaper.opengl.objects.Triangle
-import dev.jatzuk.snowwallpaper.ui.MainActivity.Companion.ratio
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
-
-    private val preferenceRepository = PreferenceRepository.getInstance(context)
 
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
@@ -24,6 +22,9 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private val viewProjectionMatrix = FloatArray(16)
 
     private lateinit var snowfallBackground: SnowfallBackground
+    private lateinit var triangle: Triangle
+
+    private val preferenceRepository = PreferenceRepository.getInstance(context)
 
     private var frameStartMs = 0L
     private var frameLimit = preferenceRepository.getRendererFrameLimit()
@@ -32,9 +33,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private var frames = 0
 
     private val isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
-//    private val isSnowflakeProgramUsed = preferenceRepository.isSnowflakeProgramUsed()
-
-    private lateinit var triangle: Triangle
+    private val isSnowflakeProgramUsed = preferenceRepository.getIsSnowflakeEnabled()
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
@@ -67,14 +66,14 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         val near = 0f
         val far = 10f
 
-        if (width > height) {
-            ratio = width.toFloat() / height
-            left *= ratio
-            right *= ratio
+        ratio = if (width > height) {
+            width.toFloat() / height
+    //            left *= ratio
+    //            right *= ratio
         } else {
-            ratio = height.toFloat() / width
-            top *= ratio
-            bottom *= ratio
+            height.toFloat() / width
+    //            top *= ratio
+    //            bottom *= ratio
         }
 
         if (isSnowfallBackgroundProgramUsed) {
@@ -98,9 +97,9 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
             snowfallBackground.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
         }
 
-//        if (isSnowflakeProgramUsed) {
-        triangle.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
-//        }
+        if (isSnowflakeProgramUsed) {
+            triangle.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
+        }
     }
 
     private fun limitFrameRate() {
@@ -127,5 +126,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     companion object {
         private const val TAG = "SnowfallRenderer"
+        var ratio = 0f
+        var roll = 0f
     }
 }
