@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.jatzuk.snowwallpaper">
 
+    <uses-feature android:name="android.software.live_wallpaper" />
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -13,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".ui.MainActivity"
             android:configChanges="orientation|screenSize"
@@ -24,6 +26,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.preferences.PreferencesActivity" />
+
+        <activity android:name=".ui.preferences.PreferencesActivity"
+            android:exported="true"/>
+
+        <service
+            android:name=".opengl.wallpaper.OpenGLWallpaperService"
+            android:enabled="true"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/snowfall_wallpaper" />
+        </service>
+
     </application>
 </manifest>
