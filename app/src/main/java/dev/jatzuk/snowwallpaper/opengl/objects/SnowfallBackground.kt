@@ -7,21 +7,21 @@ import android.opengl.Matrix.multiplyMM
 import android.opengl.Matrix.setIdentityM
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.opengl.data.VertexArray
+import dev.jatzuk.snowwallpaper.opengl.data.SnowflakeVertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.SnowfallProgram
 import dev.jatzuk.snowwallpaper.opengl.util.loadTexture
 
 class SnowfallBackground(context: Context) {
 
     private val snowfallProgram = SnowfallProgram(context)
-    private val textureId = loadTexture(context, R.drawable.background_snowflake_texture)
+    private val textureId = loadTexture(context, R.drawable.texture_snowfall)
 
     private val snowflakesLimit = PreferenceRepository.getInstance(context).getSnowfallLimit()
     private val snowflakes = Array(snowflakesLimit) { Snowflake(context) }
-    private val vertexArray = VertexArray(snowflakes)
+    private val snowflakesVertexArray = SnowflakeVertexArray(snowflakes)
 
     private fun bindData() {
-        vertexArray.apply {
+        snowflakesVertexArray.apply {
             updateBuffer()
             setVertexAttribPointer(
                 0,

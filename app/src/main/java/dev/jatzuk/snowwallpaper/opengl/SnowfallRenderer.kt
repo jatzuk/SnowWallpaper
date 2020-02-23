@@ -1,7 +1,6 @@
 package dev.jatzuk.snowwallpaper.opengl
 
 import android.content.Context
-import android.content.res.Configuration
 import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix.*
@@ -38,6 +37,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
         glBlendFunc(GL_ONE, GL_ONE)
+//        glDepthFunc(GL_LEQUAL)
 
         triangle = Triangle(context)
 
@@ -93,12 +93,13 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
-        if (isSnowfallBackgroundProgramUsed) {
-            snowfallBackground.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
-        }
+//        if (isSnowfallBackgroundProgramUsed) {
+//            snowfallBackground.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
+//        }
 
+//        glFrontFace(GL_CW)
         if (isSnowflakeProgramUsed) {
-            triangle.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
+            triangle.draw(mvpMatrix, modelMatrix, viewProjectionMatrix, viewMatrix, projectionMatrix)
         }
     }
 

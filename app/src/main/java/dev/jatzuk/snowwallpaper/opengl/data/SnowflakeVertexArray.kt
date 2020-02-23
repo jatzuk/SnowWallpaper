@@ -1,17 +1,19 @@
 package dev.jatzuk.snowwallpaper.opengl.data
 
 import android.opengl.GLES20.*
+import dev.jatzuk.snowwallpaper.opengl.objects.SnowfallBackground.Companion.TOTAL_COMPONENT_COUNT
+import dev.jatzuk.snowwallpaper.opengl.objects.Snowflake
 import dev.jatzuk.snowwallpaper.opengl.util.BYTES_PER_FLOAT
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
-class CubeArray(vertexData: FloatArray) {
+class SnowflakeVertexArray(private val snowflakes: Array<Snowflake>) {
+
     private val floatBuffer: FloatBuffer =
-        ByteBuffer.allocateDirect(vertexData.size * BYTES_PER_FLOAT)
+        ByteBuffer.allocateDirect(snowflakes.size * TOTAL_COMPONENT_COUNT * BYTES_PER_FLOAT)
             .order(ByteOrder.nativeOrder())
             .asFloatBuffer()
-            .apply { put(vertexData) }
 
     fun setVertexAttribPointer(
         dataOffset: Int,
@@ -29,5 +31,13 @@ class CubeArray(vertexData: FloatArray) {
             floatBuffer
         )
         glEnableVertexAttribArray(attributeLocation)
+    }
+
+    fun updateBuffer() {
+        floatBuffer.position(0)
+        for (flake in snowflakes) {
+            floatBuffer.put(flake.x)
+            floatBuffer.put(flake.y)
+        }
     }
 }

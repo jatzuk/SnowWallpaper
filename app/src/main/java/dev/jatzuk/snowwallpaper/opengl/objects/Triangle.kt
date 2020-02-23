@@ -4,7 +4,7 @@ import android.content.Context
 import android.opengl.GLES20.*
 import android.opengl.Matrix.*
 import android.os.SystemClock
-import dev.jatzuk.snowwallpaper.opengl.data.CubeArray
+import dev.jatzuk.snowwallpaper.opengl.data.VertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.SnowflakeProgram
 
 class Triangle(context: Context) {
@@ -15,7 +15,7 @@ class Triangle(context: Context) {
         0.5f, -0.5f, 1f,
         0f, 0.5f, 1f
     )
-    private val vertexArray = CubeArray(vertices)
+    private val vertexArray = VertexArray(vertices)
 
     private fun bindData() {
         vertexArray.setVertexAttribPointer(
@@ -37,10 +37,15 @@ class Triangle(context: Context) {
         glDisableVertexAttribArray(snowflakeProgram.aPositionLocation)
     }
 
-    fun draw(mvpMatrix: FloatArray, modelMatrix: FloatArray, viewProjectionMatrix: FloatArray) {
+    fun draw(mvpMatrix: FloatArray, modelMatrix: FloatArray, viewProjectionMatrix: FloatArray, viewMatrix: FloatArray, projectionMatrix: FloatArray) {
         setIdentityM(modelMatrix, 0)
         rotate(modelMatrix)
+
         multiplyMM(mvpMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0)
+
+//        multiplyMM(mvpMatrix, 0, viewMatrix, 0, modelMatrix, 0)
+//        multiplyMM(mvpMatrix, 0, projectionMatrix, 0, mvpMatrix, 0)
+
         snowflakeProgram.run {
             useProgram()
             setUniforms(mvpMatrix)
@@ -57,8 +62,9 @@ class Triangle(context: Context) {
     private fun rotate(modelMatrix: FloatArray) {
         val time = (SystemClock.uptimeMillis() % 10_000L).toInt()
         val angleInDegrees = (360f / 10_000f) * time
-//        translateM(modelMatrix, 0, 0f, 0f, 0f)
+        translateM(modelMatrix, 0, 0f, 0f, 1f)
         rotateM(modelMatrix, 0, angleInDegrees, 0f, 1f, 0f)
+        translateM(modelMatrix, 0, 0f, 0f, -1f)
     }
 
     companion object {
