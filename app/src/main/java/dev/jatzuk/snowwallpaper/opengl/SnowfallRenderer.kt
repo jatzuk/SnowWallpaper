@@ -37,7 +37,6 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
         glBlendFunc(GL_ONE, GL_ONE)
-//        glDepthFunc(GL_LEQUAL)
 
         triangle = Triangle(context)
 
@@ -63,7 +62,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         var right = 1f
         var bottom = -1f
         var top = 1f
-        val near = 0f
+        val near = 0.1f
         val far = 10f
 
         ratio = if (width > height) {
@@ -97,9 +96,8 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 //            snowfallBackground.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
 //        }
 
-//        glFrontFace(GL_CW)
         if (isSnowflakeProgramUsed) {
-            triangle.draw(mvpMatrix, modelMatrix, viewProjectionMatrix, viewMatrix, projectionMatrix)
+            triangle.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
         }
     }
 

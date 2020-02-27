@@ -29,7 +29,7 @@ fun loadTexture(context: Context, resourceId: Int): Int {
 
     glBindTexture(GL_TEXTURE_2D, textureObjectsIds[0])
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
     texImage2D(GL_TEXTURE_2D, 0, bitmap, 0)
 
@@ -39,6 +39,6 @@ fun loadTexture(context: Context, resourceId: Int): Int {
 
     glBindTexture(GL_TEXTURE_2D, 0)
 
-    logging(TAG, "Texture ID: $resourceId loaded successfully")
+    logging("Texture ID: $resourceId loaded successfully", TAG)
     return textureObjectsIds[0]
 }

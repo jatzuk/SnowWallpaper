@@ -1,8 +1,10 @@
 uniform mat4 u_Matrix;
-uniform float u_PointSize;
 attribute vec4 a_Position;
+
+varying vec2 v_Texture;
+attribute vec2 a_Texture;
 
 void main() {
     gl_Position = u_Matrix * a_Position;
-    gl_PointSize = u_PointSize;
+    v_Texture = a_Texture;
 }
