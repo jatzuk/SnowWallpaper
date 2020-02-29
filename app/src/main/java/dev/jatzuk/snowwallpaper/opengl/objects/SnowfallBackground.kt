@@ -18,7 +18,7 @@ class SnowfallBackground(context: Context) {
 
     private val snowflakesLimit = PreferenceRepository.getInstance(context).getSnowfallLimit()
     private val snowflakes = Array(snowflakesLimit) { Snowflake(context) }
-    private val snowflakesVertexArray = SnowflakeVertexArray(snowflakes)
+    private val snowflakesVertexArray = SnowflakeVertexArray(snowflakes, TOTAL_COMPONENT_COUNT)
 
     private fun bindData() {
         snowflakesVertexArray.apply {
@@ -47,8 +47,8 @@ class SnowfallBackground(context: Context) {
         glEnable(GL_BLEND)
         snowflakes.forEachIndexed { index, snowflake ->
             snowflake.fall()
-            snowfallProgram.setPointSize(snowflake.radius)
-            glDrawArrays(GL_POINTS, 0, index + 1)
+            snowfallProgram.setPointSize(snowflake.radius * 100f)
+            glDrawArrays(GL_POINTS, index, 1)
 
         }
         glDisable(GL_BLEND)
@@ -57,8 +57,8 @@ class SnowfallBackground(context: Context) {
 
     companion object {
         private const val TAG = "SnowfallBackground"
-        const val POSITION_COMPONENT_COUNT = 2
-        const val TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT
+        private const val POSITION_COMPONENT_COUNT = 2
+        private const val TOTAL_COMPONENT_COUNT = POSITION_COMPONENT_COUNT
         private const val STRIDE = 0
     }
 }
