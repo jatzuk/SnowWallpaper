@@ -7,7 +7,8 @@ import android.opengl.Matrix.*
 import android.os.SystemClock
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.objects.SnowfallBackground
-import dev.jatzuk.snowwallpaper.opengl.objects.Triangle
+import dev.jatzuk.snowwallpaper.opengl.objects.TexturedSnowflake
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.ratio
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -20,8 +21,8 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private val mvpMatrix = FloatArray(16)
     private val viewProjectionMatrix = FloatArray(16)
 
-    private lateinit var snowfallBackground: SnowfallBackground
-    private lateinit var triangle: Triangle
+    private var snowfallBackground: SnowfallBackground? = null
+    private var texturedSnowflake: TexturedSnowflake? = null
 
     private val preferenceRepository = PreferenceRepository.getInstance(context)
 
@@ -38,11 +39,9 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         glClearColor(0f, 0f, 0f, 0f)
         glBlendFunc(GL_ONE, GL_ONE)
 
-        triangle = Triangle(context)
-
         val eyeX = 0f
         val eyeY = 0f
-        val eyeZ = 2f
+        val eyeZ = 3f
 
         val centerX = 0f
         val centerY = 0f
@@ -58,22 +57,10 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         glViewport(0, 0, width, height)
 
-        var left = -1f
-        var right = 1f
-        var bottom = -1f
-        var top = 1f
-        val near = 0.1f
-        val far = 10f
+        ratio = if (width > height) width.toFloat() / height else height.toFloat() / width
 
-        ratio = if (width > height) {
-            width.toFloat() / height
-    //            left *= ratio
-    //            right *= ratio
-        } else {
-            height.toFloat() / width
-    //            top *= ratio
-    //            bottom *= ratio
-        }
+        Companion.width = width.toFloat()
+        Companion.height = height.toFloat()
 
         if (isSnowfallBackgroundProgramUsed) {
 //         we need to initialize background after getting right aspect ratio from above
@@ -82,7 +69,13 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
             logging("snowfall program is not using", TAG)
         }
 
-        orthoM(projectionMatrix, 0, left, right, bottom, top, near, far)
+        if (isSnowflakeProgramUsed) {
+            texturedSnowflake = TexturedSnowflake(context)
+        } else {
+            logging("snowflake program is not using", TAG)
+        }
+
+        orthoM(projectionMatrix, 0, -1f, 1f, -1f, 1f, 1f, 10f)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -92,13 +85,8 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
-//        if (isSnowfallBackgroundProgramUsed) {
-//            snowfallBackground.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
-//        }
-
-        if (isSnowflakeProgramUsed) {
-            triangle.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
-        }
+        snowfallBackground?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
+        texturedSnowflake?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
     }
 
     private fun limitFrameRate() {
@@ -125,7 +113,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     companion object {
         private const val TAG = "SnowfallRenderer"
-        var ratio = 0f
-        var roll = 0f
+        var width = 0f
+        var height = 0f
     }
 }

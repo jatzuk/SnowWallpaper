@@ -6,9 +6,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
-class VertexArray(vertexData: FloatArray) {
-    private val floatBuffer: FloatBuffer =
-        ByteBuffer.allocateDirect(vertexData.size * BYTES_PER_FLOAT)
+open class VertexArray(vertexData: FloatArray, componentsSize: Int) {
+    protected val floatBuffer: FloatBuffer =
+        ByteBuffer.allocateDirect(vertexData.size / 2 * componentsSize * BYTES_PER_FLOAT)
             .order(ByteOrder.nativeOrder())
             .asFloatBuffer()
             .apply { put(vertexData) }
@@ -17,17 +17,26 @@ class VertexArray(vertexData: FloatArray) {
         dataOffset: Int,
         attributeLocation: Int,
         componentCount: Int,
-        stride: Int
+        stride: Int,
+        normalized: Boolean = false
     ) {
         floatBuffer.position(dataOffset)
         glVertexAttribPointer(
             attributeLocation,
             componentCount,
             GL_FLOAT,
-            false,
+            normalized,
             stride,
             floatBuffer
         )
         glEnableVertexAttribArray(attributeLocation)
+    }
+
+    open fun updateBuffer() {
+        floatBuffer.clear()
+    }
+
+    protected fun FloatBuffer.shiftPositionOnTo(position: Int) {
+        position(position() + position)
     }
 }

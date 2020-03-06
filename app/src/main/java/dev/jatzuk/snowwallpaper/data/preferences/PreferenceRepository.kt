@@ -53,6 +53,12 @@ class PreferenceRepository private constructor(context: Context) {
             SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE
         )
 
+    fun getSnowflakeLimit(): Int =
+        preferenceManager.getInt(
+            PREF_KEY_SNOWFLAKE_LIMIT,
+            SNOWFLAKE_LIMIT_DEFAULT_VALUE
+        )
+
     fun getIsBackgroundImageEnabled(): Boolean =
         preferenceManager.getBoolean(
             PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED,
@@ -72,6 +78,7 @@ class PreferenceRepository private constructor(context: Context) {
         private const val SNOWFALL_MIN_RADIUS_DEFAULT_VALUE = 8
         private const val SNOWFALL_MAX_RADIUS_DEFAULT_VALUE = 30
         private const val SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE = true
+        private const val SNOWFLAKE_LIMIT_DEFAULT_VALUE = 3
         private const val BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE = false
 
         const val PREF_KEY_IS_SNOWFALL_ENABLED =
@@ -94,6 +101,9 @@ class PreferenceRepository private constructor(context: Context) {
 
         const val PREF_KEY_IS_SNOWFLAKE_ENABLED =
             "PREF_KEY_IS_SNOWFLAKE_ENABLED"
+
+        const val PREF_KEY_SNOWFLAKE_LIMIT =
+            "PREF_KEY_SNOWFLAKE_LIMIT"
 
         const val PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED =
             "PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"

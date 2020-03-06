@@ -2,14 +2,16 @@ package dev.jatzuk.snowwallpaper.opengl.objects
 
 import android.content.Context
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer.Companion.roll
+import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer.Companion.height
+import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer.Companion.width
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.roll
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-class Snowflake(context: Context) {
+open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
 
     private val preferenceRepository = PreferenceRepository.getInstance(context)
     var x = getRandomX()
@@ -19,11 +21,12 @@ class Snowflake(context: Context) {
     private val maxRadius: Float
     var radius: Float
     private var angle = assignDefaultAngle()
-    private var velocityFactor = preferenceRepository.getSnowfallVelocityFactor() * 0.1f
-    private val incrementLower = velocityFactor * 0.04f
-    private val incrementUpper = incrementLower * 1.5f
-    private var velocity = Random.nextFloat(incrementLower, incrementUpper)
+    private var velocityFactor = preferenceRepository.getSnowfallVelocityFactor()
+    private val incrementLower = velocityFactor.toFloat() * 2
+    private val incrementUpper = incrementLower * 2
+    private var velocity = getRandomVelocity()
     private var degrees = 0f
+    var rotationAxis = getRandomRotationAxis()
 //    private var degreeIncrement = Random.nextFloat(DEGREE_INCREMENT_LOWER, DEGREE_INCREMENT_UPPER)
 
     init {
@@ -34,45 +37,55 @@ class Snowflake(context: Context) {
             minRadius = 8f
             maxRadius = 30f
         }
-        logging("Unique radius set to: $isRadiusUnique", TAG)
         radius = getRandomRadius()
+        logging("Unique radius set to: $isRadiusUnique", TAG)
     }
 
     fun fall() {
         if (isOutside()) reset()
         angle += roll
         x += velocity * cos(angle)
-        y -= velocity * sin(angle)
-//      logging("$x, $y", TAG)
+        y += velocity * sin(angle)
     }
 
-    private fun isOutside() = x < -1 || x > 1 || y < -1
+    private fun isOutside() = x < -radius || x > width + radius || y > height + radius
 
     private fun reset() {
         x = getRandomX()
         y = getRandomY()
         radius = getRandomRadius()
         angle = assignDefaultAngle()
-        velocity = Random.nextFloat(incrementLower, incrementUpper)
+        velocity = getRandomVelocity()
         degrees = 0f
 //        degreeIncrement = Random.nextFloat(DEGREE_INCREMENT_LOWER, DEGREE_INCREMENT_UPPER)
+        rotationAxis = getRandomRotationAxis()
     }
 
-    private fun getRandomX() = Random.nextFloat() * 2 - 1
+    private fun getRandomX() = Random.nextFloat() * width
 
-    private fun getRandomY() = Random.nextFloat() + 1
+    private fun getRandomY() = Random.nextFloat() * -radius - radius
 
-    private fun getRandomRadius() =
-        if (isRadiusUnique) Random.nextFloat() * maxRadius + minRadius else maxRadius
-//        Random.nextFloat(BACKGROUND_SNOWFLAKE_LOWER, BACKGROUND_SNOWFLAKE_UPPER)
-//        if (isSnowfall) Random.nextFloat(BACKGROUND_SNOWFLAKE_LOWER, BACKGROUND_SNOWFLAKE_UPPER)
-//        else //300f
-//            Random.nextInt(0, FLAKES_COUNT_BIG) * 50 + FLAKE_SIZE_LOWER //todo
+    private fun getRandomVelocity(): Float {
+        var velocity = Random.nextFloat(incrementLower, incrementUpper)
+        if (isMajorSnowflake) velocity /= 2
+        return velocity
+    }
+
+    private fun getRandomRadius(): Float {
+        val radius = if (isRadiusUnique) Random.nextFloat() * maxRadius + minRadius else maxRadius
+        return if (isMajorSnowflake) radius * 3 else radius
+    }
 
     private fun assignDefaultAngle() =
         (Random.nextFloat() * ANGLE_SEED) / ANGLE_SEED * ANGE_RANGE + HALF_PI - HALF_ANGLE_RANGE
 
+    private fun getRandomRotationAxis(): RotationAxis = RotationAxis.values()[Random.nextInt(2)]
+
     private fun Random.nextFloat(lower: Float, upper: Float) = nextFloat() * (upper - lower) + lower
+
+    enum class RotationAxis {
+        Y, Z
+    }
 
     companion object {
         private val TAG = Snowflake::class.java.simpleName
@@ -81,8 +94,6 @@ class Snowflake(context: Context) {
         private const val HALF_PI = PI.toFloat() / 2f
         private const val ANGLE_SEED = 25f
         private const val ANGLE_DIVISOR = 5_000f
-        private const val BACKGROUND_SNOWFLAKE_LOWER = 2f
-        private const val BACKGROUND_SNOWFLAKE_UPPER = 15f
         private const val DEGREE_INCREMENT_LOWER = 0.0001f
         private const val DEGREE_INCREMENT_UPPER = 0.0005f
     }

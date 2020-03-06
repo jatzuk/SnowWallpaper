@@ -16,6 +16,7 @@ class SnowfallProgram(context: Context) :
     val aPositionLocation = glGetAttribLocation(program, aPosition)
 
     fun setUniforms(matrix: FloatArray, color: Int, textureId: Int) {
+        setNormalizedCoordinates()
         glUniformMatrix4fv(uMatrixLocation, 1, false, matrix, 0)
 
         glUniform4f(

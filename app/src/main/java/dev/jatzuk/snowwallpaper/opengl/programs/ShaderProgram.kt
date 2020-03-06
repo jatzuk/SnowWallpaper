@@ -1,7 +1,8 @@
 package dev.jatzuk.snowwallpaper.opengl.programs
 
 import android.content.Context
-import android.opengl.GLES20.glUseProgram
+import android.opengl.GLES20.*
+import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.opengl.util.ShaderHelper
 
 abstract class ShaderProgram(
@@ -22,7 +23,18 @@ abstract class ShaderProgram(
 
     protected val aPosition = "a_Position"
 
+    private val uScreenWidth = "u_ScreenWidth"
+    private val uScreenHeight = "u_ScreenHeight"
+
+    private val uScreenWidthLocation = glGetUniformLocation(program, uScreenWidth)
+    private val uScreenHeightLocation = glGetUniformLocation(program, uScreenHeight)
+
     fun useProgram() {
         glUseProgram(program)
+    }
+
+    protected fun setNormalizedCoordinates() {
+        glUniform1f(uScreenWidthLocation, SnowfallRenderer.width)
+        glUniform1f(uScreenHeightLocation, SnowfallRenderer.height)
     }
 }

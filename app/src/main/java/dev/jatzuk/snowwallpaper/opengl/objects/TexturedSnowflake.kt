@@ -17,7 +17,7 @@ class TexturedSnowflake(context: Context) {
 
     private val snowflakeProgram = SnowflakeProgram(context)
     private val snowflakeLimit = PreferenceRepository.getInstance(context).getSnowflakeLimit()
-    private val snowflakes = Array(1) { Snowflake(context, true) }
+    private val snowflakes = Array(snowflakeLimit) { Snowflake(context, true) }
     private val snowflakeVertexArray = RectangleVertexArray(snowflakes, TOTAL_COMPONENT_COUNT)
     private val textureId = loadTexture(context, R.drawable.texture_snowflake)
 
@@ -55,19 +55,16 @@ class TexturedSnowflake(context: Context) {
         snowflakes.forEachIndexed { index, snowflake ->
             setIdentityM(modelMatrix, 0)
 
-            if (snowflake.isTextured) {
-                val tx = snowflake.x * 2f / width - 1f //snowflake.x / width
-                val ty = snowflake.y * -2f / height + 1f //snowflake.y / height
-                rotate(modelMatrix, tx, ty, snowflake.rotationAxis)
+            if (snowflake.isMajorSnowflake) {
+                val x = snowflake.x * 2f / width - 1f
+                val y = snowflake.y * -2f / height + 1f
+                rotate(modelMatrix, x, y, snowflake.rotationAxis)
                 multiplyMM(mvpMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0)
             }
 
-            snowflakeProgram.apply {
-                setShit()
-                setUniforms(mvpMatrix, textureId)
-            }
+            snowflakeProgram.setUniforms(mvpMatrix, textureId)
 
-//            snowflake.fall()
+            snowflake.fall()
             glDrawArrays(GL_TRIANGLE_STRIP, index * 4, 4)
         }
 
@@ -84,7 +81,7 @@ class TexturedSnowflake(context: Context) {
         val time = (SystemClock.uptimeMillis() % 10_000).toInt()
         val angle = (360f / 10_000) * time
         translateM(modelMatrix, 0, x, y, 1f)
-        rotateAxis(modelMatrix, angle, Snowflake.RotationAxis.Z/*rotationAxis*/)
+        rotateAxis(modelMatrix, angle, rotationAxis)
         translateM(modelMatrix, 0, -x, -y, -1f)
     }
 
@@ -94,7 +91,6 @@ class TexturedSnowflake(context: Context) {
         rotationAxis: Snowflake.RotationAxis
     ) {
         when (rotationAxis) {
-            Snowflake.RotationAxis.X -> rotateM(modelMatrix, 0, angle, 1f, 0f, 0f)
             Snowflake.RotationAxis.Y -> rotateM(modelMatrix, 0, angle, 0f, 1f, 0f)
             Snowflake.RotationAxis.Z -> rotateM(modelMatrix, 0, angle, 0f, 0f, 1f)
         }

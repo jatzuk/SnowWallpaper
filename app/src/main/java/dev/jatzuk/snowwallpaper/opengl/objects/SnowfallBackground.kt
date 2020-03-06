@@ -47,7 +47,7 @@ class SnowfallBackground(context: Context) {
         glEnable(GL_BLEND)
         snowflakes.forEachIndexed { index, snowflake ->
             snowflake.fall()
-            snowfallProgram.setPointSize(snowflake.radius * 100f)
+            snowfallProgram.setPointSize(snowflake.radius)
             glDrawArrays(GL_POINTS, index, 1)
 
         }
