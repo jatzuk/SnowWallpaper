@@ -6,8 +6,10 @@ import android.opengl.GLSurfaceView
 import android.opengl.Matrix.*
 import android.os.SystemClock
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
+import dev.jatzuk.snowwallpaper.opengl.objects.BackgroundImage
 import dev.jatzuk.snowwallpaper.opengl.objects.SnowfallBackground
 import dev.jatzuk.snowwallpaper.opengl.objects.TexturedSnowflake
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.ratio
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import javax.microedition.khronos.egl.EGLConfig
@@ -23,6 +25,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     private var snowfallBackground: SnowfallBackground? = null
     private var texturedSnowflake: TexturedSnowflake? = null
+    private var backgroundImage: BackgroundImage? = null
 
     private val preferenceRepository = PreferenceRepository.getInstance(context)
 
@@ -34,6 +37,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     private val isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
     private val isSnowflakeProgramUsed = preferenceRepository.getIsSnowflakeEnabled()
+    private val isBackgroundImageUsed = preferenceRepository.getIsBackgroundImageEnabled()
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
@@ -59,8 +63,8 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         ratio = if (width > height) width.toFloat() / height else height.toFloat() / width
 
-        Companion.width = width.toFloat()
-        Companion.height = height.toFloat()
+        OpenGLWallpaperService.width = width.toFloat()
+        OpenGLWallpaperService.height = height.toFloat()
 
         if (isSnowfallBackgroundProgramUsed) {
 //         we need to initialize background after getting right aspect ratio from above
@@ -75,6 +79,12 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
             logging("snowflake program is not using", TAG)
         }
 
+        if (isBackgroundImageUsed) {
+            backgroundImage = BackgroundImage(context)
+        } else {
+            logging("background image is not using", TAG)
+        }
+
         orthoM(projectionMatrix, 0, -1f, 1f, -1f, 1f, 1f, 10f)
     }
 
@@ -85,6 +95,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
+        backgroundImage?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
         snowfallBackground?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
         texturedSnowflake?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
     }
@@ -113,7 +124,5 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     companion object {
         private const val TAG = "SnowfallRenderer"
-        var width = 0f
-        var height = 0f
     }
 }

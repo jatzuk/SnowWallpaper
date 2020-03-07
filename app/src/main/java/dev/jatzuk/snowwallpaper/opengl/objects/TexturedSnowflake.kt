@@ -6,12 +6,12 @@ import android.opengl.Matrix.*
 import android.os.SystemClock
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer.Companion.height
-import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer.Companion.width
 import dev.jatzuk.snowwallpaper.opengl.data.RectangleVertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.SnowflakeProgram
 import dev.jatzuk.snowwallpaper.opengl.util.BYTES_PER_FLOAT
 import dev.jatzuk.snowwallpaper.opengl.util.loadTexture
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.height
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.width
 
 class TexturedSnowflake(context: Context) {
 

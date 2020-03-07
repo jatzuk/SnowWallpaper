@@ -3,7 +3,6 @@ package dev.jatzuk.snowwallpaper.opengl.wallpaper
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.PixelFormat
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -12,11 +11,9 @@ import android.opengl.GLSurfaceView
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
 import androidx.core.graphics.drawable.toDrawable
-import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import kotlin.math.PI
 import kotlin.math.atan2
-
 
 class OpenGLWallpaperService : WallpaperService() {
 
@@ -69,14 +66,6 @@ class OpenGLWallpaperService : WallpaperService() {
             glSurfaceView.run {
                 setEGLContextClientVersion(2)
                 preserveEGLContextOnPause = true
-
-                glSurfaceView.run {
-                    setEGLConfigChooser(8, 8, 8, 8, 16, 0)
-                    holder.setFormat(PixelFormat.TRANSLUCENT)
-                    setBackgroundResource(R.drawable.b0)
-                    setZOrderOnTop(true)
-                }
-
                 setRenderer(renderer)
                 isRendererSet = true
             }
@@ -149,5 +138,7 @@ class OpenGLWallpaperService : WallpaperService() {
         private const val SENSOR_INFO_TAG = "SENSOR_INFO_TAG"
         var ratio = 0f
         var roll = 0f
+        var width = 0f
+        var height = 0f
     }
 }

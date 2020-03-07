@@ -4,8 +4,12 @@ import android.content.Context
 import android.opengl.GLES20.*
 import dev.jatzuk.snowwallpaper.R
 
-class SnowflakeProgram(context: Context) :
-    ShaderProgram(context, R.raw.snowflake_vertex_shader, R.raw.snowflake_fragment_shader) {
+class BackgroundImageProgram(context: Context) :
+    ShaderProgram(
+        context,
+        R.raw.background_image_vertex_shader,
+        R.raw.background_image_fragment_shader
+    ) {
 
     private val uMatrixLocation = glGetUniformLocation(program, uMatrix)
     private val uTextureUnitLocation = glGetUniformLocation(program, uTextureUnit)

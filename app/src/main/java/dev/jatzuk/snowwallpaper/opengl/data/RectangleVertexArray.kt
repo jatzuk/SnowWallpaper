@@ -1,9 +1,9 @@
 package dev.jatzuk.snowwallpaper.opengl.data
 
-import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer.Companion.height
-import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer.Companion.width
 import dev.jatzuk.snowwallpaper.opengl.objects.Snowflake
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.height
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.ratio
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.width
 
 class RectangleVertexArray(
     private val snowflakes: Array<Snowflake>,

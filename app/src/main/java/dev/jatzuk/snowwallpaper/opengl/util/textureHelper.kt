@@ -4,25 +4,30 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.opengl.GLES20.*
 import android.opengl.GLUtils.texImage2D
+import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 
 private const val TAG = "TextureHelper"
 
-fun loadTexture(context: Context, resourceId: Int): Int {
+fun loadTexture(context: Context, resourceId: Int = -1): Int {
     val textureObjectsIds = intArrayOf(0)
     glGenTextures(1, textureObjectsIds, 0)
 
     if (textureObjectsIds[0] == 0) {
-        errorLog(TAG, "Could not generate a new Open GL texture object")
+        errorLog("Could not generate a new Open GL texture object", TAG)
         return 0
     }
 
-    val options = BitmapFactory.Options().apply { inScaled = false }
-    val bitmap = BitmapFactory.decodeResource(context.resources, resourceId, options)
+    val bitmap = if (resourceId != -1) {
+        ImageProvider.loadBackgroundImage(context)
+    } else {
+        val options = BitmapFactory.Options().apply { inScaled = false }
+        BitmapFactory.decodeResource(context.resources, resourceId, options)
+    }
 
     if (bitmap == null) {
-        errorLog(TAG, "Resource ID: $resourceId could not be decoded")
+        errorLog("Resource ID: $resourceId could not be decoded", TAG)
         glDeleteTextures(1, textureObjectsIds, 0)
         return 0
     }

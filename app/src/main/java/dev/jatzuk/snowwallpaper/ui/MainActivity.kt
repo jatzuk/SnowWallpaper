@@ -6,13 +6,16 @@ import android.app.WallpaperManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.widget.Toast
+import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService
 
 class MainActivity : Activity() {
 
     private var isSupportingES2 = false
+    private lateinit var glSurfaceView: GLSurfaceView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,9 +29,21 @@ class MainActivity : Activity() {
         super.onResume()
 
         if (!isSupportingES2) {
-            Toast.makeText(this, "", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "todo", Toast.LENGTH_LONG).show() // todo
             finish()
-        } else startLiveWallpaperPreview()
+        } //else startLiveWallpaperPreview()
+
+        startLiveWallpaperPreview()
+//        debug()
+    }
+
+    private fun debug() {
+        glSurfaceView = GLSurfaceView(this)
+        glSurfaceView.apply {
+            setEGLContextClientVersion(2)
+            setRenderer(SnowfallRenderer(this@MainActivity))
+            setContentView(glSurfaceView)
+        }
     }
 
     private fun startLiveWallpaperPreview() {

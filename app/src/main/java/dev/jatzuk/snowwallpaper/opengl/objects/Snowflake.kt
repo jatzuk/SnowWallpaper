@@ -2,9 +2,9 @@ package dev.jatzuk.snowwallpaper.opengl.objects
 
 import android.content.Context
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer.Companion.height
-import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer.Companion.width
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.height
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.roll
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.width
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import kotlin.math.PI
 import kotlin.math.cos
