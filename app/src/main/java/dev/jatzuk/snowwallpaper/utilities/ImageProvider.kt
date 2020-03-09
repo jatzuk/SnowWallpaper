@@ -11,7 +11,10 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 object ImageProvider {

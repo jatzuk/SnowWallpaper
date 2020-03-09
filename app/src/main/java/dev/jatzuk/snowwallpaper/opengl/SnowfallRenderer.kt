@@ -35,9 +35,9 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     private var frames = 0
 
-    private val isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
-    private val isSnowflakeProgramUsed = preferenceRepository.getIsSnowflakeEnabled()
-    private val isBackgroundImageUsed = preferenceRepository.getIsBackgroundImageEnabled()
+    private var isSnowfallBackgroundProgramUsed = false
+    private var isSnowflakeProgramUsed = false
+    private var isBackgroundImageUsed = false
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
@@ -66,24 +66,25 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         OpenGLWallpaperService.width = width.toFloat()
         OpenGLWallpaperService.height = height.toFloat()
 
-        if (isSnowfallBackgroundProgramUsed) {
-//         we need to initialize background after getting right aspect ratio from above
-            snowfallBackground = SnowfallBackground(context)
-        } else {
-            logging("snowfall program is not using", TAG)
-        }
+        isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
+        isSnowflakeProgramUsed = preferenceRepository.getIsSnowflakeEnabled()
+        isBackgroundImageUsed = preferenceRepository.getIsBackgroundImageEnabled()
 
-        if (isSnowflakeProgramUsed) {
-            texturedSnowflake = TexturedSnowflake(context)
-        } else {
-            logging("snowflake program is not using", TAG)
-        }
+        snowfallBackground =
+            if (isSnowfallBackgroundProgramUsed) SnowfallBackground(context) else null
 
-        if (isBackgroundImageUsed) {
-            backgroundImage = BackgroundImage(context)
-        } else {
-            logging("background image is not using", TAG)
-        }
+        var usageMessage = if (snowfallBackground != null) IS_USING else IS_NOT_USING
+        logging("snowfall program $usageMessage", TAG)
+
+        texturedSnowflake = if (isSnowflakeProgramUsed) TexturedSnowflake(context) else null
+
+        usageMessage = if (texturedSnowflake != null) IS_USING else IS_NOT_USING
+        logging("snowflake program $usageMessage", TAG)
+
+        backgroundImage = if (isBackgroundImageUsed) BackgroundImage(context) else null
+
+        usageMessage = if (backgroundImage != null) IS_USING else IS_NOT_USING
+        logging("background image $usageMessage", TAG)
 
         orthoM(projectionMatrix, 0, -1f, 1f, -1f, 1f, 1f, 10f)
     }
@@ -124,5 +125,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     companion object {
         private const val TAG = "SnowfallRenderer"
+        private const val IS_NOT_USING = "is not used"
+        private const val IS_USING = "is used"
     }
 }

@@ -136,6 +136,7 @@ class OpenGLWallpaperService : WallpaperService() {
 
     companion object {
         private const val SENSOR_INFO_TAG = "SENSOR_INFO_TAG"
+        private const val TAG = "OpenGLWallpaperService"
         var ratio = 0f
         var roll = 0f
         var width = 0f

@@ -19,7 +19,7 @@ fun loadTexture(context: Context, resourceId: Int = -1): Int {
         return 0
     }
 
-    val bitmap = if (resourceId != -1) {
+    val bitmap = if (resourceId == -1) {
         ImageProvider.loadBackgroundImage(context)
     } else {
         val options = BitmapFactory.Options().apply { inScaled = false }

@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <SwitchPreferenceCompat
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:summary="@string/background_image_switcher_summary"
         android:title="@string/preference_switcher_enabled"
         app:key="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED" />
