@@ -3,7 +3,6 @@ package dev.jatzuk.snowwallpaper.opengl.objects
 import android.content.Context
 import android.opengl.GLES20.*
 import android.opengl.Matrix.*
-import android.os.SystemClock
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.data.RectangleVertexArray
@@ -58,7 +57,7 @@ class TexturedSnowflake(context: Context) {
             if (snowflake.isMajorSnowflake) {
                 val x = snowflake.x * 2f / width - 1f
                 val y = snowflake.y * -2f / height + 1f
-                rotate(modelMatrix, x, y, snowflake.rotationAxis)
+                rotate(modelMatrix, x, y, snowflake.rotationAxis, snowflake.rotationDegrees)
                 multiplyMM(mvpMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0)
             }
 
@@ -76,10 +75,12 @@ class TexturedSnowflake(context: Context) {
         modelMatrix: FloatArray,
         x: Float,
         y: Float,
-        rotationAxis: Snowflake.RotationAxis
+        rotationAxis: Snowflake.RotationAxis,
+        angle: Float
     ) {
-        val time = (SystemClock.uptimeMillis() % 10_000).toInt()
-        val angle = (360f / 10_000) * time
+//        val time = (SystemClock.uptimeMillis() % 10_000).toInt()
+//        val angle = (360f / 10_000) * time
+//        logging("rotation: $angle")
         translateM(modelMatrix, 0, x, y, 1f)
         rotateAxis(modelMatrix, angle, rotationAxis)
         translateM(modelMatrix, 0, -x, -y, -1f)

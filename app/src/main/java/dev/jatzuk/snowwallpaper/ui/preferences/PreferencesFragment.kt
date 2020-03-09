@@ -19,7 +19,8 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     }
 
     override fun setUp() {
-        val bitmap = ImageProvider.loadThumbnailImage(context!!)
+        val bitmap =
+            ImageProvider.loadThumbnailImage(context!!) // todo (check if it's first start of app, so background image is null, or set default images)
         val thumbnailIcon = bitmap?.toDrawable(resources) ?: BitmapDrawable(resources, bitmap)
         val backgroundImage =
             findPreference<Preference>(getString(R.string.background_image_global_switcher_key))
@@ -30,7 +31,8 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     override fun attachObserver() {
         PreferenceRepository.getInstance(context!!).backgroundImagePreference.observe(
             viewLifecycleOwner,
-            Observer { isBackgroundImageEnabled = it })
+            Observer { isBackgroundImageEnabled = it }
+        )
     }
 
 //    override fun onResume() {

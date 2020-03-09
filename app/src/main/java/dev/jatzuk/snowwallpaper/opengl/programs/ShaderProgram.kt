@@ -35,7 +35,7 @@ abstract class ShaderProgram(
     }
 
     protected fun setNormalizedCoordinates() {
-        glUniform1f(uScreenWidthLocation, OpenGLWallpaperService.width)
-        glUniform1f(uScreenHeightLocation, OpenGLWallpaperService.height)
+        glUniform1f(uScreenWidthLocation, OpenGLWallpaperService.width.toFloat())
+        glUniform1f(uScreenHeightLocation, OpenGLWallpaperService.height.toFloat())
     }
 }

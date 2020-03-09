@@ -54,10 +54,34 @@ class CustomSeekBarPreference(
     }
 
     private fun initPropertyValue(): Int = when (key) {
-        PreferenceRepository.PREF_KEY_SNOWFALL_LIMIT -> preferenceRepository.getSnowfallLimit()
-        PreferenceRepository.PREF_KEY_SNOWFALL_VELOCITY_FACTOR -> preferenceRepository.getSnowfallVelocityFactor()
-        PreferenceRepository.PREF_KEY_SNOWFALL_MIN_RADIUS -> preferenceRepository.getSnowfallMinRadius().toInt()
-        PreferenceRepository.PREF_KEY_SNOWFALL_MAX_RADIUS -> preferenceRepository.getSnowfallMaxRadius().toInt()
+        PreferenceRepository.PREF_KEY_SNOWFALL_LIMIT -> {
+            preferenceRepository.getSnowfallLimit()
+        }
+        PreferenceRepository.PREF_KEY_SNOWFALL_VELOCITY_FACTOR -> {
+            preferenceRepository.getSnowfallVelocityFactor()
+        }
+        PreferenceRepository.PREF_KEY_SNOWFALL_MIN_RADIUS -> {
+            preferenceRepository.getSnowfallMinRadius().toInt()
+        }
+        PreferenceRepository.PREF_KEY_SNOWFALL_MAX_RADIUS -> {
+            preferenceRepository.getSnowfallMaxRadius().toInt()
+        }
+
+        PreferenceRepository.PREF_KEY_SNOWFLAKE_LIMIT -> {
+            preferenceRepository.getSnowflakeLimit()
+        }
+        PreferenceRepository.PREF_KEY_SNOWFLAKE_VELOCITY_FACTOR -> {
+            preferenceRepository.getSnowflakeVelocityFactor()
+        }
+        PreferenceRepository.PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY -> {
+            preferenceRepository.getSnowflakeRotationVelocity()
+        }
+        PreferenceRepository.PREF_KEY_SNOWFLAKE_MIN_RADIUS -> {
+            preferenceRepository.getSnowflakeMinRadius()
+        }
+        PreferenceRepository.PREF_KEY_SNOWFLAKE_MAX_RADIUS -> {
+            preferenceRepository.getSnowflakeMaxRadius()
+        }
         else -> defaultValuePreference!!.toInt()
     }
 

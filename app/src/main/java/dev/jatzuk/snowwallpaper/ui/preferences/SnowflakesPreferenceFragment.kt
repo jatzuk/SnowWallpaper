@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
 
 @Suppress("unused")
-class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_snowfall) {
+class SnowflakesPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_snowflake) {
 
     override fun setUp() {}
 
@@ -17,12 +17,10 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        appBarTitleViewModel.title.value =
-            getString(R.string.background_snowflakes) // todo(change attrib name)
+        appBarTitleViewModel.title.value = "Foreground snowflakes"
     }
 
     override fun provideBackground(): Drawable? = null
-//        BitmapFactory.decodeResource(resources, R.drawable.b2).toDrawable(resources)
 
     override fun provideBackgroundColor(): Int = Color.CYAN
 
@@ -32,7 +30,7 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
         savedInstanceState: Bundle?
     ): RecyclerView {
         val recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState)
-        recyclerView.addItemDecoration(Divider(60)) // todo from dimens
+        recyclerView.addItemDecoration(Divider(60))
         return recyclerView
     }
 }

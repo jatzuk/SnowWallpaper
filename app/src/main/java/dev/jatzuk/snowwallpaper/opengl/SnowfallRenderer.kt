@@ -63,8 +63,8 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         ratio = if (width > height) width.toFloat() / height else height.toFloat() / width
 
-        OpenGLWallpaperService.width = width.toFloat()
-        OpenGLWallpaperService.height = height.toFloat()
+        OpenGLWallpaperService.width = width
+        OpenGLWallpaperService.height = height
 
         isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
         isSnowflakeProgramUsed = preferenceRepository.getIsSnowflakeEnabled()

@@ -22,6 +22,14 @@ class CustomSwitchPreference(
                     PreferenceRepository.PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED -> {
                         preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
                     }
+
+                    PreferenceRepository.PREF_KEY_IS_SNOWFLAKE_ENABLED -> {
+                        preferenceRepository.getIsSnowflakeEnabled()
+                    }
+                    PreferenceRepository.PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED -> {
+                        preferenceRepository.getIsSnowflakeUniqueRadiusEnabled()
+                    }
+
                     PreferenceRepository.PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED -> {
                         preferenceRepository.getIsBackgroundImageEnabled()
                     }

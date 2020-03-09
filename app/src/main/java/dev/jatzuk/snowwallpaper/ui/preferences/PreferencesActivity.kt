@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dev.jatzuk.snowwallpaper.R
@@ -28,7 +28,7 @@ class PreferencesActivity : AppCompatActivity(),
             .replace(R.id.preferences_container, PreferencesFragment())
             .commit()
 
-        appBarTitleViewModel = ViewModelProviders.of(this).get(AppBarTitleViewModel::class.java)
+        appBarTitleViewModel = ViewModelProvider(this).get(AppBarTitleViewModel::class.java)
         appBarTitleViewModel.title.observe(this, Observer {
             supportActionBar?.title = it
         })

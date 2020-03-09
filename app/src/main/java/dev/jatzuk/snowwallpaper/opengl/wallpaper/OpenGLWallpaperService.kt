@@ -139,7 +139,7 @@ class OpenGLWallpaperService : WallpaperService() {
         private const val TAG = "OpenGLWallpaperService"
         var ratio = 0f
         var roll = 0f
-        var width = 0f
-        var height = 0f
+        var width = 0
+        var height = 0
     }
 }

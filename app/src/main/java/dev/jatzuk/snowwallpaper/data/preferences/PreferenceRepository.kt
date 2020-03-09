@@ -7,12 +7,11 @@ class PreferenceRepository private constructor(context: Context) {
 
     private val preferenceManager = PreferenceManager.getDefaultSharedPreferences(context)
 
-    val backgroundImagePreference =
-        PreferenceLiveData(
-            context,
-            PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED,
-            BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE
-        )
+    val backgroundImagePreference = PreferenceLiveData(
+        context,
+        PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED,
+        BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE
+    )
 
     fun getIsSnowfallEnabled(): Boolean =
         preferenceManager.getBoolean(
@@ -21,7 +20,10 @@ class PreferenceRepository private constructor(context: Context) {
         )
 
     fun getSnowfallLimit(): Int =
-        preferenceManager.getInt(PREF_KEY_SNOWFALL_LIMIT, SNOWFALL_LIMIT_DEFAULT_VALUE)
+        preferenceManager.getInt(
+            PREF_KEY_SNOWFALL_LIMIT,
+            SNOWFALL_LIMIT_DEFAULT_VALUE
+        )
 
     fun getSnowfallVelocityFactor(): Int =
         preferenceManager.getInt(
@@ -32,20 +34,20 @@ class PreferenceRepository private constructor(context: Context) {
     fun getIsSnowfallUniqueRadiusEnabled(): Boolean =
         preferenceManager.getBoolean(
             PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED,
-            SNOWFALL_IS_UNIQUE_RADIUS_ENABLED
+            SNOWFALL_IS_UNIQUE_RADIUS_ENABLED_DEFAULT_VALUE
         )
 
-    fun getSnowfallMinRadius(): Float =
+    fun getSnowfallMinRadius(): Int =
         preferenceManager.getInt(
             PREF_KEY_SNOWFALL_MIN_RADIUS,
             SNOWFALL_MIN_RADIUS_DEFAULT_VALUE
-        ).toFloat()
+        )
 
-    fun getSnowfallMaxRadius(): Float =
+    fun getSnowfallMaxRadius(): Int =
         preferenceManager.getInt(
             PREF_KEY_SNOWFALL_MAX_RADIUS,
             SNOWFALL_MAX_RADIUS_DEFAULT_VALUE
-        ).toFloat()
+        )
 
     fun getIsSnowflakeEnabled(): Boolean =
         preferenceManager.getBoolean(
@@ -59,27 +61,70 @@ class PreferenceRepository private constructor(context: Context) {
             SNOWFLAKE_LIMIT_DEFAULT_VALUE
         )
 
+    fun getSnowflakeVelocityFactor(): Int =
+        preferenceManager.getInt(
+            PREF_KEY_SNOWFLAKE_VELOCITY_FACTOR,
+            SNOWFLAKE_VELOCITY_DEFAULT_VALUE
+        )
+
+    fun getSnowflakeRotationVelocity(): Int =
+        preferenceManager.getInt(
+            PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY,
+            SNOWFLAKE_ROTATION_VELOCITY_DEFAULT_VALUE
+        )
+
+    fun getIsSnowflakeUniqueRadiusEnabled(): Boolean =
+        preferenceManager.getBoolean(
+            PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED,
+            SNOWFLAKE_IS_UNIQUE_RADIUS_ENABLED_DEFAULT_VALUE
+        )
+
+    fun getSnowflakeMinRadius(): Int =
+        preferenceManager.getInt(
+            PREF_KEY_SNOWFLAKE_MIN_RADIUS,
+            SNOWFLAKE_MIN_RADIUS_DEFAULT_VALUE
+        )
+
+    fun getSnowflakeMaxRadius(): Int =
+        preferenceManager.getInt(
+            PREF_KEY_SNOWFLAKE_MAX_RADIUS,
+            SNOWFLAKE_MAX_RADIUS_DEFAULT_VALUE
+        )
+
     fun getIsBackgroundImageEnabled(): Boolean =
         preferenceManager.getBoolean(
             PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED,
             BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE
         )
 
-    fun getRendererFrameLimit(): Int = preferenceManager.getInt(PREF_KEY_RENDERER_FRAME_LIMIT, 30)
+    fun getRendererFrameLimit(): Int =
+        preferenceManager.getInt(
+            PREF_KEY_RENDERER_FRAME_LIMIT,
+            FRAMERATE_DEFAULT_VALUE
+        )
 
     companion object {
         @Volatile
         private var instance: PreferenceRepository? = null
 
         private const val SNOWFALL_IS_ENABLED_DEFAULT_VALUE = true
-        private const val SNOWFALL_VELOCITY_FACTOR_DEFAULT_VALUE = 3
         private const val SNOWFALL_LIMIT_DEFAULT_VALUE = 80
-        private const val SNOWFALL_IS_UNIQUE_RADIUS_ENABLED = true
+        private const val SNOWFALL_VELOCITY_FACTOR_DEFAULT_VALUE = 3
+        private const val SNOWFALL_IS_UNIQUE_RADIUS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFALL_MIN_RADIUS_DEFAULT_VALUE = 8
         private const val SNOWFALL_MAX_RADIUS_DEFAULT_VALUE = 30
+
         private const val SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFLAKE_LIMIT_DEFAULT_VALUE = 3
+        private const val SNOWFLAKE_VELOCITY_DEFAULT_VALUE = 2
+        private const val SNOWFLAKE_ROTATION_VELOCITY_DEFAULT_VALUE = 50
+        private const val SNOWFLAKE_IS_UNIQUE_RADIUS_ENABLED_DEFAULT_VALUE = true
+        private const val SNOWFLAKE_MIN_RADIUS_DEFAULT_VALUE = 30
+        private const val SNOWFLAKE_MAX_RADIUS_DEFAULT_VALUE = 60
+
         private const val BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE = false
+
+        private const val FRAMERATE_DEFAULT_VALUE = 30
 
         const val PREF_KEY_IS_SNOWFALL_ENABLED =
             "PREF_KEY_IS_SNOWFALL_ENABLED"
@@ -104,6 +149,21 @@ class PreferenceRepository private constructor(context: Context) {
 
         const val PREF_KEY_SNOWFLAKE_LIMIT =
             "PREF_KEY_SNOWFLAKE_LIMIT"
+
+        const val PREF_KEY_SNOWFLAKE_VELOCITY_FACTOR =
+            "PREF_KEY_SNOWFLAKE_VELOCITY_FACTOR"
+
+        const val PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED =
+            "PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED"
+
+        const val PREF_KEY_SNOWFLAKE_MIN_RADIUS =
+            "PREF_KEY_SNOWFLAKE_MIN_RADIUS"
+
+        const val PREF_KEY_SNOWFLAKE_MAX_RADIUS =
+            "PREF_KEY_SNOWFLAKE_MAX_RADIUS"
+
+        const val PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY =
+            "PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY"
 
         const val PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED =
             "PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"

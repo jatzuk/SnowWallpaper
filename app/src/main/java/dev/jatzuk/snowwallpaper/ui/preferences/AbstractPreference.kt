@@ -11,7 +11,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 
 abstract class AbstractPreference : Preference {
 
@@ -68,6 +67,14 @@ abstract class AbstractPreference : Preference {
         PreferenceRepository.PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED -> {
             !preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
         }
+
+        PreferenceRepository.PREF_KEY_IS_SNOWFLAKE_ENABLED -> {
+            !preferenceRepository.getIsSnowflakeEnabled()
+        }
+        PreferenceRepository.PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED -> {
+            !preferenceRepository.getIsSnowflakeUniqueRadiusEnabled()
+        }
+
         PreferenceRepository.PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED -> {
             !preferenceRepository.getIsBackgroundImageEnabled()
         }
@@ -80,6 +87,11 @@ abstract class AbstractPreference : Preference {
             PreferenceRepository.PREF_KEY_SNOWFALL_MAX_RADIUS -> {
                 preferenceRepository.getIsSnowfallEnabled() &&
                         preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
+            }
+            PreferenceRepository.PREF_KEY_SNOWFLAKE_MIN_RADIUS,
+            PreferenceRepository.PREF_KEY_SNOWFLAKE_MAX_RADIUS -> {
+                preferenceRepository.getIsSnowflakeEnabled() &&
+                        preferenceRepository.getIsSnowflakeUniqueRadiusEnabled()
             }
             else -> !disableDependent
         }
