@@ -97,11 +97,17 @@ class PreferenceRepository private constructor(context: Context) {
             BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE
         )
 
-    fun getRendererFrameLimit(): Int =
+    fun getCosineDeviation(): Int =
         preferenceManager.getInt(
+            PREF_KEY_COSINE_DEVIATION,
+            COSINE_DEVIATION_DEFAULT_VALUE
+        )
+
+    fun getRendererFrameLimit(): Int =
+        preferenceManager.getString(
             PREF_KEY_RENDERER_FRAME_LIMIT,
             FRAMERATE_DEFAULT_VALUE
-        )
+        )!!.toInt()
 
     companion object {
         @Volatile
@@ -117,14 +123,16 @@ class PreferenceRepository private constructor(context: Context) {
         private const val SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFLAKE_LIMIT_DEFAULT_VALUE = 3
         private const val SNOWFLAKE_VELOCITY_DEFAULT_VALUE = 2
-        private const val SNOWFLAKE_ROTATION_VELOCITY_DEFAULT_VALUE = 50
+        private const val SNOWFLAKE_ROTATION_VELOCITY_DEFAULT_VALUE = 2
         private const val SNOWFLAKE_IS_UNIQUE_RADIUS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFLAKE_MIN_RADIUS_DEFAULT_VALUE = 30
         private const val SNOWFLAKE_MAX_RADIUS_DEFAULT_VALUE = 60
 
         private const val BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE = false
 
-        private const val FRAMERATE_DEFAULT_VALUE = 30
+        private const val COSINE_DEVIATION_DEFAULT_VALUE = 1
+
+        private const val FRAMERATE_DEFAULT_VALUE = "30"
 
         const val PREF_KEY_IS_SNOWFALL_ENABLED =
             "PREF_KEY_IS_SNOWFALL_ENABLED"
@@ -167,6 +175,9 @@ class PreferenceRepository private constructor(context: Context) {
 
         const val PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED =
             "PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
+
+        const val PREF_KEY_COSINE_DEVIATION =
+            "PREF_KEY_COSINE_DEVIATION"
 
         const val PREF_KEY_RENDERER_FRAME_LIMIT =
             "PREF_KEY_RENDERER_FRAME_LIMIT"

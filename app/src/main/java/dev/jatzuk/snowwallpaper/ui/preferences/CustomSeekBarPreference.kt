@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 
@@ -20,6 +21,12 @@ class CustomSeekBarPreference(
     private val seekBarMaxValue =
         attributeSet?.getAttributeValue(NAMESPACE, PREFERENCE_MAX)!!.toInt()
     private var currentProgress = initPropertyValue()
+
+    init {
+        if (backgroundImage == null) {
+            backgroundImage = ContextCompat.getDrawable(context, R.drawable.b1)
+        }
+    }
 
     override fun provideLayout(): Int = R.layout.layout_preference_seekbar
 
@@ -61,10 +68,10 @@ class CustomSeekBarPreference(
             preferenceRepository.getSnowfallVelocityFactor()
         }
         PreferenceRepository.PREF_KEY_SNOWFALL_MIN_RADIUS -> {
-            preferenceRepository.getSnowfallMinRadius().toInt()
+            preferenceRepository.getSnowfallMinRadius()
         }
         PreferenceRepository.PREF_KEY_SNOWFALL_MAX_RADIUS -> {
-            preferenceRepository.getSnowfallMaxRadius().toInt()
+            preferenceRepository.getSnowfallMaxRadius()
         }
 
         PreferenceRepository.PREF_KEY_SNOWFLAKE_LIMIT -> {

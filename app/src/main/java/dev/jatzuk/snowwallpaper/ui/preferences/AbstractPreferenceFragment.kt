@@ -12,6 +12,7 @@ import androidx.annotation.XmlRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
+import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
 abstract class AbstractPreferenceFragment(
@@ -51,6 +52,18 @@ abstract class AbstractPreferenceFragment(
     final override fun onResume() {
         super.onResume()
         attachObserver()
+    }
+
+    override fun onCreateRecyclerView(
+        inflater: LayoutInflater?,
+        parent: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): RecyclerView {
+        val recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState)
+        recyclerView.addItemDecoration(
+            Divider(resources.getDimension(R.dimen.preference_divider_height).toInt())
+        )
+        return recyclerView
     }
 
     protected abstract fun setUp()

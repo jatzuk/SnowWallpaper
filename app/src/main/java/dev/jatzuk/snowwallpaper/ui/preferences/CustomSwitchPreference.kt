@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.ContextCompat
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 
@@ -11,6 +12,12 @@ class CustomSwitchPreference(
     context: Context,
     attributeSet: AttributeSet?
 ) : AbstractPreference(context, attributeSet) {
+
+    init {
+        if (backgroundImage == null) {
+            backgroundImage = ContextCompat.getDrawable(context, R.drawable.b0)
+        }
+    }
 
     override fun setupPreference(view: View) {
         view.run {

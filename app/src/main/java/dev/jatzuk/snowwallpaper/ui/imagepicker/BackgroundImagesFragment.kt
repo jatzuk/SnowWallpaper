@@ -18,7 +18,7 @@ class BackgroundImagesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        retainInstance = true
+//        retainInstance = true // todo
         arguments?.let { columnCount = it.getInt(ARG_COLUMN_COUNT) }
     }
 

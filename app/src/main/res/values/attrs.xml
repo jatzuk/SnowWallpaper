@@ -3,7 +3,8 @@
     <declare-styleable name="AbstractPreference">
         <attr name="preferenceTitle" format="string" />
         <attr name="preferenceSummary" format="string" />
-        <attr name="preferenceDefaultValue" format="string|boolean" />
+        <attr name="preferenceDefaultValue" format="integer|boolean" />
+        <attr name="preferenceBackground" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="CustomSeekBarPreference">

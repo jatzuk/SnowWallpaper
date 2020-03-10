@@ -7,4 +7,6 @@
     <dimen name="thumbnail_size">64dp</dimen>
 
     <dimen name="grid_layout_spacing">2dp</dimen>
+
+    <dimen name="preference_divider_height">20dp</dimen>
 </resources>

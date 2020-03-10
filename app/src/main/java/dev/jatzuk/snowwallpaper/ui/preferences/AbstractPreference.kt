@@ -2,10 +2,13 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.content.res.getIntOrThrow
 import androidx.core.content.res.use
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
@@ -16,13 +19,14 @@ abstract class AbstractPreference : Preference {
 
     private var titleString: String? = null
     private var summaryString: String? = null
-    protected var defaultValuePreference: String? = null
+    protected var defaultValuePreference: Int? = null
+    protected var backgroundImage: Drawable? = null
     protected val preferenceRepository = PreferenceRepository.getInstance(context)
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
 
-    @SuppressLint("Recycle") // recycled via use extension function
+    @SuppressLint("Recycle") // recycled via "use" extension function
     constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attributeSet,
@@ -34,7 +38,8 @@ abstract class AbstractPreference : Preference {
             titleString = it.getString(R.styleable.AbstractPreference_preferenceTitle)
             summaryString = it.getString(R.styleable.AbstractPreference_preferenceSummary)
             defaultValuePreference =
-                it.getString(R.styleable.AbstractPreference_preferenceDefaultValue)
+                it.getIntOrThrow(R.styleable.AbstractPreference_preferenceDefaultValue)
+            backgroundImage = it.getDrawable(R.styleable.AbstractPreference_preferenceBackground)
         }
     }
 
@@ -52,6 +57,7 @@ abstract class AbstractPreference : Preference {
         }
 
         holder.itemView.run {
+            backgroundImage?.let { findViewById<ViewGroup>(R.id.master_layout).background = it }
             findViewById<TextView>(R.id.title).text = titleString ?: "no title provided" // todo
             findViewById<TextView>(R.id.summary).text = summaryString ?: "no summary provided"//todo
 
@@ -59,6 +65,8 @@ abstract class AbstractPreference : Preference {
             setupPreference(this)
         }
     }
+
+//    abstract fun getMasterLayout(layout: View): ViewGroup
 
     override fun shouldDisableDependents(): Boolean = when (key) {
         PreferenceRepository.PREF_KEY_IS_SNOWFALL_ENABLED -> {

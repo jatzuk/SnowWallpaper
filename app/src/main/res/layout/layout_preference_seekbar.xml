@@ -9,9 +9,9 @@
     card_view:cardElevation="5dp">
 
     <LinearLayout
+        android:id="@+id/master_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/b1"
         android:orientation="vertical">
 
         <include layout="@layout/layout_preference_base" />
