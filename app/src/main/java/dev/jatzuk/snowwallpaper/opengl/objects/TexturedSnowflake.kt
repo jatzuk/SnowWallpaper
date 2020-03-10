@@ -78,9 +78,6 @@ class TexturedSnowflake(context: Context) {
         rotationAxis: Snowflake.RotationAxis,
         angle: Float
     ) {
-//        val time = (SystemClock.uptimeMillis() % 10_000).toInt()
-//        val angle = (360f / 10_000) * time
-//        logging("rotation: $angle")
         translateM(modelMatrix, 0, x, y, 1f)
         rotateAxis(modelMatrix, angle, rotationAxis)
         translateM(modelMatrix, 0, -x, -y, -1f)
