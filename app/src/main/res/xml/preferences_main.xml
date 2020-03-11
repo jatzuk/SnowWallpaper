@@ -47,6 +47,12 @@
         <!--            android:key="PREF_KEY_RENDERER_FRAME_LIMIT"-->
         <!--            android:summary="current value is"-->
         <!--            android:title="Frame count" />-->
+
+        <dev.jatzuk.snowwallpaper.ui.preferences.IntentPreference
+            app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.SnowfallPreferenceFragment"
+            app:key="test"
+            app:preferenceSummary="test summary"
+            app:preferenceTitle="test title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

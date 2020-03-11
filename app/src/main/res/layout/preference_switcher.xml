@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/b0">
 
-        <include layout="@layout/layout_preference_base" />
+        <include layout="@layout/preference_base" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchWidget"

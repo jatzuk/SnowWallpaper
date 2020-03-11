@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.core.content.res.getIntOrThrow
 import androidx.core.content.res.use
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
@@ -38,7 +37,7 @@ abstract class AbstractPreference : Preference {
             titleString = it.getString(R.styleable.AbstractPreference_preferenceTitle)
             summaryString = it.getString(R.styleable.AbstractPreference_preferenceSummary)
             defaultValuePreference =
-                it.getIntOrThrow(R.styleable.AbstractPreference_preferenceDefaultValue)
+                it.getInteger(R.styleable.AbstractPreference_preferenceDefaultValue, 0)
             backgroundImage = it.getDrawable(R.styleable.AbstractPreference_preferenceBackground)
         }
     }

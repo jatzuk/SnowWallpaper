@@ -51,7 +51,7 @@ class CustomSwitchPreference(
         }
     }
 
-    override fun provideLayout(): Int = R.layout.layout_preference_switcher
+    override fun provideLayout(): Int = R.layout.preference_switcher
 
     companion object {
         private const val TAG = "CustomSwitchPreference"

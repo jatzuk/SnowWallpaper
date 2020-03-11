@@ -28,7 +28,7 @@ class CustomSeekBarPreference(
         }
     }
 
-    override fun provideLayout(): Int = R.layout.layout_preference_seekbar
+    override fun provideLayout(): Int = R.layout.preference_seekbar
 
     override fun setupPreference(view: View) {
         view.run {
@@ -88,6 +88,14 @@ class CustomSeekBarPreference(
         }
         PreferenceRepository.PREF_KEY_SNOWFLAKE_MAX_RADIUS -> {
             preferenceRepository.getSnowflakeMaxRadius()
+        }
+
+        PreferenceRepository.PREF_KEY_COSINE_DEVIATION -> {
+            preferenceRepository.getCosineDeviation()
+        }
+
+        PreferenceRepository.PREF_KEY_RENDERER_FRAME_LIMIT -> {
+            preferenceRepository.getRendererFrameLimit()
         }
         else -> defaultValuePreference!!.toInt()
     }
