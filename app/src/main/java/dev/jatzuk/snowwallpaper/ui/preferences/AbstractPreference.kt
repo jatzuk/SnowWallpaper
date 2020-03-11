@@ -66,8 +66,6 @@ abstract class AbstractPreference : Preference {
         }
     }
 
-//    abstract fun getMasterLayout(layout: View): ViewGroup
-
     override fun shouldDisableDependents(): Boolean = when (key) {
         PreferenceRepository.PREF_KEY_IS_SNOWFALL_ENABLED -> {
             !preferenceRepository.getIsSnowfallEnabled()
