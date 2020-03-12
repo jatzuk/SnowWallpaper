@@ -8,27 +8,18 @@
 
     <TextView
         android:id="@+id/title"
+        style="@style/PreferenceTextAppearanceTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:textAppearance="?attr/textAppearanceSearchResultTitle"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Preference name" />
 
     <TextView
         android:id="@+id/summary"
+        style="@style/PreferenceTextAppearanceSubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:textAppearance="?attr/textAppearanceSearchResultSubtitle"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
         tools:text="preference summary" />

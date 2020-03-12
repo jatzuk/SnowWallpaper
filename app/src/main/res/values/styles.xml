@@ -8,12 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!--    <style name="PreferenceTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">-->
-    <!--        <item name="android:background">#FFEB3B</item>-->
-    <!--    </style>-->
-
     <style name="PreferenceTheme" parent="@style/AppTheme">
         <item name="android:background">#673AB7</item>
+    </style>
+
+    <style name="PreferenceTextAppearanceTitle" parent="@android:style/TextAppearance">
+        <item name="android:layout_marginLeft">@dimen/preference_margin_left</item>
+        <item name="android:textAppearance">?attr/textAppearanceSearchResultTitle</item>
+        <item name="android:textColor">@color/colorPreferenceTitle</item>
+        <item name="android:textSize">@dimen/preference_title_size</item>
+    </style>
+
+    <style name="PreferenceTextAppearanceSubtitle" parent="PreferenceTextAppearanceTitle">
+        <item name="android:textAppearance">?attr/textAppearanceSearchResultSubtitle</item>
+        <item name="android:textColor">@color/colorPreferenceSubtitle</item>
+        <item name="android:textSize">@dimen/preference_subtitle_size</item>
     </style>
 
 </resources>

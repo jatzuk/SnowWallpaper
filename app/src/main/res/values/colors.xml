@@ -6,4 +6,7 @@
 
     <color name="colorSeekbarBackground">#4E62D5</color>
     <color name="preferencesBackground">#673AB7</color>
+
+    <color name="colorPreferenceTitle">#FFF</color>
+    <color name="colorPreferenceSubtitle">#FF888888</color>
 </resources>
