@@ -25,4 +25,8 @@
         <item name="android:textSize">@dimen/preference_subtitle_size</item>
     </style>
 
+    <style name="PreferenceCategoryTitleText" parent="PreferenceTextAppearanceTitle">
+        <item name="android:layout_marginLeft">0dp</item>
+    </style>
+
 </resources>

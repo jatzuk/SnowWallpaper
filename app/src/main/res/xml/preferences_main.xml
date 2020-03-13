@@ -2,29 +2,29 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        android:icon="@android:drawable/btn_star_big_off"
+    <dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory
         android:title="rendering setup">
 
-        <Preference
-            android:icon="@android:drawable/btn_star_big_on"
-            android:summary="@string/background_snowflakes_category_summary"
-            android:title="@string/background_snowflakes"
+        <dev.jatzuk.snowwallpaper.ui.preferences.IntentPreference
             app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.SnowfallPreferenceFragment"
-            app:key="@string/background_snowflakes_category_key" />
+            app:key="@string/background_snowflakes_category_key"
+            app:preferenceSummary="@string/background_snowflakes_category_summary"
+            app:preferenceTitle="@string/background_snowflakes" />
 
-        <Preference
-            android:icon="@android:drawable/btn_star_big_on"
-            android:summary="@string/foreground_snowflakes_category_summary"
-            android:title="@string/foreground_snowflakes_category"
+        <dev.jatzuk.snowwallpaper.ui.preferences.IntentPreference
             app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.SnowflakesPreferenceFragment"
-            app:key="@string/foreground_snowflakes_category_key" />
+            app:key="@string/foreground_snowflakes_category_key"
+            app:preferenceSummary="@string/foreground_snowflakes_category_summary"
+            app:preferenceTitle="@string/foreground_snowflakes_category" />
 
-        <Preference
+        <dev.jatzuk.snowwallpaper.ui.preferences.IntentPreference
             android:title="@string/background_image"
             app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.BackgroundImagePreferenceFragment"
-            app:key="@string/background_image_global_switcher_key" />
-    </PreferenceCategory>
+            app:key="@string/background_image_global_switcher_key"
+            app:preferenceSummary="@string/background_image_category_summary"
+            app:preferenceTitle="@string/background_image" />
+
+    </dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/preference_general_category"
@@ -32,7 +32,6 @@
 
         <dev.jatzuk.snowwallpaper.ui.preferences.CustomSeekBarPreference
             app:key="PREF_KEY_COSINE_DEVIATION"
-            app:preferenceBackground="@drawable/b2"
             app:preferenceDefaultValue="1"
             app:preferenceMax="5"
             app:preferenceMin="1"
@@ -48,11 +47,7 @@
         <!--            android:summary="current value is"-->
         <!--            android:title="Frame count" />-->
 
-        <dev.jatzuk.snowwallpaper.ui.preferences.IntentPreference
-            app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.SnowfallPreferenceFragment"
-            app:key="test"
-            app:preferenceSummary="test summary"
-            app:preferenceTitle="test title" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
