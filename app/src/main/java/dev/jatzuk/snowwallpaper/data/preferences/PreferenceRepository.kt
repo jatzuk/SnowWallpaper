@@ -104,10 +104,14 @@ class PreferenceRepository private constructor(context: Context) {
         )
 
     fun getRendererFrameLimit(): Int =
-        preferenceManager.getString(
+        if (getRendererToggleState()) RENDERER_FRAMERATE_MAX_VALUE
+        else RENDERER_FRAMERATE_DEFAULT_VALUE
+
+    fun getRendererToggleState(): Boolean =
+        preferenceManager.getBoolean(
             PREF_KEY_RENDERER_FRAME_LIMIT,
-            FRAMERATE_DEFAULT_VALUE
-        )!!.toInt()
+            RENDERER_FRAMERATE_STATE_DEFAULT_VALUE
+        )
 
     companion object {
         @Volatile
@@ -132,7 +136,9 @@ class PreferenceRepository private constructor(context: Context) {
 
         private const val COSINE_DEVIATION_DEFAULT_VALUE = 1
 
-        private const val FRAMERATE_DEFAULT_VALUE = "30"
+        const val RENDERER_FRAMERATE_DEFAULT_VALUE = 30
+        const val RENDERER_FRAMERATE_MAX_VALUE = 60
+        private const val RENDERER_FRAMERATE_STATE_DEFAULT_VALUE = false
 
         const val PREF_KEY_IS_SNOWFALL_ENABLED =
             "PREF_KEY_IS_SNOWFALL_ENABLED"

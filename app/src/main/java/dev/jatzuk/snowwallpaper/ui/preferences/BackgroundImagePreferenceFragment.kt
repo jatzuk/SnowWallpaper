@@ -2,14 +2,12 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.preference.Preference
-import androidx.preference.SwitchPreferenceCompat
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.imagepicker.BackgroundImagesFragment
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
@@ -29,13 +27,13 @@ class BackgroundImagePreferenceFragment :
         predefinedImagePicker?.setOnPreferenceClickListener {
             val columnCount =
                 if (resources.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
-            fragmentManager?.beginTransaction()
-                ?.replace(
+            parentFragmentManager.beginTransaction()
+                .replace(
                     R.id.preferences_container,
                     BackgroundImagesFragment.newInstance(columnCount)
                 )
-                ?.addToBackStack(null)
-                ?.commit()
+                .addToBackStack(null)
+                .commit()
             true
         }
 
@@ -60,11 +58,7 @@ class BackgroundImagePreferenceFragment :
         }
     }
 
-    override fun attachObserver() {
-//        done with xml
-//        PreferenceRepository.getInstance(context!!).backgroundImagePreference
-//            .observe(viewLifecycleOwner, Observer { switchDependentPreferences(it, 1) })
-    }
+    override fun attachObserver() {}
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -90,6 +84,10 @@ class BackgroundImagePreferenceFragment :
             }
         }
     }
+
+    override fun provideBackgroundColor(): Int = Color.BLUE
+
+//    override fun provideBackground(): Drawable? = ContextCompat.getDrawable(context!!, R.drawable.b1)
 
     companion object {
         private const val TAG = "BackgroundImagePreferenceFragment"

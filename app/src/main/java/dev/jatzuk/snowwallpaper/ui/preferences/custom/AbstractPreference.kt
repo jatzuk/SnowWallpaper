@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.ui.preferences
+package dev.jatzuk.snowwallpaper.ui.preferences.custom
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,7 +17,8 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 abstract class AbstractPreference : Preference {
 
     private var titleString: String? = null
-    private var summaryString: String? = null
+    protected var summaryString: String? = null
+    protected var summaryStringDefault: String? = null
     protected var defaultValuePreference: Int? = null
     protected var backgroundImage: Drawable? = null
     protected val preferenceRepository = PreferenceRepository.getInstance(context)
@@ -36,6 +37,7 @@ abstract class AbstractPreference : Preference {
         ).use {
             titleString = it.getString(R.styleable.AbstractPreference_preferenceTitle)
             summaryString = it.getString(R.styleable.AbstractPreference_preferenceSummary)
+            summaryStringDefault = summaryString
             defaultValuePreference =
                 it.getInteger(R.styleable.AbstractPreference_preferenceDefaultValue, 0)
             backgroundImage = it.getDrawable(R.styleable.AbstractPreference_preferenceBackground)
@@ -57,11 +59,12 @@ abstract class AbstractPreference : Preference {
 
         holder.itemView.run {
             backgroundImage?.let { findViewById<ViewGroup>(R.id.master_layout).background = it }
-            findViewById<TextView>(R.id.title).text = titleString ?: "no title provided" // todo
-            findViewById<TextView>(R.id.summary).text = summaryString ?: "no summary provided"//todo
 
             isClickable = false
             setupPreference(this)
+
+            findViewById<TextView>(R.id.title).text = titleString ?: "no title provided" // todo
+            findViewById<TextView>(R.id.summary).text = summaryString ?: "no summary provided"//todo
         }
     }
 

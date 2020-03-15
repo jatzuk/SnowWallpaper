@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.ui.preferences
+package dev.jatzuk.snowwallpaper.ui.preferences.custom
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,6 +7,9 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository.Companion.PREF_KEY_RENDERER_FRAME_LIMIT
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository.Companion.RENDERER_FRAMERATE_DEFAULT_VALUE
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository.Companion.RENDERER_FRAMERATE_MAX_VALUE
 
 class CustomSwitchPreference(
     context: Context,
@@ -40,18 +43,41 @@ class CustomSwitchPreference(
                     PreferenceRepository.PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED -> {
                         preferenceRepository.getIsBackgroundImageEnabled()
                     }
+
+                    // for the same code style
+                    @Suppress("RemoveRedundantQualifierName")
+                    PreferenceRepository.PREF_KEY_RENDERER_FRAME_LIMIT -> {
+                        preferenceRepository.getRendererToggleState()
+                    }
                     else -> true
                 }
                 setOnClickListener {
                     notifyDependencyChange(shouldDisableDependents())
+                    updateSummary(isChecked)
                     sharedPreferences.edit().putBoolean(key, isChecked).apply()
                     notifyDependencyChange(shouldDisableDependents())
+
+                    // separate update call because there are no dependencies
+                    if (key == PREF_KEY_RENDERER_FRAME_LIMIT) notifyChanged()
                 }
+
+                updateSummary(isChecked)
             }
         }
     }
 
     override fun provideLayout(): Int = R.layout.preference_switcher
+
+    private fun updateSummary(isChecked: Boolean) {
+        val summary = when (key) {
+            PREF_KEY_RENDERER_FRAME_LIMIT -> {
+                if (!isChecked) RENDERER_FRAMERATE_DEFAULT_VALUE.toString()
+                else RENDERER_FRAMERATE_MAX_VALUE.toString()
+            }
+            else -> if (isChecked) summaryStringDefault else "disabled" // todo
+        }
+        summaryString = summary
+    }
 
     companion object {
         private const val TAG = "CustomSwitchPreference"

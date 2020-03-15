@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.ui.preferences
+package dev.jatzuk.snowwallpaper.ui.preferences.custom
 
 import android.content.Context
 import android.util.AttributeSet
@@ -17,9 +17,15 @@ class CustomSeekBarPreference(
     private lateinit var progressTextView: TextView
     private lateinit var seekBar: SeekBar
     private val seekBarMinValue =
-        attributeSet?.getAttributeValue(NAMESPACE, PREFERENCE_MIN)!!.toInt()
+        attributeSet?.getAttributeValue(
+            NAMESPACE,
+            PREFERENCE_MIN
+        )!!.toInt()
     private val seekBarMaxValue =
-        attributeSet?.getAttributeValue(NAMESPACE, PREFERENCE_MAX)!!.toInt()
+        attributeSet?.getAttributeValue(
+            NAMESPACE,
+            PREFERENCE_MAX
+        )!!.toInt()
     private var currentProgress = initPropertyValue()
 
     init {
@@ -94,9 +100,6 @@ class CustomSeekBarPreference(
             preferenceRepository.getCosineDeviation()
         }
 
-        PreferenceRepository.PREF_KEY_RENDERER_FRAME_LIMIT -> {
-            preferenceRepository.getRendererFrameLimit()
-        }
         else -> defaultValuePreference!!.toInt()
     }
 

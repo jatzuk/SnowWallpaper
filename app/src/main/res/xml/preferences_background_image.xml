@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:summary="@string/background_image_switcher_summary"
-        android:title="@string/preference_switcher_enabled"
-        app:key="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED" />
 
-    <Preference
-        android:dependency="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
-        android:key="@string/background_image_pick_predefined_image_key"
-        android:summary="Picks background image from presets"
-        android:title="Pick Background Image" />
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
+        app:key="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
+        app:preferenceDefaultValue="false"
+        app:preferenceSummary="@string/background_image_switcher_summary"
+        app:preferenceTitle="@string/preference_switcher_enabled" />
 
-    <Preference
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
         android:dependency="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
-        android:key="@string/background_image_pick_custom_image_key"
-        android:summary="Pick own background image"
-        android:title="Choose custom Background Image" />
-<!--    todo-->
+        android:title="@string/background_image"
+        app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.BackgroundImagePreferenceFragment"
+        app:key="@string/background_image_pick_predefined_image_key"
+        app:preferenceSummary="Picks background image from presets"
+        app:preferenceTitle="Pick Background Image" />
+
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
+        android:dependency="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
+        android:title="@string/background_image"
+        app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.BackgroundImagePreferenceFragment"
+        app:key="@string/background_image_pick_custom_image_key"
+        app:preferenceSummary="Pick own background image"
+        app:preferenceTitle="Choose custom Background Image" />
+
 </PreferenceScreen>

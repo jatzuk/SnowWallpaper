@@ -30,7 +30,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private val preferenceRepository = PreferenceRepository.getInstance(context)
 
     private var frameStartMs = 0L
-    private var frameLimit = preferenceRepository.getRendererFrameLimit()
+    private var frameLimit = 0
     private var startTimeMs = 0L
 
     private var frames = 0
@@ -65,6 +65,8 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         OpenGLWallpaperService.width = width
         OpenGLWallpaperService.height = height
+
+        frameLimit = preferenceRepository.getRendererFrameLimit() // todo fix 60fps x2 speed
 
         isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
         isSnowflakeProgramUsed = preferenceRepository.getIsSnowflakeEnabled()

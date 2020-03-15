@@ -2,13 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <dev.jatzuk.snowwallpaper.ui.preferences.CustomSwitchPreference
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
         app:key="PREF_KEY_IS_SNOWFALL_ENABLED"
         app:preferenceDefaultValue="true"
         app:preferenceSummary="@string/background_snowflakes_switcher_summary"
         app:preferenceTitle="@string/preference_switcher_enabled" />
 
-    <dev.jatzuk.snowwallpaper.ui.preferences.CustomSeekBarPreference
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
         android:dependency="PREF_KEY_IS_SNOWFALL_ENABLED"
         app:key="PREF_KEY_SNOWFALL_LIMIT"
         app:preferenceDefaultValue="80"
@@ -17,7 +17,7 @@
         app:preferenceSummary="@string/background_snowflakes_limit_summary"
         app:preferenceTitle="@string/snowflakes_limit" />
 
-    <dev.jatzuk.snowwallpaper.ui.preferences.CustomSeekBarPreference
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
         android:dependency="PREF_KEY_IS_SNOWFALL_ENABLED"
         app:key="PREF_KEY_SNOWFALL_VELOCITY_FACTOR"
         app:preferenceDefaultValue="3"
@@ -25,14 +25,14 @@
         app:preferenceMin="1"
         app:preferenceTitle="@string/snowflake_velocity_factor" />
 
-    <dev.jatzuk.snowwallpaper.ui.preferences.CustomSwitchPreference
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
         android:dependency="PREF_KEY_IS_SNOWFALL_ENABLED"
         app:key="PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED"
         app:preferenceDefaultValue="true"
         app:preferenceSummary="@string/background_snowflakes_randomize_radius_summary"
         app:preferenceTitle="@string/background_snowflakes_randomize_radius" />
 
-    <dev.jatzuk.snowwallpaper.ui.preferences.CustomSeekBarPreference
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
         android:dependency="PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED"
         app:key="PREF_KEY_SNOWFALL_MIN_RADIUS"
         app:preferenceDefaultValue="8"
@@ -40,7 +40,7 @@
         app:preferenceMin="1"
         app:preferenceTitle="@string/snowflake_min_radius" />
 
-    <dev.jatzuk.snowwallpaper.ui.preferences.CustomSeekBarPreference
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
         android:dependency="PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED"
         app:key="PREF_KEY_SNOWFALL_MAX_RADIUS"
         app:preferenceDefaultValue="30"

@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.ui.preferences
+package dev.jatzuk.snowwallpaper.ui.preferences.custom
 
 import android.content.Context
 import android.util.AttributeSet
