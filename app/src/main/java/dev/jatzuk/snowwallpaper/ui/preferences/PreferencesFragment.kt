@@ -1,5 +1,6 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import androidx.core.graphics.drawable.toDrawable
@@ -34,6 +35,10 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
             Observer { isBackgroundImageEnabled = it }
         )
     }
+
+    override fun provideBackgroundColor(): Int = Color.YELLOW
+
+//    override fun provideBackground(): Drawable? = ContextCompat.getDrawable(context!!, R.drawable.b1)
 
 //    override fun onResume() {
 //        super.onResume()
