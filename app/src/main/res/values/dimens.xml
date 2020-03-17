@@ -9,7 +9,10 @@
     <dimen name="grid_layout_spacing">2dp</dimen>
 
     <dimen name="preference_divider_height">20dp</dimen>
-    <dimen name="preference_margin_left">8dp</dimen>
+    <dimen name="preference_default_margin">8dp</dimen>
     <dimen name="preference_title_size">18sp</dimen>
     <dimen name="preference_subtitle_size">14sp</dimen>
+    <dimen name="preference_height">60dp</dimen>
+    <dimen name="preference_category_height">50dp</dimen>
+
 </resources>

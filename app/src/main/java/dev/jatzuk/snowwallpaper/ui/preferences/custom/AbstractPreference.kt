@@ -69,7 +69,7 @@ abstract class AbstractPreference : Preference {
         }
     }
 
-    override fun shouldDisableDependents(): Boolean = when (key) {
+    override fun shouldDisableDependents(): Boolean = when (key) { // todo check logic
         PreferenceRepository.PREF_KEY_IS_SNOWFALL_ENABLED -> {
             !preferenceRepository.getIsSnowfallEnabled()
         }

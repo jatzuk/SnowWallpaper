@@ -1,19 +1,24 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="PreferenceTheme" parent="@style/AppTheme">
+    <style name="ToolBar" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/colorPreferenceTitle</item>
+        <item name="android:textColorSecondary">@color/colorPreferenceTitle</item>
+    </style>
+
+    <style name="PreferenceTheme" parent="AppTheme">
         <item name="android:background">#673AB7</item>
     </style>
 
     <style name="PreferenceTextAppearanceTitle" parent="@android:style/TextAppearance">
-        <item name="android:layout_marginLeft">@dimen/preference_margin_left</item>
+        <item name="android:layout_marginLeft">@dimen/preference_default_margin</item>
         <item name="android:textAppearance">?attr/textAppearanceSearchResultTitle</item>
         <item name="android:textColor">@color/colorPreferenceTitle</item>
         <item name="android:textSize">@dimen/preference_title_size</item>
@@ -27,6 +32,23 @@
 
     <style name="PreferenceCategoryTitleText" parent="PreferenceTextAppearanceTitle">
         <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:textColor">@color/colorPreferenceGeneralTitle</item>
+    </style>
+
+    <style name="PreferenceDefault">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:animateLayoutChanges">true</item>
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">5dp</item>
+    </style>
+
+    <style name="PreferenceSwitcher" parent="PreferenceDefault">
+        <item name="android:layout_height">@dimen/preference_height</item>
+    </style>
+
+    <style name="PreferenceCategory" parent="PreferenceDefault">
+        <item name="android:layout_height">@dimen/preference_category_height</item>
     </style>
 
 </resources>

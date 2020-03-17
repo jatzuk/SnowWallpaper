@@ -4,9 +4,16 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#63a4ff</color>
 
+    <color name="colorToolbar">#032240</color>
+
     <color name="colorSeekbarBackground">#4E62D5</color>
     <color name="preferencesBackground">#673AB7</color>
 
-    <color name="colorPreferenceTitle">#FFF</color>
-    <color name="colorPreferenceSubtitle">#FF888888</color>
+    <color name="colorPreferenceTitle">#FFCC7F</color>
+    <color name="colorPreferenceSubtitle">#BFFFCC7F</color>
+
+    <color name="colorPreferenceGeneralTitle">#000</color>
+
+    <color name="colorPreferenceCategoryBackground">#FFB852</color>
+    <color name="colorPreferenceIntentBackground">#03305A</color>
 </resources>

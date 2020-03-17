@@ -38,9 +38,12 @@ class CustomPreferenceCategory : PreferenceGroup {
         super.onBindViewHolder(holder)
 
         holder.itemView.run {
-            findViewById<TextView>(R.id.category_name).text = titleString ?: "no title provided"
-            findViewById<TextView>(R.id.category_name).background =
-                ContextCompat.getDrawable(context, R.drawable.b0)
+            findViewById<TextView>(R.id.category_name).apply {
+                text = titleString ?: "no title provided" // todo replace str
+                background =
+                    ContextCompat.getDrawable(context, R.drawable.background_preference_category)
+//                setBackgroundResource(R.color.colorPreferenceCategoryBackground) // todo tmp
+            }
         }
     }
 }
