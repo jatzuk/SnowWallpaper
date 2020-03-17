@@ -79,6 +79,9 @@ class CustomSeekBarPreference(
         PreferenceRepository.PREF_KEY_SNOWFALL_MAX_RADIUS -> {
             preferenceRepository.getSnowfallMaxRadius()
         }
+        PreferenceRepository.PREF_KEY_SNOWFALL_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED -> {
+            preferenceRepository.getSnowfallRadiusWhenUniqueDisabled()
+        }
 
         PreferenceRepository.PREF_KEY_SNOWFLAKE_LIMIT -> {
             preferenceRepository.getSnowflakeLimit()
@@ -95,6 +98,9 @@ class CustomSeekBarPreference(
         PreferenceRepository.PREF_KEY_SNOWFLAKE_MAX_RADIUS -> {
             preferenceRepository.getSnowflakeMaxRadius()
         }
+//        PreferenceRepository.PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_DISABLED ->{
+//            preferenceRepository.getIsSnowflakeUniqueRadiusEnabled()
+//        }
 
         PreferenceRepository.PREF_KEY_COSINE_DEVIATION -> {
             preferenceRepository.getCosineDeviation()

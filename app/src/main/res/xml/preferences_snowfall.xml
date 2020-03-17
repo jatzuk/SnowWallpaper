@@ -48,5 +48,16 @@
         app:preferenceMin="16"
         app:preferenceTitle="@string/snowflake_max_radius" />
 
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
+        android:dependency="PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED"
+        android:disableDependentsState="true"
+        app:isPreferenceVisible="false"
+        app:key="PREF_KEY_SNOWFALL_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED"
+        app:preferenceDefaultValue="30"
+        app:preferenceMax="50"
+        app:preferenceMin="1"
+        app:preferenceSummary="summary text"
+        app:preferenceTitle="the one" />
+
 </PreferenceScreen>
 

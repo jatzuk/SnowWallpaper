@@ -13,6 +13,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository.Companion.PREF_KEY_SNOWFLAKE_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED
 
 abstract class AbstractPreference : Preference {
 
@@ -73,14 +74,16 @@ abstract class AbstractPreference : Preference {
             !preferenceRepository.getIsSnowfallEnabled()
         }
         PreferenceRepository.PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED -> {
-            !preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
+//            !preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
+            false
         }
 
         PreferenceRepository.PREF_KEY_IS_SNOWFLAKE_ENABLED -> {
             !preferenceRepository.getIsSnowflakeEnabled()
         }
         PreferenceRepository.PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED -> {
-            !preferenceRepository.getIsSnowflakeUniqueRadiusEnabled()
+//            !preferenceRepository.getIsSnowflakeUniqueRadiusEnabled()
+            false
         }
 
         PreferenceRepository.PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED -> {
@@ -96,10 +99,21 @@ abstract class AbstractPreference : Preference {
                 preferenceRepository.getIsSnowfallEnabled() &&
                         preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
             }
+            PreferenceRepository.PREF_KEY_SNOWFALL_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED -> {
+                !preferenceRepository.getIsSnowfallUniqueRadiusEnabled() &&
+                        preferenceRepository.getIsSnowfallEnabled()
+            }
+
             PreferenceRepository.PREF_KEY_SNOWFLAKE_MIN_RADIUS,
             PreferenceRepository.PREF_KEY_SNOWFLAKE_MAX_RADIUS -> {
                 preferenceRepository.getIsSnowflakeEnabled() &&
                         preferenceRepository.getIsSnowflakeUniqueRadiusEnabled()
+            }
+            // for code style purposes
+            @Suppress("RemoveRedundantQualifierName")
+            PREF_KEY_SNOWFLAKE_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED -> {
+                !preferenceRepository.getIsSnowflakeUniqueRadiusEnabled() &&
+                        preferenceRepository.getIsSnowflakeEnabled()
             }
             else -> !disableDependent
         }

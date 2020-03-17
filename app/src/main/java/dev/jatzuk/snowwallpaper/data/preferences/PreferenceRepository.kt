@@ -49,6 +49,12 @@ class PreferenceRepository private constructor(context: Context) {
             SNOWFALL_MAX_RADIUS_DEFAULT_VALUE
         )
 
+    fun getSnowfallRadiusWhenUniqueDisabled(): Int =
+        preferenceManager.getInt(
+            PREF_KEY_SNOWFALL_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED,
+            SNOWFALL_RADIUS_UNIQUE_DISABLED_DEFAULT_VALUE
+        )
+
     fun getIsSnowflakeEnabled(): Boolean =
         preferenceManager.getBoolean(
             PREF_KEY_IS_SNOWFLAKE_ENABLED,
@@ -91,6 +97,12 @@ class PreferenceRepository private constructor(context: Context) {
             SNOWFLAKE_MAX_RADIUS_DEFAULT_VALUE
         )
 
+    fun getSnowflakeRadiusWhenUniqueDisabled(): Int =
+        preferenceManager.getInt(
+            PREF_KEY_SNOWFLAKE_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED,
+            SNOWFLAKE_RADIUS_UNIQUE_DISABLED_DEFAULT_VALUE
+        )
+
     fun getIsBackgroundImageEnabled(): Boolean =
         preferenceManager.getBoolean(
             PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED,
@@ -123,6 +135,7 @@ class PreferenceRepository private constructor(context: Context) {
         private const val SNOWFALL_IS_UNIQUE_RADIUS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFALL_MIN_RADIUS_DEFAULT_VALUE = 8
         private const val SNOWFALL_MAX_RADIUS_DEFAULT_VALUE = 30
+        private const val SNOWFALL_RADIUS_UNIQUE_DISABLED_DEFAULT_VALUE = 30
 
         private const val SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFLAKE_LIMIT_DEFAULT_VALUE = 3
@@ -131,6 +144,7 @@ class PreferenceRepository private constructor(context: Context) {
         private const val SNOWFLAKE_IS_UNIQUE_RADIUS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFLAKE_MIN_RADIUS_DEFAULT_VALUE = 30
         private const val SNOWFLAKE_MAX_RADIUS_DEFAULT_VALUE = 60
+        private const val SNOWFLAKE_RADIUS_UNIQUE_DISABLED_DEFAULT_VALUE = 60
 
         private const val BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE = false
 
@@ -158,6 +172,9 @@ class PreferenceRepository private constructor(context: Context) {
         const val PREF_KEY_SNOWFALL_MAX_RADIUS =
             "PREF_KEY_SNOWFALL_MAX_RADIUS"
 
+        const val PREF_KEY_SNOWFALL_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED =
+            "PREF_KEY_SNOWFALL_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED"
+
         const val PREF_KEY_IS_SNOWFLAKE_ENABLED =
             "PREF_KEY_IS_SNOWFLAKE_ENABLED"
 
@@ -175,6 +192,9 @@ class PreferenceRepository private constructor(context: Context) {
 
         const val PREF_KEY_SNOWFLAKE_MAX_RADIUS =
             "PREF_KEY_SNOWFLAKE_MAX_RADIUS"
+
+        const val PREF_KEY_SNOWFLAKE_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED =
+            "PREF_KEY_SNOWFLAKE_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED"
 
         const val PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY =
             "PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY"

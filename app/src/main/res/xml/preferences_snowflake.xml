@@ -4,6 +4,7 @@
     android:icon="@android:drawable/btn_star_big_on"
     android:summary="@string/foreground_snowflakes_category_summary"
     android:title="@string/foreground_snowflakes_category">
+    <!--todo screen title summary-->
 
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
         app:key="PREF_KEY_IS_SNOWFLAKE_ENABLED"
@@ -59,5 +60,16 @@
         app:preferenceMax="100"
         app:preferenceMin="51"
         app:preferenceTitle="@string/snowflake_max_radius" />
+
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
+        android:dependency="PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED"
+        android:disableDependentsState="true"
+        app:isPreferenceVisible="false"
+        app:key="PREF_KEY_SNOWFLAKE_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED"
+        app:preferenceDefaultValue="30"
+        app:preferenceMax="100"
+        app:preferenceMin="10"
+        app:preferenceSummary="summary text"
+        app:preferenceTitle="the one" />
 
 </PreferenceScreen>
