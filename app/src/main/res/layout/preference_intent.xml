@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     style="@style/PreferenceDefault">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -10,13 +10,7 @@
 
         <include layout="@layout/preference_base" />
 
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/b0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <include layout="@layout/image_preview" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

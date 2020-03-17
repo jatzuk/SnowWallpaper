@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.utilities.CircleImageView
 
 class IntentPreference(
     context: Context,
@@ -27,9 +27,27 @@ class IntentPreference(
     override fun setupPreference(view: View) {
 
         view.run {
-            findViewById<ImageView>(R.id.image_view).run {
-                visibility = if (previewImage == null) View.GONE else View.VISIBLE
+            val drawableRes = when (key) { // todo replace keys
+                context.getString(R.string.background_snowflakes_category_key) -> {
+                    R.drawable.texture_snowfall
+                }
+                context.getString(R.string.foreground_snowflakes_category_key) -> {
+                    R.drawable.texture_snowflake
+                }
+                context.getString(R.string.background_image_global_switcher_key) -> {
+                    R.drawable.b0
+                }
+                else -> -1
             }
+
+            val imageView = findViewById<CircleImageView>(R.id.image_view)
+            if (drawableRes != -1) {
+                previewImage = ContextCompat.getDrawable(context, drawableRes)
+                imageView.apply {
+                    setPreviewImage(previewImage!!)
+                    visibility = View.VISIBLE
+                }
+            } else imageView.visibility = View.GONE
 
             isClickable = true
         }
