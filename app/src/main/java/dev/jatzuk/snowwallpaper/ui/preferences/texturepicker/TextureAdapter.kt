@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.ui.imagepicker
+package dev.jatzuk.snowwallpaper.ui.preferences.texturepicker
 
 import android.content.Context
 import android.view.View
@@ -7,11 +7,11 @@ import androidx.core.content.ContextCompat
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.utilities.AbstractRecyclerAdapter
 
-class BackgroundImagesAdapter<T : Any>(
+class TextureAdapter<T : Any>(
     private val context: Context,
     items: List<T>,
-    clickListener: OnViewHolderClick<T>? = null
-) : AbstractRecyclerAdapter<T>(R.layout.background_image_list_item, items, clickListener) {
+    clickListener: OnViewHolderClick<T>
+) : AbstractRecyclerAdapter<T>(R.layout.texture_list_item, items, clickListener) {
 
     private lateinit var imageView: ImageView
 
@@ -21,11 +21,6 @@ class BackgroundImagesAdapter<T : Any>(
     }
 
     override fun onBind(position: Int, listItem: T) {
-        imageView.setImageDrawable(
-            ContextCompat.getDrawable(
-                context,
-                (listItem as BackgroundImage).resourceId
-            )
-        )
+        imageView.setImageDrawable(ContextCompat.getDrawable(context, listItem as Int))
     }
 }

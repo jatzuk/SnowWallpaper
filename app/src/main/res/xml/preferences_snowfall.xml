@@ -8,6 +8,12 @@
         app:preferenceSummary="@string/background_snowflakes_switcher_summary"
         app:preferenceTitle="@string/preference_switcher_enabled" />
 
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
+        android:dependency="PREF_KEY_IS_SNOWFALL_ENABLED"
+        app:key="snowfall_select_texture"
+        app:preferenceSummary="summary"
+        app:preferenceTitle="select custom texture" />
+
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
         android:dependency="PREF_KEY_IS_SNOWFALL_ENABLED"
         app:key="PREF_KEY_SNOWFALL_LIMIT"

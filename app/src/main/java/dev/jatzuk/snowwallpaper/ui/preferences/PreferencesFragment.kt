@@ -1,14 +1,12 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.core.graphics.drawable.toDrawable
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.preference.Preference
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
 class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
@@ -20,12 +18,13 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     }
 
     override fun setUp() {
-        val bitmap =
-            ImageProvider.loadThumbnailImage(context!!) // todo (check if it's first start of app, so background image is null, or set default images)
-        val thumbnailIcon = bitmap?.toDrawable(resources) ?: BitmapDrawable(resources, bitmap)
-        val backgroundImage =
-            findPreference<Preference>(getString(R.string.background_image_global_switcher_key))
-        backgroundImage?.icon = thumbnailIcon
+//        todo load image preview
+//        val bitmap =
+//            ImageProvider.loadThumbnailImage(context!!) // todo (check if it's first start of app, so background image is null, or set default images)
+//        val thumbnailIcon = bitmap?.toDrawable(resources) ?: BitmapDrawable(resources, bitmap)
+//        val backgroundImage =
+//            findPreference<Preference>(getString(R.string.background_image_global_switcher_key))
+//        backgroundImage?.icon = thumbnailIcon
 
     } // stub
 
@@ -38,15 +37,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
     override fun provideBackgroundColor(): Int = Color.YELLOW
 
-//    override fun provideBackground(): Drawable? = ContextCompat.getDrawable(context!!, R.drawable.b1)
+    override fun provideBackground(): Drawable? =
+        ContextCompat.getDrawable(context!!, R.drawable.background_preferences_main_screen)
 
-//    override fun onResume() {
-//        super.onResume()
-//
-//        val bitmap = ImageProvider.loadThumbnailImage(context!!)
-//        val thumbnailIcon = bitmap?.toDrawable(resources) ?: BitmapDrawable(resources, bitmap)
-//        val backgroundImage =
-//            findPreference<Preference>(getString(R.string.background_image_global_switcher_key))
-//        backgroundImage?.icon = thumbnailIcon
-//    }
 }

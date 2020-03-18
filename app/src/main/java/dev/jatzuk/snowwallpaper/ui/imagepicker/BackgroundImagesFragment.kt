@@ -10,11 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.utilities.AbstractRecyclerAdapter
 
 class BackgroundImagesFragment : Fragment() {
 
     private var columnCount = 2
-    private var listener: OnListFragmentInteractionListener? = null
+    private var listener: AbstractRecyclerAdapter.OnViewHolderClick<BackgroundImage>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +34,11 @@ class BackgroundImagesFragment : Fragment() {
             view.apply {
                 setHasFixedSize(true)
                 layoutManager = GridLayoutManager(context, columnCount)
-                adapter = BackgroundImagesAdapter(getPredefinedImages(), listener)
+                adapter = BackgroundImagesAdapter(
+                    context,
+                    getPredefinedImages(),
+                    listener
+                )
                 addItemDecoration(object : RecyclerView.ItemDecoration() {
                     override fun getItemOffsets(
                         outRect: Rect,
@@ -56,10 +61,12 @@ class BackgroundImagesFragment : Fragment() {
         return view
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnListFragmentInteractionListener) listener = context
-        else throw RuntimeException("$context must implement OnListFragmentInteractionListener")
+        if (context is AbstractRecyclerAdapter.OnViewHolderClick<*>)
+            listener = context as AbstractRecyclerAdapter.OnViewHolderClick<BackgroundImage>
+        else throw RuntimeException("$context must implement AbstractRecyclerAdapter.OnViewHolderClick<BackgroundImage>")
     }
 
     override fun onDetach() {
@@ -73,10 +80,6 @@ class BackgroundImagesFragment : Fragment() {
         BackgroundImage(R.drawable.b1),
         BackgroundImage(R.drawable.b2)
     )
-
-    interface OnListFragmentInteractionListener {
-        fun onListFragmentInteraction(image: BackgroundImage)
-    }
 
     companion object {
         const val ARG_COLUMN_COUNT = "columnCount"

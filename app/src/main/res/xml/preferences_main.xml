@@ -22,7 +22,7 @@
             app:key="@string/background_image_global_switcher_key"
             app:preferenceSummary="@string/background_image_category_summary"
             app:preferenceTitle="@string/background_image" />
-
+        <!--todo update keys-->
     </dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory>
 
     <dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory app:preferenceTitle="General">

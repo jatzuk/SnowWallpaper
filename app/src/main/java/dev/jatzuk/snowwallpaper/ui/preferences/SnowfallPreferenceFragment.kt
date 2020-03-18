@@ -4,11 +4,24 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
+import dev.jatzuk.snowwallpaper.ui.preferences.texturepicker.PickerDialogFragment
 
 @Suppress("unused")
 class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_snowfall) {
 
-    override fun setUp() {}
+    private lateinit var texturePickerPreference: IntentPreference
+
+    override fun setUp() {
+        texturePickerPreference = findPreference("snowfall_select_texture")!! // todo
+        texturePickerPreference.apply {
+            setOnPreferenceClickListener {
+                PickerDialogFragment()
+                    .show(childFragmentManager.beginTransaction(), "") // todo
+                true
+            }
+        }
+    }
 
     override fun attachObserver() {}
 
