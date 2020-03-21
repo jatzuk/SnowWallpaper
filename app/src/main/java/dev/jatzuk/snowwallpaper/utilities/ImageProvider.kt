@@ -9,12 +9,15 @@ import android.util.DisplayMetrics
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.FileNotFoundException
 import java.io.IOException
 
 object ImageProvider {
@@ -47,17 +50,27 @@ object ImageProvider {
         return try {
             BitmapFactory.decodeStream(context.openFileInput(ImageType.THUMBNAIL_IMAGE.path))
         } catch (e: IOException) {
-            errorLog("failed to load thumbnail image", TAG, e)
+            errorLog("Failed to load thumbnail image", TAG, e)
             null
         }
     }
 
-    fun loadImage(context: Context, imageType: ImageType): Bitmap? { // todo(side thread?)
+    // todo(side thread?)
+    fun loadTexture(context: Context, imageType: ImageType): Bitmap? {
         return try {
             BitmapFactory.decodeStream(context.openFileInput(imageType.path))
+        } catch (e: FileNotFoundException) {
+            val resourceId =
+                when (imageType) {
+                    ImageType.SNOWFALL_TEXTURE -> R.drawable.texture_snowfall
+                    ImageType.SNOWFLAKE_TEXTURE -> R.drawable.texture_snowflake
+                    ImageType.THUMBNAIL_IMAGE -> R.drawable.background_image // todo
+                    ImageType.BACKGROUND_IMAGE -> R.drawable.background_image // todo
+                }
+            ContextCompat.getDrawable(context, resourceId)!!.toBitmap()
         } catch (e: IOException) {
             errorLog(
-                "failed to load image type: ${imageType.name} from internal storage", TAG, e
+                "Failed to load image type: ${imageType.name} from internal storage", TAG, e
             )
             null
         }

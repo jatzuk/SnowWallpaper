@@ -23,7 +23,7 @@ class ImageSlidePageFragment : Fragment() {
     ): View? {
         arguments?.let { imageId = it.getInt(ARG_POSITION) }
         val v = inflater.inflate(R.layout.fragment_screen_slide_page, container, false)
-        val imageView = v.findViewById<ImageView>(R.id.image_view)
+        val imageView = v.findViewById<ImageView>(R.id.circle_image_view)
         imageView.setImageResource(imageId) // todo(setDrawable)
         return v
     }

@@ -12,6 +12,7 @@ abstract class AbstractRecyclerAdapter<T : Any>(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val views = HashMap<String, View>()
+    protected var parentViewGroup: ViewGroup? = null
 
     final override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -19,6 +20,7 @@ abstract class AbstractRecyclerAdapter<T : Any>(
     ): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(layoutResource, parent, false)
         view.tag = view.hashCode()
+        if (parentViewGroup == null) parentViewGroup = parent
         return ViewHolder(view)
     }
 

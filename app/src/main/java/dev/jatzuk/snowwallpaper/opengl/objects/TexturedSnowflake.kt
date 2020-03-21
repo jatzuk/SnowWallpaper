@@ -3,7 +3,6 @@ package dev.jatzuk.snowwallpaper.opengl.objects
 import android.content.Context
 import android.opengl.GLES20.*
 import android.opengl.Matrix.*
-import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.data.RectangleVertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.SnowflakeProgram
@@ -19,11 +18,7 @@ class TexturedSnowflake(context: Context) {
     private val snowflakeLimit = PreferenceRepository.getInstance(context).getSnowflakeLimit()
     private val snowflakes = Array(snowflakeLimit) { Snowflake(context, true) }
     private val snowflakeVertexArray = RectangleVertexArray(snowflakes, TOTAL_COMPONENT_COUNT)
-    private val textureId = loadTexture(
-        context,
-        R.drawable.texture_snowflake,
-        ImageProvider.ImageType.SNOWFLAKE_TEXTURE
-    )
+    private val textureId = loadTexture(context, ImageProvider.ImageType.SNOWFLAKE_TEXTURE)
 
     private fun bindData() {
         snowflakeVertexArray.apply {

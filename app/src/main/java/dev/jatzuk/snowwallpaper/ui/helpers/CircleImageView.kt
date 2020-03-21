@@ -6,17 +6,24 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.graphics.drawable.toBitmap
+import dev.jatzuk.snowwallpaper.R
 
 class CircleImageView : AppCompatImageView {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-    private val desiredSize = 180
-    private val radius = desiredSize / 2f - 20
-    var bitmap: Bitmap? = null
+    private var desiredSize =
+        resources.getDimensionPixelSize(R.dimen.circle_image_view_default_size)
+    private var radius = desiredSize / 2f - 20
+    private var bitmap: Bitmap? = null
 
-    fun setPreviewImage(drawable: Drawable) {
+    private var isStrokeEnabled = false
+    private var strokePaint: Paint? = null
+
+    fun setPreviewImage(drawable: Drawable, size: Int) {
+        desiredSize = size
+        radius = desiredSize / 2f - 20
         bitmap = getCroppedBitmap(drawable.toBitmap())
     }
 
@@ -30,6 +37,8 @@ class CircleImageView : AppCompatImageView {
                 (height / 2f) - bitmap!!.height / 2,
                 null
             )
+
+            if (isStrokeEnabled) drawStroke(canvas)
         }
     }
 
@@ -39,7 +48,7 @@ class CircleImageView : AppCompatImageView {
     }
 
     private fun getCroppedBitmap(bitmap: Bitmap): Bitmap {
-        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, false)
+        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, desiredSize, desiredSize, false)
         val output =
             Bitmap.createBitmap(scaledBitmap.width, scaledBitmap.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(output)
@@ -54,14 +63,32 @@ class CircleImageView : AppCompatImageView {
             drawBitmap(scaledBitmap, rect, rect, paint)
         }
 
-        paint.apply {
-            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
-            color = Color.BLACK
-            style = Paint.Style.STROKE
-            strokeWidth = 3f
-        }
-        canvas.drawCircle(scaledBitmap.width / 2f, scaledBitmap.height / 2f, radius, paint)
-
         return output
+    }
+
+    fun setStroke(width: Float, color: Int) {
+        strokePaint = Paint().apply {
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
+            this.color = color
+            style = Paint.Style.STROKE
+            strokeWidth = width
+        }
+        isStrokeEnabled = true
+        updateView()
+    }
+
+    fun disableStroke() {
+        strokePaint = null
+        isStrokeEnabled = false
+        updateView()
+    }
+
+    private fun drawStroke(canvas: Canvas) {
+        canvas.drawCircle(desiredSize / 2f, desiredSize / 2f, radius, strokePaint!!)
+    }
+
+    private fun updateView() {
+        invalidate()
+        requestLayout()
     }
 }

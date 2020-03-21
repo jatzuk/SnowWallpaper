@@ -5,10 +5,11 @@ import android.opengl.GLES20.*
 import android.opengl.GLUtils.texImage2D
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
+import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 
 private const val TAG = "TextureHelper"
 
-fun loadTexture(context: Context, resourceId: Int = -1, imageType: ImageProvider.ImageType): Int {
+fun loadTexture(context: Context, imageType: ImageProvider.ImageType): Int {
     val textureObjectsIds = intArrayOf(0)
     glGenTextures(1, textureObjectsIds, 0)
 
@@ -17,16 +18,9 @@ fun loadTexture(context: Context, resourceId: Int = -1, imageType: ImageProvider
         return 0
     }
 
-//    val bitmap = if (resourceId == -1) {
-//    } else {
-//    }
-
-    val bitmap = ImageProvider.loadImage(context, imageType = imageType)
-//    val options = BitmapFactory.Options().apply { inScaled = false }
-//    BitmapFactory.decodeResource(context.resources, resourceId, options)
-
+    val bitmap = ImageProvider.loadTexture(context, imageType)
     if (bitmap == null) {
-//        errorLog("Resource ID: $resourceId could not be decoded", TAG)
+        errorLog("Bitmap texture for type ${imageType.name} could not be loaded", TAG)
         glDeleteTextures(1, textureObjectsIds, 0)
         return 0
     }
@@ -43,6 +37,6 @@ fun loadTexture(context: Context, resourceId: Int = -1, imageType: ImageProvider
 
     glBindTexture(GL_TEXTURE_2D, 0)
 
-//    logging("Texture ID: $resourceId loaded successfully", TAG)
+    logging("Texture for type: ${imageType.name} loaded successfully", TAG)
     return textureObjectsIds[0]
 }

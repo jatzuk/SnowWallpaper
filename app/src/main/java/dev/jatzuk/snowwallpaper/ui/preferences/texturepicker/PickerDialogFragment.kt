@@ -3,17 +3,21 @@ package dev.jatzuk.snowwallpaper.ui.preferences.texturepicker
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
+import dev.jatzuk.snowwallpaper.ui.helpers.CircleImageView
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 import kotlin.math.abs
 import kotlin.math.max
@@ -23,15 +27,34 @@ class PickerDialogFragment : DialogFragment() {
     private lateinit var preferenceRepository: PreferenceRepository
     private lateinit var textureAdapter: TextureAdapter<Int>
     private lateinit var viewPager: ViewPager2
+    private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
     private val predefinedTextureList =
         listOf(
-//            ContextCompat.getDrawable(context!!, R.drawable.texture_snowflake)!!,
-//            ContextCompat.getDrawable(context!!, R.drawable.texture_snowfall)!!,
-//            ContextCompat.getDrawable(context!!, R.drawable.b1)!!
             R.drawable.texture_snowflake,
             R.drawable.texture_snowfall,
             R.drawable.b0
         )
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+//        setStyle(STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+
+                (textureAdapter.getParentView() as ViewGroup).children.forEachIndexed { index, view ->
+                    val circleImageView =
+                        view.findViewById<CircleImageView>(R.id.circle_image_view)
+                    if (position != index) circleImageView.disableStroke()
+                    else circleImageView.setStroke(10f, Color.GREEN)
+                }
+            }
+        }
+    }
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -39,14 +62,11 @@ class PickerDialogFragment : DialogFragment() {
             val inflater = requireActivity().layoutInflater
             val view = inflater.inflate(R.layout.fragment_picker_dialog, null)
 
-            val savedImage =
-                ImageProvider.loadImage(context, ImageProvider.ImageType.SNOWFALL_TEXTURE)!!
-
             textureAdapter = TextureAdapter(
-                context,
                 predefinedTextureList,
                 object : AbstractRecyclerAdapter.OnViewHolderClick<Int> {
                     override fun onClick(view: View?, position: Int, item: Int) {
+
                         if (position == predefinedTextureList.lastIndex) {
                             startIntent()
                         }
@@ -115,6 +135,12 @@ class PickerDialogFragment : DialogFragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+//        dialog!!.window!!.setLayout(1080, 1920 / 2)
+        viewPager.registerOnPageChangeCallback(onPageChangeCallback)
+    }
+
     private fun startIntent() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
         startActivityForResult(intent, SELECT_CUSTOM_SNOWFALL_TEXTURE)
@@ -137,6 +163,7 @@ class PickerDialogFragment : DialogFragment() {
         if (resultCode == AppCompatActivity.RESULT_OK) {
             when (requestCode) {
                 SELECT_CUSTOM_SNOWFALL_TEXTURE -> {
+                    RuntimeException("EGOR LOG")
                     data?.let {
                         val cr = context?.contentResolver
                         val stringType = cr?.getType(it.data!!)
@@ -157,16 +184,6 @@ class PickerDialogFragment : DialogFragment() {
                 }
             }
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        setStyle(STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-    }
-
-    override fun onStart() {
-        super.onStart()
-//        dialog!!.window!!.setLayout(1080, 1920 / 2)
     }
 
     companion object {

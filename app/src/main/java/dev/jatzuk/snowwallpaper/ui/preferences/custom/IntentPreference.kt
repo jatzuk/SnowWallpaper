@@ -1,6 +1,7 @@
 package dev.jatzuk.snowwallpaper.ui.preferences.custom
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
@@ -40,14 +41,18 @@ class IntentPreference(
                 else -> -1
             }
 
-            val imageView = findViewById<CircleImageView>(R.id.image_view)
+            val circleImageView = findViewById<CircleImageView>(R.id.circle_image_view)
             if (drawableRes != -1) {
                 previewImage = ContextCompat.getDrawable(context, drawableRes)
-                imageView.apply {
-                    setPreviewImage(previewImage!!)
+                circleImageView.apply {
+                    setPreviewImage(
+                        previewImage!!,
+                        resources.getDimensionPixelSize(R.dimen.intent_preview_image_size)
+                    )
+                    setStroke(5f, Color.BLACK)
                     visibility = View.VISIBLE
                 }
-            } else imageView.visibility = View.GONE
+            } else circleImageView.visibility = View.GONE
 
             isClickable = true
         }
