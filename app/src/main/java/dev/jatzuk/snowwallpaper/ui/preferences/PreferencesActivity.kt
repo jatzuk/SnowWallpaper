@@ -1,5 +1,6 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -9,10 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 import dev.jatzuk.snowwallpaper.ui.imagepicker.BackgroundImage
 import dev.jatzuk.snowwallpaper.ui.imagepicker.ImageViewerFragment
-import dev.jatzuk.snowwallpaper.utilities.AbstractRecyclerAdapter
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
 class PreferencesActivity : AppCompatActivity(),
@@ -58,12 +58,7 @@ class PreferencesActivity : AppCompatActivity(),
         return true
     }
 
-//    override fun onListFragmentInteraction(image: BackgroundImage) {
-//
-//    }
-
     override fun onClick(view: View?, position: Int, item: BackgroundImage) {
-        logging("FFFFFFFFF")
         supportFragmentManager.beginTransaction()
             .replace(R.id.preferences_container, ImageViewerFragment.newInstance(item.resourceId))
             .addToBackStack(null)
@@ -76,6 +71,12 @@ class PreferencesActivity : AppCompatActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        supportFragmentManager.fragments[0].onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
 
     companion object {
         private const val PICK_CUSTOM_IMAGE = 2

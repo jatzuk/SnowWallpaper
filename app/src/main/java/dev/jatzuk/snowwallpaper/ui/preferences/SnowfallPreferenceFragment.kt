@@ -6,6 +6,7 @@ import android.os.Bundle
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
 import dev.jatzuk.snowwallpaper.ui.preferences.texturepicker.PickerDialogFragment
+import dev.jatzuk.snowwallpaper.ui.preferences.texturepicker.PickerDialogFragment.Companion.SELECT_CUSTOM_SNOWFALL_TEXTURE
 
 @Suppress("unused")
 class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_snowfall) {
@@ -16,8 +17,12 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
         texturePickerPreference = findPreference("snowfall_select_texture")!! // todo
         texturePickerPreference.apply {
             setOnPreferenceClickListener {
-                PickerDialogFragment()
-                    .show(childFragmentManager.beginTransaction(), "") // todo
+                val pickerDialogFragment = PickerDialogFragment()
+                pickerDialogFragment.setTargetFragment(
+                    childFragmentManager.findFragmentById(this@SnowfallPreferenceFragment.id),
+                    SELECT_CUSTOM_SNOWFALL_TEXTURE
+                )
+                pickerDialogFragment.show(childFragmentManager.beginTransaction(), "") // todo
                 true
             }
         }

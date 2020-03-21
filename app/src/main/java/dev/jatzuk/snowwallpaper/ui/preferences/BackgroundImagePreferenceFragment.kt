@@ -73,12 +73,18 @@ class BackgroundImagePreferenceFragment :
                         val cr = context?.contentResolver
                         val stringType = cr?.getType(it.data!!)
                         if (stringType?.substringBefore("/") == "image")
-                            ImageProvider.saveBackgroundImage(context!!, it.data!!)
-                        else Toast.makeText(
-                            context,
-                            "ff",
-                            Toast.LENGTH_SHORT
-                        ).show()//todo(not image)
+                            ImageProvider.saveImage(
+                                context!!,
+                                it.data!!,
+                                ImageProvider.ImageType.BACKGROUND_IMAGE
+                            )
+                        else {
+                            Toast.makeText(
+                                context,
+                                "ff",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }//todo(not image)
                     }
                 }
             }

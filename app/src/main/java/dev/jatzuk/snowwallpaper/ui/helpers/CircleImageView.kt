@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.utilities
+package dev.jatzuk.snowwallpaper.ui.helpers
 
 import android.content.Context
 import android.graphics.*

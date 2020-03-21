@@ -9,9 +9,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 import dev.jatzuk.snowwallpaper.ui.imagepicker.viewpager.ImageSlidePageFragment
 import dev.jatzuk.snowwallpaper.ui.imagepicker.viewpager.pagetransformers.ZoomOutPageTransformer
+import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
 class ImageViewerFragment : Fragment() { // view pager2 content home
 
@@ -82,9 +82,11 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
 //                    resultMessage,
 //                    Toast.LENGTH_SHORT
 //                ).show()
-                ImageProvider.saveBackgroundImage(
+                ImageProvider.saveImage(
                     context!!,
-                    resourceId = imagesIds[viewPager.currentItem]
+                    null,
+                    ImageProvider.ImageType.BACKGROUND_IMAGE,
+                    imagesIds[viewPager.currentItem]
                 )
                 activity?.supportFragmentManager?.popBackStack(
                     null,

@@ -20,12 +20,11 @@ import java.io.IOException
 object ImageProvider {
 
     private const val TAG = "ImageProvider"
-    private const val BACKGROUND_IMAGE = "background.png"
-    private const val THUMBNAIL_IMAGE = "thumbnail.png"
 
-    fun saveBackgroundImage(
+    fun saveImage(
         context: Context,
         uri: Uri? = null,
+        imageType: ImageType,
         @DrawableRes resourceId: Int = -1
     ) {
         val (height, width) = DisplayMetrics().run {
@@ -36,7 +35,7 @@ object ImageProvider {
             val bitmap =
                 if (uri != null) decodeSampledBitmapFromUri(context, uri, height, width)
                 else decodeSampledBitmapFromResource(context.resources, resourceId, height, width)
-            val result = storeImage(context, bitmap)
+            val result = storeImage(context, bitmap, imageType)
             val message =
                 if (result) context.getString(R.string.image_storage_successed)
                 else context.getString(R.string.image_storage_failed)
@@ -46,18 +45,20 @@ object ImageProvider {
 
     fun loadThumbnailImage(context: Context): Bitmap? {
         return try {
-            BitmapFactory.decodeStream(context.openFileInput(THUMBNAIL_IMAGE))
+            BitmapFactory.decodeStream(context.openFileInput(ImageType.THUMBNAIL_IMAGE.path))
         } catch (e: IOException) {
             errorLog("failed to load thumbnail image", TAG, e)
             null
         }
     }
 
-    fun loadBackgroundImage(context: Context): Bitmap? { // todo(side thread?)
+    fun loadImage(context: Context, imageType: ImageType): Bitmap? { // todo(side thread?)
         return try {
-            BitmapFactory.decodeStream(context.openFileInput(BACKGROUND_IMAGE))
+            BitmapFactory.decodeStream(context.openFileInput(imageType.path))
         } catch (e: IOException) {
-            errorLog("failed to load background image from storage", TAG, e)
+            errorLog(
+                "failed to load image type: ${imageType.name} from internal storage", TAG, e
+            )
             null
         }
     }
@@ -114,16 +115,24 @@ object ImageProvider {
 
     private suspend fun storeImage(
         context: Context,
-        bitmap: Bitmap
+        bitmap: Bitmap,
+        imageType: ImageType
     ): Boolean = withContext(Dispatchers.IO) {
-        context.openFileOutput(BACKGROUND_IMAGE, Context.MODE_PRIVATE).use {
+        context.openFileOutput(imageType.path, Context.MODE_PRIVATE).use {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }
 
         val dstSize = context.resources.getDimensionPixelSize(R.dimen.thumbnail_size)
-        context.openFileOutput(THUMBNAIL_IMAGE, Context.MODE_PRIVATE).use {
+        context.openFileOutput(imageType.path, Context.MODE_PRIVATE).use {
             Bitmap.createScaledBitmap(bitmap, dstSize, dstSize, false)
                 .compress(Bitmap.CompressFormat.PNG, 100, it)
         }
+    }
+
+    enum class ImageType(val path: String) {
+        SNOWFALL_TEXTURE("snowfall_texture.png"),
+        SNOWFLAKE_TEXTURE("snowflake_texture.png"),
+        BACKGROUND_IMAGE("background.png"),
+        THUMBNAIL_IMAGE("thumbnail.png");
     }
 }

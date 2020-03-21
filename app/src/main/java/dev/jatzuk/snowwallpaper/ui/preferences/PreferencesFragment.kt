@@ -3,7 +3,6 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
@@ -37,7 +36,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
     override fun provideBackgroundColor(): Int = Color.YELLOW
 
-    override fun provideBackground(): Drawable? =
-        ContextCompat.getDrawable(context!!, R.drawable.background_preferences_main_screen)
+    override fun provideBackground(): Drawable? = null
+//        ContextCompat.getDrawable(context!!, R.drawable.background_preferences_main_screen)
 
 }

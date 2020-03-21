@@ -10,11 +10,13 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.data.SnowflakeVertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.SnowfallProgram
 import dev.jatzuk.snowwallpaper.opengl.util.loadTexture
+import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
 class SnowfallBackground(context: Context) {
 
     private val snowfallProgram = SnowfallProgram(context)
-    private val textureId = loadTexture(context, R.drawable.texture_snowfall)
+    private val textureId =
+        loadTexture(context, R.drawable.texture_snowfall, ImageProvider.ImageType.SNOWFALL_TEXTURE)
 
     private val snowflakesLimit = PreferenceRepository.getInstance(context).getSnowfallLimit()
     private val snowflakes = Array(snowflakesLimit) { Snowflake(context) }

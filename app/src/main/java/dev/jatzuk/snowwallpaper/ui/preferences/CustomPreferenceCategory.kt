@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceViewHolder
@@ -40,9 +39,8 @@ class CustomPreferenceCategory : PreferenceGroup {
         holder.itemView.run {
             findViewById<TextView>(R.id.category_name).apply {
                 text = titleString ?: "no title provided" // todo replace str
-                background =
-                    ContextCompat.getDrawable(context, R.drawable.background_preference_category)
-//                setBackgroundResource(R.color.colorPreferenceCategoryBackground) // todo tmp
+//                background = ContextCompat.getDrawable(context, R.drawable.background_preference_category)
+                setBackgroundResource(R.color.colorPreferenceCategoryBackground) // todo tmp
             }
         }
     }

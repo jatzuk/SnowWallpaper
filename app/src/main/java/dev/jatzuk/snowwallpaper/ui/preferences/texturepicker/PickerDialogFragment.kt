@@ -2,39 +2,54 @@ package dev.jatzuk.snowwallpaper.ui.preferences.texturepicker
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.utilities.AbstractRecyclerAdapter
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
+import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
+import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 import kotlin.math.abs
 import kotlin.math.max
 
 class PickerDialogFragment : DialogFragment() {
 
+    private lateinit var preferenceRepository: PreferenceRepository
     private lateinit var textureAdapter: TextureAdapter<Int>
     private lateinit var viewPager: ViewPager2
+    private val predefinedTextureList =
+        listOf(
+//            ContextCompat.getDrawable(context!!, R.drawable.texture_snowflake)!!,
+//            ContextCompat.getDrawable(context!!, R.drawable.texture_snowfall)!!,
+//            ContextCompat.getDrawable(context!!, R.drawable.b1)!!
+            R.drawable.texture_snowflake,
+            R.drawable.texture_snowfall,
+            R.drawable.b0
+        )
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-//        arguments?.let {
-//            return super.onCreateDialog(savedInstanceState)
-//        }
-
         return AlertDialog.Builder(context!!).run {
             val inflater = requireActivity().layoutInflater
             val view = inflater.inflate(R.layout.fragment_picker_dialog, null)
 
+            val savedImage =
+                ImageProvider.loadImage(context, ImageProvider.ImageType.SNOWFALL_TEXTURE)!!
+
             textureAdapter = TextureAdapter(
                 context,
-                listOf(R.drawable.texture_snowflake, R.drawable.texture_snowfall, R.drawable.b1),
+                predefinedTextureList,
                 object : AbstractRecyclerAdapter.OnViewHolderClick<Int> {
                     override fun onClick(view: View?, position: Int, item: Int) {
-                        logging("$item on $position for $view clicked")
+                        if (position == predefinedTextureList.lastIndex) {
+                            startIntent()
+                        }
                     }
                 }
             )
@@ -44,6 +59,11 @@ class PickerDialogFragment : DialogFragment() {
                 clipToPadding = false
                 clipChildren = false
                 offscreenPageLimit = 3
+
+//                val savedTextureId = preferenceRepository.getPredefinedTextureId(
+//                    PreferenceRepository.SNOWFALL_PREDEFINED_TEXTURE_SELECTED_ID
+//                )
+//                setCurrentItem(predefinedTextureList.indexOf(savedTextureId), false)
 
                 setPageTransformer { page, position ->
                     page.apply {
@@ -81,16 +101,61 @@ class PickerDialogFragment : DialogFragment() {
             }
 
             setView(view)
-            setTitle("Alert dialog")
-            setMessage("message")
-            setPositiveButton("positive") { dialog, which ->
-                dismiss()
+            setTitle("Pick snowfall texture")
+            setPositiveButton("Select this") { _, _ ->
+                if (viewPager.currentItem != predefinedTextureList.lastIndex) {
+                    storeSelectedImage()
+                    dismiss()
+                } else {
+//                    for custom click on view
+                }
             }
-            setNegativeButton("negative") { dialog, which ->
-                dismiss()
-            }
-
+            setNegativeButton("Dismiss") { _, _ -> dismiss() }
             create()
+        }
+    }
+
+    private fun startIntent() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
+        startActivityForResult(intent, SELECT_CUSTOM_SNOWFALL_TEXTURE)
+    }
+
+    private fun storeSelectedImage() {
+        // todo pos != lastIndex (for imagepicker view)
+        if (viewPager.currentItem != predefinedTextureList.lastIndex) {
+            ImageProvider.saveImage(
+                context!!,
+                null,
+                ImageProvider.ImageType.SNOWFALL_TEXTURE,
+                predefinedTextureList[viewPager.currentItem]
+            )
+        } else {
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == AppCompatActivity.RESULT_OK) {
+            when (requestCode) {
+                SELECT_CUSTOM_SNOWFALL_TEXTURE -> {
+                    data?.let {
+                        val cr = context?.contentResolver
+                        val stringType = cr?.getType(it.data!!)
+                        if (stringType?.substringBefore("/") == "image")
+                            ImageProvider.saveImage(
+                                context!!,
+                                it.data!!,
+                                ImageProvider.ImageType.SNOWFALL_TEXTURE
+                            )
+                        else {
+                            Toast.makeText(
+                                context,
+                                "ff",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }//todo(not image)
+                    }
+                }
+            }
         }
     }
 
@@ -102,5 +167,9 @@ class PickerDialogFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
 //        dialog!!.window!!.setLayout(1080, 1920 / 2)
+    }
+
+    companion object {
+        const val SELECT_CUSTOM_SNOWFALL_TEXTURE = 1
     }
 }

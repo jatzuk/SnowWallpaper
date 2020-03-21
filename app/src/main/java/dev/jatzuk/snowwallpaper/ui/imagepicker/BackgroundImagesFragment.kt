@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.utilities.AbstractRecyclerAdapter
+import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 
 class BackgroundImagesFragment : Fragment() {
 

@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.utilities.AbstractRecyclerAdapter
+import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 
 class TextureAdapter<T : Any>(
     private val context: Context,
@@ -22,5 +22,6 @@ class TextureAdapter<T : Any>(
 
     override fun onBind(position: Int, listItem: T) {
         imageView.setImageDrawable(ContextCompat.getDrawable(context, listItem as Int))
+//        imageView.setImageBitmap((listItem as Drawable).toBitmap())
     }
 }

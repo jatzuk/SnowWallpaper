@@ -125,6 +125,14 @@ class PreferenceRepository private constructor(context: Context) {
             RENDERER_FRAMERATE_STATE_DEFAULT_VALUE
         )
 
+    fun savePredefinedTextureId(textureKey: String, resourceId: Int) {
+        preferenceManager.edit().putInt(textureKey, resourceId).apply()
+    }
+
+    fun getPredefinedTextureId(textureKey: String): Int {
+        return preferenceManager.getInt(textureKey, -1)
+    }
+
     companion object {
         @Volatile
         private var instance: PreferenceRepository? = null
@@ -153,6 +161,12 @@ class PreferenceRepository private constructor(context: Context) {
         const val RENDERER_FRAMERATE_DEFAULT_VALUE = 30
         const val RENDERER_FRAMERATE_MAX_VALUE = 60
         private const val RENDERER_FRAMERATE_STATE_DEFAULT_VALUE = false
+
+        const val SNOWFALL_PREDEFINED_TEXTURE_SELECTED_ID =
+            "SNOWFALL_PREDEFINED_TEXTURE_SELECTED_ID"
+
+        const val SNOWFLAKE_PREDEFINED_TEXTURE_SELECTED_ID =
+            "SNOWFLAKE_PREDEFINED_TEXTURE_SELECTED_ID"
 
         const val PREF_KEY_IS_SNOWFALL_ENABLED =
             "PREF_KEY_IS_SNOWFALL_ENABLED"
