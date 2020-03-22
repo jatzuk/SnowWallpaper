@@ -1,6 +1,5 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -28,8 +27,11 @@ class PreferencesActivity : AppCompatActivity(),
 
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val retainFragment = PreferencesFragment.findOrCreateRetainFragment(supportFragmentManager)
+
         supportFragmentManager.beginTransaction()
-            .replace(R.id.preferences_container, PreferencesFragment())
+            .replace(R.id.preferences_container, retainFragment, PreferencesFragment.TAG)
             .commit()
 
         appBarTitleViewModel = ViewModelProvider(this).get(AppBarTitleViewModel::class.java)
@@ -72,14 +74,7 @@ class PreferencesActivity : AppCompatActivity(),
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        supportFragmentManager.fragments[0].onActivityResult(requestCode, resultCode, data)
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
-
     companion object {
-        private const val PICK_CUSTOM_IMAGE = 2
         private const val TAG = "PreferencesActivity"
     }
 }

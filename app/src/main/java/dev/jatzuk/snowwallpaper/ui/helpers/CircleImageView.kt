@@ -74,21 +74,16 @@ class CircleImageView : AppCompatImageView {
             strokeWidth = width
         }
         isStrokeEnabled = true
-        updateView()
+        invalidate()
     }
 
     fun disableStroke() {
         strokePaint = null
         isStrokeEnabled = false
-        updateView()
+        invalidate()
     }
 
     private fun drawStroke(canvas: Canvas) {
         canvas.drawCircle(desiredSize / 2f, desiredSize / 2f, radius, strokePaint!!)
-    }
-
-    private fun updateView() {
-        invalidate()
-        requestLayout()
     }
 }

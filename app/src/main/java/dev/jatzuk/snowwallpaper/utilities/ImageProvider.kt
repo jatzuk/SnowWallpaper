@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
+import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ import java.io.IOException
 object ImageProvider {
 
     private const val TAG = "ImageProvider"
+    private val textureCache = TextureCache()
 
     fun saveImage(
         context: Context,
@@ -58,7 +60,18 @@ object ImageProvider {
     // todo(side thread?)
     fun loadTexture(context: Context, imageType: ImageType): Bitmap? {
         return try {
-            BitmapFactory.decodeStream(context.openFileInput(imageType.path))
+            val cachedTexture = textureCache.get(imageType.name)
+            if (cachedTexture != null) {
+                logging("got image texture ${imageType.name} from cache")
+                return cachedTexture
+            } else {
+                logging("requested texture ${imageType.name} not found in cache, retrieving from disk")
+            }
+
+            putTextureToCache(
+                imageType,
+                BitmapFactory.decodeStream(context.openFileInput(imageType.path))
+            )
         } catch (e: FileNotFoundException) {
             val resourceId =
                 when (imageType) {
@@ -67,7 +80,10 @@ object ImageProvider {
                     ImageType.THUMBNAIL_IMAGE -> R.drawable.background_image // todo
                     ImageType.BACKGROUND_IMAGE -> R.drawable.background_image // todo
                 }
-            ContextCompat.getDrawable(context, resourceId)!!.toBitmap()
+            putTextureToCache(
+                imageType,
+                ContextCompat.getDrawable(context, resourceId)!!.toBitmap()
+            )
         } catch (e: IOException) {
             errorLog(
                 "Failed to load image type: ${imageType.name} from internal storage", TAG, e
@@ -131,15 +147,20 @@ object ImageProvider {
         bitmap: Bitmap,
         imageType: ImageType
     ): Boolean = withContext(Dispatchers.IO) {
-        context.openFileOutput(imageType.path, Context.MODE_PRIVATE).use {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
-        }
-
-        val dstSize = context.resources.getDimensionPixelSize(R.dimen.thumbnail_size)
-        context.openFileOutput(imageType.path, Context.MODE_PRIVATE).use {
+        val resultBitmap = if (imageType == ImageType.THUMBNAIL_IMAGE) {
+            val dstSize = context.resources.getDimensionPixelSize(R.dimen.thumbnail_size)
             Bitmap.createScaledBitmap(bitmap, dstSize, dstSize, false)
-                .compress(Bitmap.CompressFormat.PNG, 100, it)
+        } else bitmap
+
+        putTextureToCache(imageType, resultBitmap)
+        context.openFileOutput(imageType.path, Context.MODE_PRIVATE).use {
+            resultBitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }
+    }
+
+    private fun putTextureToCache(imageType: ImageType, bitmap: Bitmap): Bitmap {
+        textureCache.putBitmap(imageType.name, bitmap)
+        return bitmap
     }
 
     enum class ImageType(val path: String) {

@@ -9,7 +9,7 @@ import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 
 private const val TAG = "TextureHelper"
 
-fun loadTexture(context: Context, imageType: ImageProvider.ImageType): Int {
+fun loadTextureForOpenGL(context: Context, imageType: ImageProvider.ImageType): Int {
     val textureObjectsIds = intArrayOf(0)
     glGenTextures(1, textureObjectsIds, 0)
 
@@ -20,7 +20,7 @@ fun loadTexture(context: Context, imageType: ImageProvider.ImageType): Int {
 
     val bitmap = ImageProvider.loadTexture(context, imageType)
     if (bitmap == null) {
-        errorLog("Bitmap texture for type ${imageType.name} could not be loaded", TAG)
+        errorLog("Bitmap type ${imageType.name} could not be loaded", TAG)
         glDeleteTextures(1, textureObjectsIds, 0)
         return 0
     }
@@ -32,11 +32,10 @@ fun loadTexture(context: Context, imageType: ImageProvider.ImageType): Int {
     texImage2D(GL_TEXTURE_2D, 0, bitmap, 0)
 
     glGenerateMipmap(GL_TEXTURE_2D)
-
-    bitmap.recycle()
-
     glBindTexture(GL_TEXTURE_2D, 0)
 
-    logging("Texture for type: ${imageType.name} loaded successfully", TAG)
+//    bitmap.recycle() // todo throws IllegalArgumentException involves by twice call inside Renderer
+    logging("Texture type: ${imageType.name} loaded successfully", TAG)
+
     return textureObjectsIds[0]
 }

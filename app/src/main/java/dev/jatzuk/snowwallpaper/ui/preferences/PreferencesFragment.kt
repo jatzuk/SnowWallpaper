@@ -3,6 +3,7 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
@@ -10,6 +11,10 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
     var isBackgroundImageEnabled = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -39,4 +44,15 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     override fun provideBackground(): Drawable? = null
 //        ContextCompat.getDrawable(context!!, R.drawable.background_preferences_main_screen)
 
+    companion object {
+        const val TAG = "PreferencesFragment"
+
+        fun findOrCreateRetainFragment(fm: FragmentManager): PreferencesFragment {
+            return (fm.findFragmentByTag(TAG) as? PreferencesFragment) ?: run {
+                PreferencesFragment().also {
+                    fm.beginTransaction().add(it, TAG).commit()
+                }
+            }
+        }
+    }
 }

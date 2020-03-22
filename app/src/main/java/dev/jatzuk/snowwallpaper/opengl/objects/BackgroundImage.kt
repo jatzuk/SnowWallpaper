@@ -7,7 +7,7 @@ import android.opengl.Matrix.setIdentityM
 import dev.jatzuk.snowwallpaper.opengl.data.VertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.BackgroundImageProgram
 import dev.jatzuk.snowwallpaper.opengl.util.BYTES_PER_FLOAT
-import dev.jatzuk.snowwallpaper.opengl.util.loadTexture
+import dev.jatzuk.snowwallpaper.opengl.util.loadTextureForOpenGL
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
 class BackgroundImage(context: Context) {
@@ -23,7 +23,7 @@ class BackgroundImage(context: Context) {
         TOTAL_COMPONENT_COUNT
     )
     private val textureId =
-        loadTexture(context, imageType = ImageProvider.ImageType.BACKGROUND_IMAGE)
+        loadTextureForOpenGL(context, ImageProvider.ImageType.BACKGROUND_IMAGE)
 
     private fun bindData() {
         backgroundImageVertexArray.apply {

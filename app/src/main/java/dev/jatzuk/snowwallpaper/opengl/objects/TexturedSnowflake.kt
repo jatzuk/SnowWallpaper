@@ -7,7 +7,7 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.data.RectangleVertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.SnowflakeProgram
 import dev.jatzuk.snowwallpaper.opengl.util.BYTES_PER_FLOAT
-import dev.jatzuk.snowwallpaper.opengl.util.loadTexture
+import dev.jatzuk.snowwallpaper.opengl.util.loadTextureForOpenGL
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.height
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.width
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
@@ -18,7 +18,7 @@ class TexturedSnowflake(context: Context) {
     private val snowflakeLimit = PreferenceRepository.getInstance(context).getSnowflakeLimit()
     private val snowflakes = Array(snowflakeLimit) { Snowflake(context, true) }
     private val snowflakeVertexArray = RectangleVertexArray(snowflakes, TOTAL_COMPONENT_COUNT)
-    private val textureId = loadTexture(context, ImageProvider.ImageType.SNOWFLAKE_TEXTURE)
+    private val textureId = loadTextureForOpenGL(context, ImageProvider.ImageType.SNOWFLAKE_TEXTURE)
 
     private fun bindData() {
         snowflakeVertexArray.apply {
