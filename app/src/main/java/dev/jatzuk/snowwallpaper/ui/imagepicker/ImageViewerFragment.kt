@@ -71,22 +71,10 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.choose_background_image -> {
-//                val resultMessage =
-//                    if (ImageProvider.saveBackgroundImage(
-//                        context!!,
-//                        resourceId = imagesIds[viewPager.currentItem]
-//                    )) "success" else
-//                    "we have some problems storing image" // todo
-//                Toast.makeText(
-//                    context,
-//                    resultMessage,
-//                    Toast.LENGTH_SHORT
-//                ).show()
                 ImageProvider.saveImage(
                     context!!,
-                    null,
                     ImageProvider.ImageType.BACKGROUND_IMAGE,
-                    imagesIds[viewPager.currentItem]
+                    resourceId = imagesIds[viewPager.currentItem]
                 )
                 activity?.supportFragmentManager?.popBackStack(
                     null,

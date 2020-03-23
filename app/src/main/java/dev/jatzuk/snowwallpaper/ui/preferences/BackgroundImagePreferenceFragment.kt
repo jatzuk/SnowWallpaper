@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
@@ -44,7 +45,7 @@ class BackgroundImagePreferenceFragment :
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
             val pickIntent = Intent(
                 Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             ).apply { type = "image/*" }
             val chooser =
                 Intent.createChooser(intent, getString(R.string.action_choose_image)).apply {
@@ -72,13 +73,17 @@ class BackgroundImagePreferenceFragment :
                     data?.let {
                         val cr = context?.contentResolver
                         val stringType = cr?.getType(it.data!!)
-                        if (stringType?.substringBefore("/") == "image")
+                        if (stringType?.substringBefore("/") == "image") {
+                            val bitmap = MediaStore.Images.Media.getBitmap(
+                                context?.contentResolver,
+                                it.data!!
+                            )
                             ImageProvider.saveImage(
                                 context!!,
-                                it.data!!,
-                                ImageProvider.ImageType.BACKGROUND_IMAGE
+                                ImageProvider.ImageType.BACKGROUND_IMAGE,
+                                bitmap
                             )
-                        else {
+                        } else {
                             Toast.makeText(
                                 context,
                                 "ff",

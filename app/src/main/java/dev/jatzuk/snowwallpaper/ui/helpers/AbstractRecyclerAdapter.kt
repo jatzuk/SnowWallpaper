@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 
 abstract class AbstractRecyclerAdapter<T : Any>(
     private val layoutResource: Int,
@@ -21,10 +20,7 @@ abstract class AbstractRecyclerAdapter<T : Any>(
     ): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(layoutResource, parent, false)
         view.tag = view.hashCode()
-        if (parentViewGroup == null) {
-            parentViewGroup = parent
-            logging("parentViewGroup initialized!!!!!!!!!!!!!!!!!!!!!!!")
-        }
+        if (parentViewGroup == null) parentViewGroup = parent
         return ViewHolder(view)
     }
 
@@ -61,5 +57,4 @@ abstract class AbstractRecyclerAdapter<T : Any>(
     interface OnViewHolderClick<T> {
         fun onClick(view: View?, position: Int, item: T)
     }
-
 }

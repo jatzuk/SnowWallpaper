@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -12,6 +13,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
@@ -28,25 +31,26 @@ import kotlin.math.max
 class PickerDialogFragment : DialogFragment() {
 
     private lateinit var preferenceRepository: PreferenceRepository
-    private lateinit var textureAdapter: TextureAdapter<Int>
+    private lateinit var textureAdapter: TextureAdapter<Drawable>
     private lateinit var viewPager: ViewPager2
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
-    private val predefinedTextureList =
-        listOf(
-            R.drawable.texture_snowflake,
-            R.drawable.texture_snowfall,
-            R.drawable.b0
-        )
-    private var viewPager2Position = 0
+    private lateinit var predefinedTextureList: ArrayList<Drawable>
+    private var viewPagerCurrentPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setStyle(STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
 
+        predefinedTextureList = arrayListOf(
+            ContextCompat.getDrawable(context!!, R.drawable.texture_snowflake)!!,
+            ContextCompat.getDrawable(context!!, R.drawable.texture_snowfall)!!,
+            ContextCompat.getDrawable(context!!, R.drawable.b0)!!
+        )
+
         textureAdapter = TextureAdapter(
             predefinedTextureList,
-            object : AbstractRecyclerAdapter.OnViewHolderClick<Int> {
-                override fun onClick(view: View?, position: Int, item: Int) {
+            object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
+                override fun onClick(view: View?, position: Int, item: Drawable) {
 
                     if (position == predefinedTextureList.lastIndex) {
                         startIntent()
@@ -56,10 +60,8 @@ class PickerDialogFragment : DialogFragment() {
         )
 
         preferenceRepository = PreferenceRepository.getInstance(context!!)
-        viewPager2Position = preferenceRepository.getSnowfallTextureSavedPosition()
-        if (viewPager2Position == predefinedTextureList.lastIndex) {
-            loadUserTexture() // todo parent view not initialized at this moment
-        }
+        viewPagerCurrentPosition = preferenceRepository.getSnowfallTextureSavedPosition()
+        if (viewPagerCurrentPosition == predefinedTextureList.lastIndex) loadUserTexture()
 
         onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
@@ -68,10 +70,12 @@ class PickerDialogFragment : DialogFragment() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
+                viewPagerCurrentPosition = position
                 textureAdapter.getParentView()?.children?.forEachIndexed { index, view ->
                     val circleImageView =
                         view.findViewById<CircleImageView>(R.id.circle_image_view)
-                    if (position != index) circleImageView.disableStroke()
+                    if (position != index || index == predefinedTextureList.lastIndex)
+                        circleImageView.disableStroke()
                     else circleImageView.setStroke(10f, Color.GREEN)
                 }
             }
@@ -90,7 +94,7 @@ class PickerDialogFragment : DialogFragment() {
                     clipChildren = false
                     offscreenPageLimit = 3
 
-                    setCurrentItem(viewPager2Position, false)
+                    setCurrentItem(viewPagerCurrentPosition, false)
 
                     setPageTransformer { page, position ->
                         page.apply {
@@ -131,9 +135,8 @@ class PickerDialogFragment : DialogFragment() {
             setView(view)
             setTitle("Pick snowfall texture")
             setPositiveButton("Select this") { _, _ ->
-                viewPager2Position = viewPager.currentItem
-                preferenceRepository.setSnowfallTextureSavedPosition(viewPager2Position)
-                if (viewPager2Position != predefinedTextureList.lastIndex) {
+//                viewPager2Position = viewPager.currentItem
+                if (viewPagerCurrentPosition != predefinedTextureList.lastIndex) {
                     storeSelectedImage()
                     dismiss()
                 } else {
@@ -157,15 +160,20 @@ class PickerDialogFragment : DialogFragment() {
     }
 
     private fun storeSelectedImage() {
-        // todo pos != lastIndex (for imagepicker view)
-        if (viewPager2Position != predefinedTextureList.lastIndex) {
+        preferenceRepository.setSnowfallTextureSavedPosition(viewPagerCurrentPosition)
+        if (viewPagerCurrentPosition != predefinedTextureList.lastIndex) {
             ImageProvider.saveImage(
                 context!!,
-                null,
                 ImageProvider.ImageType.SNOWFALL_TEXTURE,
-                predefinedTextureList[viewPager2Position]
+                predefinedTextureList[viewPagerCurrentPosition].toBitmap()
             )
+            //todo no success msg
         } else {
+            Toast.makeText(
+                context,
+                "cant save this icon",
+                Toast.LENGTH_SHORT
+            ).show() // todo
         }
     }
 
@@ -177,12 +185,7 @@ class PickerDialogFragment : DialogFragment() {
                         val cr = context?.contentResolver
                         val stringType = cr?.getType(it.data!!)
                         if (stringType?.substringBefore("/") == "image") {
-                            ImageProvider.saveImage(
-                                context!!,
-                                it.data!!,
-                                ImageProvider.ImageType.SNOWFALL_TEXTURE
-                            )
-                            updateViewPagerPreview(it.data!!)
+                            updateItemPreview(it.data!!)
                         } else {
                             Toast.makeText(
                                 context,
@@ -198,29 +201,18 @@ class PickerDialogFragment : DialogFragment() {
 
     private fun loadUserTexture() {
         val bitmap = ImageProvider.loadTexture(context!!, ImageProvider.ImageType.SNOWFALL_TEXTURE)
-        setBitmapForCurrentViewHolder(bitmap!!)
+        insertBitmapToTextureList(bitmap!!)
     }
 
-    private fun updateViewPagerPreview(uri: Uri) {
-//        val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//            val source = ImageDecoder.createSource(context!!.contentResolver, uri)
-//            ImageDecoder.decodeBitmap(source)
-//        } else {
-//            @Suppress("DEPRECATION")
-//            MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
-//        }
-
+    private fun updateItemPreview(uri: Uri) {
+        @Suppress("DEPRECATION")
         val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
-        setBitmapForCurrentViewHolder(bitmap!!)
+        insertBitmapToTextureList(bitmap)
     }
 
-    private fun setBitmapForCurrentViewHolder(bitmap: Bitmap) {
-        val circleImageView = textureAdapter.getParentView()?.getChildAt(viewPager2Position)
-            ?.findViewById<CircleImageView>(R.id.circle_image_view)
-        circleImageView?.setPreviewImage(
-            bitmap.toDrawable(resources),
-            resources.getDimensionPixelSize(R.dimen.texture_picker_image_size)
-        )
+    private fun insertBitmapToTextureList(bitmap: Bitmap) {
+        predefinedTextureList.add(viewPagerCurrentPosition, bitmap.toDrawable(resources))
+        textureAdapter.notifyItemInserted(viewPagerCurrentPosition)
     }
 
     companion object {

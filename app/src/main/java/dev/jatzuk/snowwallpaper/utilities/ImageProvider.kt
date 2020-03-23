@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.util.DisplayMetrics
 import android.widget.Toast
 import androidx.annotation.DrawableRes
@@ -28,8 +27,8 @@ object ImageProvider {
 
     fun saveImage(
         context: Context,
-        uri: Uri? = null,
         imageType: ImageType,
+        bitmap: Bitmap? = null,
         @DrawableRes resourceId: Int = -1
     ) {
         val (height, width) = DisplayMetrics().run {
@@ -37,10 +36,14 @@ object ImageProvider {
             ydpi.toInt() to xdpi.toInt()
         }
         CoroutineScope(Dispatchers.Main).launch {
-            val bitmap =
-                if (uri != null) decodeSampledBitmapFromUri(context, uri, height, width)
-                else decodeSampledBitmapFromResource(context.resources, resourceId, height, width)
-            val result = storeImage(context, bitmap, imageType)
+            val bmp = bitmap
+                ?: decodeSampledBitmapFromResource(
+                    context.resources,
+                    resourceId,
+                    height,
+                    width
+                )
+            val result = storeImage(context, bmp, imageType)
             val message =
                 if (result) context.getString(R.string.image_storage_successed)
                 else context.getString(R.string.image_storage_failed)
@@ -104,21 +107,6 @@ object ImageProvider {
             inSampleSize = calculateInSampleSize(this, requiredWidth, requiredHeight)
             inJustDecodeBounds = false
             BitmapFactory.decodeResource(resources, resourceId, this)
-        }
-    }
-
-    private suspend fun decodeSampledBitmapFromUri(
-        context: Context,
-        uri: Uri,
-        requiredHeight: Int,
-        requiredWidth: Int
-    ): Bitmap = withContext(Dispatchers.IO) {
-        BitmapFactory.Options().run {
-            inJustDecodeBounds = true
-            BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri), null, this)
-            inSampleSize = calculateInSampleSize(this, requiredHeight, requiredWidth)
-            inJustDecodeBounds = false
-            BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri), null, this)!!
         }
     }
 
