@@ -19,7 +19,9 @@
     <dimen name="offset">60dp</dimen>
 
     <dimen name="circle_image_view_default_size">256dp</dimen>
+    <dimen name="circle_image_view_stroke_width">5dp</dimen>
     <dimen name="intent_preview_image_size">100dp</dimen>
+    <dimen name="intent_preview_image_stroke_width">2dp</dimen>
     <dimen name="texture_picker_image_size">256dp</dimen>
 
 

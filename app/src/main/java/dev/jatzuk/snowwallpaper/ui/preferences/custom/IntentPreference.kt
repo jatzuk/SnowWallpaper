@@ -49,7 +49,10 @@ class IntentPreference(
                         previewImage!!,
                         resources.getDimensionPixelSize(R.dimen.intent_preview_image_size)
                     )
-                    setStroke(5f, Color.BLACK)
+                    setStroke(
+                        resources.getDimensionPixelOffset(R.dimen.intent_preview_image_stroke_width),
+                        Color.BLACK
+                    )
                     visibility = View.VISIBLE
                 }
             } else circleImageView.visibility = View.GONE
