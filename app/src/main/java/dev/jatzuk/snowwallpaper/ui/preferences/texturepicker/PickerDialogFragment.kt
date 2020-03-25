@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -31,37 +32,39 @@ import kotlin.math.max
 class PickerDialogFragment : DialogFragment() {
 
     private lateinit var preferenceRepository: PreferenceRepository
+    private lateinit var positiveButton: Button
     private lateinit var textureAdapter: TextureAdapter<Drawable>
     private lateinit var viewPager: ViewPager2
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
-    private lateinit var predefinedTextureList: ArrayList<Drawable>
+    private lateinit var textureArray: ArrayList<Drawable>
     private var viewPagerCurrentPosition = 0
+    private var userPickedImage: Drawable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setStyle(STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
 
-        predefinedTextureList = arrayListOf(
+        textureArray = arrayListOf(
             ContextCompat.getDrawable(context!!, R.drawable.texture_snowflake)!!,
             ContextCompat.getDrawable(context!!, R.drawable.texture_snowfall)!!,
             ContextCompat.getDrawable(context!!, R.drawable.b0)!!
         )
 
         textureAdapter = TextureAdapter(
-            predefinedTextureList,
+            textureArray,
             object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
                 override fun onClick(view: View?, position: Int, item: Drawable) {
-
-                    if (position == predefinedTextureList.lastIndex) {
-                        startIntent()
-                    }
+                    if (position == textureArray.lastIndex) startImagePickerIntent()
                 }
             }
         )
 
         preferenceRepository = PreferenceRepository.getInstance(context!!)
         viewPagerCurrentPosition = preferenceRepository.getSnowfallTextureSavedPosition()
-        if (viewPagerCurrentPosition == predefinedTextureList.lastIndex) loadUserTexture()
+        if (viewPagerCurrentPosition == textureArray.lastIndex) {
+            val bitmap = loadUserTexture()
+            bitmap?.let { notifyAdapter(it.toDrawable(resources)) }
+        }
 
         onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
@@ -69,14 +72,19 @@ class PickerDialogFragment : DialogFragment() {
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-
+                positiveButton.isEnabled = position != textureArray.lastIndex
                 viewPagerCurrentPosition = position
                 textureAdapter.getParentView()?.children?.forEachIndexed { index, view ->
                     val circleImageView =
                         view.findViewById<CircleImageView>(R.id.circle_image_view)
-                    if (position != index || index == predefinedTextureList.lastIndex)
+                    if (position != index || index == textureArray.lastIndex) {
                         circleImageView.disableStroke()
-                    else circleImageView.setStroke(10f, Color.GREEN)
+                    } else {
+                        circleImageView.setStroke(
+                            resources.getDimensionPixelSize(R.dimen.circle_image_view_stroke_width),
+                            Color.GREEN
+                        )
+                    }
                 }
             }
         }
@@ -134,16 +142,8 @@ class PickerDialogFragment : DialogFragment() {
 
             setView(view)
             setTitle("Pick snowfall texture")
-            setPositiveButton("Select this") { _, _ ->
-//                viewPager2Position = viewPager.currentItem
-                if (viewPagerCurrentPosition != predefinedTextureList.lastIndex) {
-                    storeSelectedImage()
-                    dismiss()
-                } else {
-//                    for custom click on view
-                }
-            }
-            setNegativeButton("Dismiss") { _, _ -> dismiss() }
+            setPositiveButton("Select this") { _, _ -> storeSelectedImage() }
+            setNegativeButton("Dismiss") { _, _ -> }
             create()
         }
     }
@@ -152,29 +152,22 @@ class PickerDialogFragment : DialogFragment() {
         super.onStart()
 //        dialog!!.window!!.setLayout(1080, 1920 / 2)
         viewPager.registerOnPageChangeCallback(onPageChangeCallback)
+
+        dialog?.let { positiveButton = (it as AlertDialog).getButton(Dialog.BUTTON_POSITIVE) }
     }
 
-    private fun startIntent() {
+    private fun startImagePickerIntent() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
         parentFragment?.startActivityForResult(intent, SELECT_CUSTOM_SNOWFALL_TEXTURE)
     }
 
     private fun storeSelectedImage() {
         preferenceRepository.setSnowfallTextureSavedPosition(viewPagerCurrentPosition)
-        if (viewPagerCurrentPosition != predefinedTextureList.lastIndex) {
-            ImageProvider.saveImage(
-                context!!,
-                ImageProvider.ImageType.SNOWFALL_TEXTURE,
-                predefinedTextureList[viewPagerCurrentPosition].toBitmap()
-            )
-            //todo no success msg
-        } else {
-            Toast.makeText(
-                context,
-                "cant save this icon",
-                Toast.LENGTH_SHORT
-            ).show() // todo
-        }
+        ImageProvider.saveImage(
+            context!!,
+            ImageProvider.ImageType.SNOWFALL_TEXTURE,
+            textureArray[viewPagerCurrentPosition].toBitmap()
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -185,34 +178,39 @@ class PickerDialogFragment : DialogFragment() {
                         val cr = context?.contentResolver
                         val stringType = cr?.getType(it.data!!)
                         if (stringType?.substringBefore("/") == "image") {
-                            updateItemPreview(it.data!!)
+                            val drawable = getBitmapFromUri(it.data!!).toDrawable(resources)
+                            notifyAdapter(drawable)
                         } else {
                             Toast.makeText(
                                 context,
-                                "", // todo
+                                "selected item is not an image", // todo
                                 Toast.LENGTH_SHORT
                             ).show()
-                        }//todo(not image)
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun loadUserTexture() {
-        val bitmap = ImageProvider.loadTexture(context!!, ImageProvider.ImageType.SNOWFALL_TEXTURE)
-        insertBitmapToTextureList(bitmap!!)
-    }
+    private fun loadUserTexture(): Bitmap? =
+        ImageProvider.loadTexture(context!!, ImageProvider.ImageType.SNOWFALL_TEXTURE)
 
-    private fun updateItemPreview(uri: Uri) {
-        @Suppress("DEPRECATION")
-        val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
-        insertBitmapToTextureList(bitmap)
-    }
+    @Suppress("DEPRECATION")
+    private fun getBitmapFromUri(uri: Uri): Bitmap =
+        MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
 
-    private fun insertBitmapToTextureList(bitmap: Bitmap) {
-        predefinedTextureList.add(viewPagerCurrentPosition, bitmap.toDrawable(resources))
-        textureAdapter.notifyItemInserted(viewPagerCurrentPosition)
+    private fun notifyAdapter(drawable: Drawable) {
+        if (userPickedImage == null) {
+            textureArray.add(viewPagerCurrentPosition, drawable)
+            textureAdapter.notifyItemInserted(viewPagerCurrentPosition)
+        } else {
+            textureArray[viewPagerCurrentPosition - 1] = drawable
+            textureAdapter.notifyItemChanged(viewPagerCurrentPosition - 1)
+            viewPager.currentItem = viewPagerCurrentPosition - 1
+        }
+
+        userPickedImage = drawable
     }
 
     companion object {
