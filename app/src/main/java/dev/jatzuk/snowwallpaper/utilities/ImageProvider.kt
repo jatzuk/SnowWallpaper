@@ -13,6 +13,7 @@ import androidx.core.graphics.drawable.toBitmap
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
+import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +25,7 @@ object ImageProvider {
 
     private const val TAG = "ImageProvider"
     private val textureCache = TextureCache()
+    var texturesViewModel: TexturesViewModel? = null
 
     fun saveImage(
         context: Context,
@@ -48,15 +50,6 @@ object ImageProvider {
                 if (result) context.getString(R.string.image_storage_successed)
                 else context.getString(R.string.image_storage_failed)
             if (result) Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun loadThumbnailImage(context: Context): Bitmap? {
-        return try {
-            BitmapFactory.decodeStream(context.openFileInput(ImageType.THUMBNAIL_IMAGE.path))
-        } catch (e: IOException) {
-            errorLog("Failed to load thumbnail image", TAG, e)
-            null
         }
     }
 
@@ -93,6 +86,10 @@ object ImageProvider {
             )
             null
         }
+    }
+
+    fun getBitmapFromCache(imageType: ImageType): Bitmap? {
+        return textureCache.get(imageType.name)
     }
 
     private suspend fun decodeSampledBitmapFromResource(
@@ -148,6 +145,7 @@ object ImageProvider {
 
     private fun putTextureToCache(imageType: ImageType, bitmap: Bitmap): Bitmap {
         textureCache.putBitmap(imageType.name, bitmap)
+        texturesViewModel?.getTextures()?.value?.set(imageType, bitmap)
         return bitmap
     }
 

@@ -7,6 +7,19 @@ class PreferenceRepository private constructor(context: Context) {
 
     private val preferenceManager = PreferenceManager.getDefaultSharedPreferences(context)
 
+
+    val snowfallPreference = PreferenceLiveData(
+        context,
+        PREF_KEY_IS_SNOWFALL_ENABLED,
+        SNOWFALL_IS_ENABLED_DEFAULT_VALUE
+    )
+
+    val snowflakePreference = PreferenceLiveData(
+        context,
+        PREF_KEY_IS_SNOWFLAKE_ENABLED,
+        SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE
+    )
+
     val backgroundImagePreference = PreferenceLiveData(
         context,
         PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED,

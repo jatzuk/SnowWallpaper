@@ -3,17 +3,27 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
+import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
+import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.utilities.ImageProvider.texturesViewModel
+import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 
 class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
-    var isBackgroundImageEnabled = false
+    private lateinit var preferenceRepository: PreferenceRepository
+    private lateinit var intentPreferences: Array<IntentPreference>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        preferenceRepository = PreferenceRepository.getInstance(context!!)
+        texturesViewModel = ViewModelProvider(this).get(TexturesViewModel::class.java)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -22,20 +32,54 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     }
 
     override fun setUp() {
-//        todo load image preview
-//        val bitmap =
-//            ImageProvider.loadThumbnailImage(context!!) // todo (check if it's first start of app, so background image is null, or set default images)
-//        val thumbnailIcon = bitmap?.toDrawable(resources) ?: BitmapDrawable(resources, bitmap)
-//        val backgroundImage =
-//            findPreference<Preference>(getString(R.string.background_image_global_switcher_key))
-//        backgroundImage?.icon = thumbnailIcon
-
-    } // stub
+        intentPreferences = arrayOf(
+            findPreference(getString(R.string.background_snowflakes_category_key))!!,
+            findPreference(getString(R.string.foreground_snowflakes_category_key))!!,
+            findPreference(getString(R.string.background_image_global_switcher_key))!!
+        )
+    }
 
     override fun attachObserver() {
-        PreferenceRepository.getInstance(context!!).backgroundImagePreference.observe(
+        texturesViewModel?.getTextures()?.observe(
             viewLifecycleOwner,
-            Observer { isBackgroundImageEnabled = it }
+            Observer {
+                intentPreferences.forEachIndexed { index, preference ->
+                    preference.apply {
+                        previewImage =
+                            it[ImageProvider.ImageType.values()[index]]?.toDrawable(resources)
+                    }
+                }
+            }
+        )
+
+//        todo replace with normal realization
+        preferenceRepository.snowfallPreference.observe(
+            viewLifecycleOwner,
+            Observer { isEnabled ->
+                if (!isEnabled) {
+                    intentPreferences[0].previewImage =
+                        ContextCompat.getDrawable(context!!, R.drawable.category_disabled)
+                }
+            }
+        )
+
+        preferenceRepository.snowflakePreference.observe(
+            viewLifecycleOwner,
+            Observer { isEnabled ->
+                if (!isEnabled) {
+                    intentPreferences[1].previewImage =
+                        ContextCompat.getDrawable(context!!, R.drawable.category_disabled)
+                }
+            }
+        )
+
+        preferenceRepository.backgroundImagePreference.observe(
+            viewLifecycleOwner,
+            Observer { isEnabled ->
+                if (!isEnabled)
+                    intentPreferences[2].previewImage =
+                        ContextCompat.getDrawable(context!!, R.drawable.category_disabled)
+            }
         )
     }
 
