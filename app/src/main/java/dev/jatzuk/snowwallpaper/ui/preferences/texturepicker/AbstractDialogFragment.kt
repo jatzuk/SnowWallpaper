@@ -25,18 +25,22 @@ import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 import dev.jatzuk.snowwallpaper.ui.helpers.CircleImageView
+import dev.jatzuk.snowwallpaper.ui.imagepicker.ImageViewerFragment
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 import kotlin.math.abs
 import kotlin.math.max
 
-class PickerDialogFragment : DialogFragment() {
+abstract class AbstractDialogFragment(
+    private val textureIds: Array<Int>,
+    private val imageType: ImageProvider.ImageType
+) : DialogFragment() {
 
-    private lateinit var preferenceRepository: PreferenceRepository
+    protected lateinit var preferenceRepository: PreferenceRepository
     private lateinit var positiveButton: Button
     private lateinit var textureAdapter: TextureAdapter<Drawable>
     private lateinit var viewPager: ViewPager2
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
-    private lateinit var textureArray: ArrayList<Drawable>
+    private val textureArray = ArrayList<Drawable>()
     private var viewPagerCurrentPosition = 0
     private var userPickedImage: Drawable? = null
 
@@ -44,31 +48,33 @@ class PickerDialogFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
 //        setStyle(STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
 
-        textureArray = arrayListOf(
-            ContextCompat.getDrawable(context!!, R.drawable.texture_snowflake)!!,
-            ContextCompat.getDrawable(context!!, R.drawable.texture_snowfall)!!,
-            ContextCompat.getDrawable(context!!, R.drawable.b0)!!
-        )
+        textureIds.forEach { textureArray.add(ContextCompat.getDrawable(context!!, it)!!) }
+        textureArray.add(ContextCompat.getDrawable(context!!, R.drawable.b0)!!)
 
         textureAdapter = TextureAdapter(
             textureArray,
             object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
                 override fun onClick(view: View?, position: Int, item: Drawable) {
                     if (position == textureArray.lastIndex) startImagePickerIntent()
+                    else {
+                        val fragment = ImageViewerFragment.newInstance(textureIds[position])
+                        childFragmentManager.beginTransaction()
+                            .add(fragment, "").commit()
+                    }
                 }
             }
         )
 
         preferenceRepository = PreferenceRepository.getInstance(context!!)
-        viewPagerCurrentPosition = preferenceRepository.getSnowfallTextureSavedPosition()
+        viewPagerCurrentPosition = provideTexturePositionLoadPosition()
+
         if (viewPagerCurrentPosition == textureArray.lastIndex) {
             val bitmap = loadUserTexture()
             bitmap?.let { notifyAdapter(it.toDrawable(resources)) }
         }
 
         onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrollStateChanged(state: Int) {
-            }
+            override fun onPageScrollStateChanged(state: Int) {}
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -158,14 +164,15 @@ class PickerDialogFragment : DialogFragment() {
 
     private fun startImagePickerIntent() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
-        parentFragment?.startActivityForResult(intent, SELECT_CUSTOM_SNOWFALL_TEXTURE)
+        parentFragment?.startActivityForResult(intent, SELECT_CUSTOM_IMAGE)
     }
 
     private fun storeSelectedImage() {
-        preferenceRepository.setSnowfallTextureSavedPosition(viewPagerCurrentPosition)
+        provideTexturePositionSavePosition(viewPagerCurrentPosition)
+
         ImageProvider.saveImage(
             context!!,
-            ImageProvider.ImageType.SNOWFALL_TEXTURE,
+            imageType,
             textureArray[viewPagerCurrentPosition].toBitmap()
         )
     }
@@ -173,7 +180,7 @@ class PickerDialogFragment : DialogFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == AppCompatActivity.RESULT_OK) {
             when (requestCode) {
-                SELECT_CUSTOM_SNOWFALL_TEXTURE -> {
+                SELECT_CUSTOM_IMAGE -> {
                     data?.let {
                         val cr = context?.contentResolver
                         val stringType = cr?.getType(it.data!!)
@@ -193,8 +200,7 @@ class PickerDialogFragment : DialogFragment() {
         }
     }
 
-    private fun loadUserTexture(): Bitmap? =
-        ImageProvider.loadTexture(context!!, ImageProvider.ImageType.SNOWFALL_TEXTURE)
+    private fun loadUserTexture(): Bitmap? = ImageProvider.loadTexture(context!!, imageType)
 
     @Suppress("DEPRECATION")
     private fun getBitmapFromUri(uri: Uri): Bitmap =
@@ -213,7 +219,11 @@ class PickerDialogFragment : DialogFragment() {
         userPickedImage = drawable
     }
 
+    abstract fun provideTexturePositionSavePosition(position: Int)
+
+    abstract fun provideTexturePositionLoadPosition(): Int
+
     companion object {
-        const val SELECT_CUSTOM_SNOWFALL_TEXTURE = 1
+        const val SELECT_CUSTOM_IMAGE = 1
     }
 }

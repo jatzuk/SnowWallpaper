@@ -54,7 +54,7 @@
     <string name="background_snowflakes_max_radius_key">background_snowflakes_max_radius_key</string>
     <string name="background_snowflakes_velocity_factor_key">background_snowflakes_velocity_factor_key</string>
 
-    <string name="foreground_snowflakes_category_key">foreground_snowflakes_category_key</string>
+    <string name="foreground_snowflake_category_key">foreground_snowflake_category_key</string>
 
     <string name="background_image_global_switcher_key">PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED</string>
     <string name="background_image_pick_predefined_image_key">background_image_pick_predefined_image_key</string>

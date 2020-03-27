@@ -34,7 +34,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     override fun setUp() {
         intentPreferences = arrayOf(
             findPreference(getString(R.string.background_snowflakes_category_key))!!,
-            findPreference(getString(R.string.foreground_snowflakes_category_key))!!,
+            findPreference(getString(R.string.foreground_snowflake_category_key))!!,
             findPreference(getString(R.string.background_image_global_switcher_key))!!
         )
     }

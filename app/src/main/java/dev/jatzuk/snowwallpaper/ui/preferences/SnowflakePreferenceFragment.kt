@@ -7,39 +7,38 @@ import android.os.Bundle
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
 import dev.jatzuk.snowwallpaper.ui.preferences.texturepicker.AbstractDialogFragment
-import dev.jatzuk.snowwallpaper.ui.preferences.texturepicker.AbstractDialogFragment.Companion.SELECT_CUSTOM_IMAGE
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
 @Suppress("unused")
-class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_snowfall) {
+class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_snowflake) {
 
     private lateinit var texturePickerPreference: IntentPreference
 
     override fun setUp() {
-        texturePickerPreference = findPreference("snowfall_select_texture")!! // todo
+        texturePickerPreference =
+            findPreference("snowflake_select_texture")!! // todo
         texturePickerPreference.apply {
             setOnPreferenceClickListener {
-                val pickerDialogFragment = SnowfallDialogFragment()
+                val pickerDialogFragment = SnowflakeDialogFragment()
                 pickerDialogFragment.setTargetFragment(
-                    childFragmentManager.findFragmentById(this@SnowfallPreferenceFragment.id),
-                    SELECT_CUSTOM_IMAGE
+                    childFragmentManager.findFragmentById(this@SnowflakePreferenceFragment.id),
+                    AbstractDialogFragment.SELECT_CUSTOM_IMAGE
                 )
                 pickerDialogFragment.show(childFragmentManager.beginTransaction(), "") // todo
                 true
             }
         }
+
     }
 
     override fun attachObserver() {}
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        appBarTitleViewModel.title.value =
-            getString(R.string.background_snowflakes) // todo(change attrib name)
+        appBarTitleViewModel.title.value = "Foreground snowflakes"
     }
 
     override fun provideBackground(): Drawable? = null
-//        BitmapFactory.decodeResource(resources, R.drawable.b2).toDrawable(resources)
 
     override fun provideBackgroundColor(): Int = Color.CYAN
 
@@ -48,15 +47,20 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
         childFragmentManager.fragments[0].onActivityResult(requestCode, resultCode, data)
     }
 
-    class SnowfallDialogFragment : AbstractDialogFragment(
-        arrayOf(R.drawable.texture_snowflake, R.drawable.texture_snowfall),
-        ImageProvider.ImageType.SNOWFALL_TEXTURE
+    class SnowflakeDialogFragment : AbstractDialogFragment(
+        arrayOf(
+            R.drawable.texture_snowflake,
+            R.drawable.texture_snowfall,
+            R.drawable.category_disabled,
+            R.drawable.ic_disabled_64dp
+        ),
+        ImageProvider.ImageType.SNOWFLAKE_TEXTURE
     ) {
         override fun provideTexturePositionSavePosition(position: Int) {
-            preferenceRepository.setSnowfallTextureSavedPosition(position)
+            preferenceRepository.setSnowflakeTextureSavedPosition(position)
         }
 
         override fun provideTexturePositionLoadPosition(): Int =
-            preferenceRepository.getSnowfallTextureSavedPosition()
+            preferenceRepository.getSnowflakeTextureSavedPosition()
     }
 }

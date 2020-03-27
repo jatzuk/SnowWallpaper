@@ -11,8 +11,8 @@
             app:preferenceTitle="@string/background_snowflakes" />
 
         <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
-            app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.SnowflakesPreferenceFragment"
-            app:key="@string/foreground_snowflakes_category_key"
+            app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.SnowflakePreferenceFragment"
+            app:key="@string/foreground_snowflake_category_key"
             app:preferenceSummary="@string/foreground_snowflakes_category_summary"
             app:preferenceTitle="@string/foreground_snowflakes_category" />
 
