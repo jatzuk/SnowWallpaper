@@ -18,7 +18,7 @@ class CircleImageView : AppCompatImageView {
     private var radius = desiredSize / 2f - 20
     private var bitmap: Bitmap? = null
 
-    private var isStrokeEnabled = false
+    var isStrokeEnabled = false
     private var strokePaint: Paint? = null
 
     fun setPreviewImage(drawable: Drawable, size: Int) {
@@ -29,7 +29,6 @@ class CircleImageView : AppCompatImageView {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
         if (bitmap != null) {
             canvas.drawBitmap(
                 bitmap!!,
@@ -38,7 +37,8 @@ class CircleImageView : AppCompatImageView {
                 null
             )
 
-            if (isStrokeEnabled) drawStroke(canvas)
+//            if (isStrokeEnabled)
+            drawStroke(canvas)
         }
     }
 

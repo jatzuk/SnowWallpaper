@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.content.ContextCompat
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.ui.helpers.CircleImageView
 
@@ -23,8 +22,8 @@ class IntentPreference(
 
     init {
         if (backgroundImage == null) {
-            backgroundImage =
-                ContextCompat.getDrawable(context, R.drawable.background_preference_intent)
+//            backgroundImage =
+//                ContextCompat.getDrawable(context, R.drawable.background_preference_intent)
         }
     }
 

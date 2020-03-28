@@ -31,7 +31,7 @@ import kotlin.math.abs
 import kotlin.math.max
 
 abstract class AbstractDialogFragment(
-    private val textureIds: Array<Int>,
+    private val textureIds: IntArray,
     private val imageType: ImageProvider.ImageType
 ) : DialogFragment() {
 
@@ -57,9 +57,17 @@ abstract class AbstractDialogFragment(
                 override fun onClick(view: View?, position: Int, item: Drawable) {
                     if (position == textureArray.lastIndex) startImagePickerIntent()
                     else {
-                        val fragment = ImageViewerFragment.newInstance(textureIds[position])
-                        childFragmentManager.beginTransaction()
-                            .add(fragment, "").commit()
+                        dialog?.hide()
+//                        dismiss()
+
+                        val fragment =
+                            ImageViewerFragment.newInstance(textureIds, R.drawable.background_image)
+                        parentFragment!!.parentFragmentManager
+                            .beginTransaction()
+//                            .setTransition()
+                            .replace(R.id.preferences_container, fragment)
+                            .addToBackStack(null)
+                            .commit()
                     }
                 }
             }
@@ -83,14 +91,21 @@ abstract class AbstractDialogFragment(
                 textureAdapter.getParentView()?.children?.forEachIndexed { index, view ->
                     val circleImageView =
                         view.findViewById<CircleImageView>(R.id.circle_image_view)
-                    if (position != index || index == textureArray.lastIndex) {
-                        circleImageView.disableStroke()
-                    } else {
-                        circleImageView.setStroke(
-                            resources.getDimensionPixelSize(R.dimen.circle_image_view_stroke_width),
-                            Color.GREEN
-                        )
-                    }
+//                    if (position != index || index == textureArray.lastIndex) {
+//                        circleImageView.disableStroke()
+//                    } else {
+//                        circleImageView.isStrokeEnabled = true
+//                        circleImageView.setStroke(
+//                            resources.getDimensionPixelSize(R.dimen.circle_image_view_stroke_width),
+//                            Color.GREEN
+//                        )
+//                    }
+
+                    circleImageView.setStroke(
+                        resources.getDimensionPixelSize(R.dimen.circle_image_view_stroke_width),
+                        Color.GREEN
+                    )
+
                 }
             }
         }
@@ -158,8 +173,14 @@ abstract class AbstractDialogFragment(
         super.onStart()
 //        dialog!!.window!!.setLayout(1080, 1920 / 2)
         viewPager.registerOnPageChangeCallback(onPageChangeCallback)
+        dialog!!.show()
 
         dialog?.let { positiveButton = (it as AlertDialog).getButton(Dialog.BUTTON_POSITIVE) }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewPager.unregisterOnPageChangeCallback(onPageChangeCallback)
     }
 
     private fun startImagePickerIntent() {

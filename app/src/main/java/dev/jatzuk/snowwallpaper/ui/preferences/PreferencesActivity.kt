@@ -2,22 +2,16 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
-import dev.jatzuk.snowwallpaper.ui.imagepicker.BackgroundImage
-import dev.jatzuk.snowwallpaper.ui.imagepicker.ImageViewerFragment
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
 class PreferencesActivity : AppCompatActivity(),
-    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback,
-    AbstractRecyclerAdapter.OnViewHolderClick<BackgroundImage>
-/*BackgroundImagesFragment.OnListFragmentInteractionListener*/ {
+    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
     private lateinit var appBarTitleViewModel: AppBarTitleViewModel
 
@@ -58,13 +52,6 @@ class PreferencesActivity : AppCompatActivity(),
             .addToBackStack(null)
             .commit()
         return true
-    }
-
-    override fun onClick(view: View?, position: Int, item: BackgroundImage) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.preferences_container, ImageViewerFragment.newInstance(item.resourceId))
-            .addToBackStack(null)
-            .commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

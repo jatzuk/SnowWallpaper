@@ -49,7 +49,7 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
     }
 
     class SnowfallDialogFragment : AbstractDialogFragment(
-        arrayOf(R.drawable.texture_snowflake, R.drawable.texture_snowfall),
+        intArrayOf(R.drawable.texture_snowflake, R.drawable.texture_snowfall),
         ImageProvider.ImageType.SNOWFALL_TEXTURE
     ) {
         override fun provideTexturePositionSavePosition(position: Int) {

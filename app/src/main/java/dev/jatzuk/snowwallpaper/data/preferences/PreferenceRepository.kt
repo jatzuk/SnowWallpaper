@@ -158,13 +158,16 @@ class PreferenceRepository private constructor(context: Context) {
             0
         )
 
-//    fun savePredefinedTextureId(textureKey: String, resourceId: Int) {
-//        preferenceManager.edit().putInt(textureKey, resourceId).apply()
-//    }
-//
-//    fun getPredefinedTextureId(textureKey: String): Int {
-//        return preferenceManager.getInt(textureKey, -1)
-//    }
+
+    fun setBackgroundImageSavedPosition(position: Int) {
+        preferenceManager.edit().putInt(BACKGROUND_IMAGE_SAVED_POSITION, position).apply()
+    }
+
+    fun getBackgroundImageSavedPosition(): Int =
+        preferenceManager.getInt(
+            BACKGROUND_IMAGE_SAVED_POSITION,
+            0
+        )
 
     companion object {
         @Volatile
@@ -195,17 +198,14 @@ class PreferenceRepository private constructor(context: Context) {
         const val RENDERER_FRAMERATE_MAX_VALUE = 60
         private const val RENDERER_FRAMERATE_STATE_DEFAULT_VALUE = false
 
-//        const val SNOWFALL_PREDEFINED_TEXTURE_SELECTED_ID =
-//            "SNOWFALL_PREDEFINED_TEXTURE_SELECTED_ID"
-//
-//        const val SNOWFLAKE_PREDEFINED_TEXTURE_SELECTED_ID =
-//            "SNOWFLAKE_PREDEFINED_TEXTURE_SELECTED_ID"
-
         private const val SNOWFALL_TEXTURE_SAVED_POSITION =
             "SNOWFALL_TEXTURE_SAVED_POSITION"
 
         private const val SNOWFLAKE_TEXTURE_SAVED_POSITION =
             "SNOWFLAKE_TEXTURE_SAVED_POSITION"
+
+        private const val BACKGROUND_IMAGE_SAVED_POSITION =
+            "BACKGROUND_IMAGE_SAVED_POSITION"
 
         const val PREF_KEY_IS_SNOWFALL_ENABLED =
             "PREF_KEY_IS_SNOWFALL_ENABLED"

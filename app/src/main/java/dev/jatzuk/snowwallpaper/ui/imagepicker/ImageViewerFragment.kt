@@ -11,20 +11,14 @@ import androidx.viewpager2.widget.ViewPager2
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.ui.imagepicker.viewpager.ImageSlidePageFragment
 import dev.jatzuk.snowwallpaper.ui.imagepicker.viewpager.pagetransformers.ZoomOutPageTransformer
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
-class ImageViewerFragment : Fragment() { // view pager2 content home
+class ImageViewerFragment : Fragment() {
 
     @DrawableRes
     private var imageId = 0
     private var position = 0
     private lateinit var viewPager: ViewPager2
-    private val imagesIds = listOf(
-        R.drawable.background_image,
-        R.drawable.b0,
-        R.drawable.b1,
-        R.drawable.b2
-    )
+    private lateinit var imagesIds: IntArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +26,7 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
         retainInstance = true
 
         arguments?.let {
+            imagesIds = it.getIntArray(EXTRA_IMAGE_LIST_IDS)!!
             imageId = it.getInt(EXTRA_IMAGE_ID)
             position = imagesIds.indexOf(imageId)
         }
@@ -43,7 +38,7 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(
-            R.layout.fragment_image_viewer /*fragment_screen_slide_page*/,
+            R.layout.fragment_image_viewer,
             container,
             false
         )
@@ -71,12 +66,7 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.choose_background_image -> {
-                ImageProvider.saveImage(
-                    context!!,
-                    ImageProvider.ImageType.BACKGROUND_IMAGE,
-                    resourceId = imagesIds[viewPager.currentItem]
-                )
-                activity?.supportFragmentManager?.popBackStack(
+                parentFragmentManager.popBackStack(
                     null,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
@@ -88,9 +78,7 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
 
     inner class ScreenSlidePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
-        override fun getItemCount(): Int {
-            return imagesIds.size
-        }
+        override fun getItemCount(): Int = imagesIds.size
 
         override fun createFragment(position: Int): Fragment {
             return ImageSlidePageFragment.newInstance(imagesIds[position])
@@ -99,10 +87,14 @@ class ImageViewerFragment : Fragment() { // view pager2 content home
 
     companion object {
         private const val EXTRA_IMAGE_ID = "extraImageId"
+        private const val EXTRA_IMAGE_LIST_IDS = "extraImagesListIds"
 
-        fun newInstance(@DrawableRes resourceId: Int) =
+        fun newInstance(resourcesIds: IntArray, @DrawableRes drawableId: Int) =
             ImageViewerFragment().apply {
-                arguments = Bundle().apply { putInt(EXTRA_IMAGE_ID, resourceId) }
+                arguments = Bundle().apply {
+                    putIntArray(EXTRA_IMAGE_LIST_IDS, resourcesIds)
+                    putInt(EXTRA_IMAGE_ID, drawableId)
+                }
             }
     }
 }

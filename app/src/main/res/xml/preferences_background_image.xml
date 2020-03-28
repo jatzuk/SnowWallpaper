@@ -10,18 +10,8 @@
 
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
         android:dependency="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
-        android:title="@string/background_image"
-        app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.BackgroundImagePreferenceFragment"
-        app:key="@string/background_image_pick_predefined_image_key"
-        app:preferenceSummary="Picks background image from presets"
-        app:preferenceTitle="Pick Background Image" />
-
-    <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
-        android:dependency="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
-        android:title="@string/background_image"
-        app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.BackgroundImagePreferenceFragment"
-        app:key="@string/background_image_pick_custom_image_key"
-        app:preferenceSummary="Pick own background image"
-        app:preferenceTitle="Choose custom Background Image" />
+        app:key="background_image_select_image"
+        app:preferenceSummary="summary"
+        app:preferenceTitle="select texture" />
 
 </PreferenceScreen>
