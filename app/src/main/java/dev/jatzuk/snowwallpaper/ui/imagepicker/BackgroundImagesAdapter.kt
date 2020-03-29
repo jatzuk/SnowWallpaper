@@ -16,7 +16,7 @@ class BackgroundImagesAdapter<T : Any>(
     private lateinit var imageView: ImageView
 
     override fun getView(view: View): View {
-        imageView = bind(view.tag.toString(), R.id.circle_image_view) as ImageView
+        imageView = bind(view.tag as Int, R.id.circle_image_view) as ImageView
         return view
     }
 

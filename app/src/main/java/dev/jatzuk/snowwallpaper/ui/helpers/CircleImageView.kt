@@ -37,8 +37,7 @@ class CircleImageView : AppCompatImageView {
                 null
             )
 
-//            if (isStrokeEnabled)
-            drawStroke(canvas)
+            if (isStrokeEnabled) drawStroke(canvas)
         }
     }
 

@@ -14,7 +14,7 @@ class TextureAdapter<T : Any>(
     private lateinit var circleImageView: CircleImageView
 
     override fun getView(view: View): View {
-        circleImageView = bind(view.tag.toString(), R.id.circle_image_view) as CircleImageView
+        circleImageView = bind(view.tag as Int, R.id.circle_image_view) as CircleImageView
         return view
     }
 

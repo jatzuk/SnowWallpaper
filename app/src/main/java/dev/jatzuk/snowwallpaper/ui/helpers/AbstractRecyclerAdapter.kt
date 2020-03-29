@@ -11,7 +11,7 @@ abstract class AbstractRecyclerAdapter<T : Any>(
     protected val listener: OnViewHolderClick<T>? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val views = HashMap<String, View>()
+    private val views = HashMap<Int, View>()
     protected var parentViewGroup: ViewGroup? = null
 
     final override fun onCreateViewHolder(
@@ -20,6 +20,7 @@ abstract class AbstractRecyclerAdapter<T : Any>(
     ): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(layoutResource, parent, false)
         view.tag = view.hashCode()
+        views[view.tag as Int] = view
         if (parentViewGroup == null) parentViewGroup = parent
         return ViewHolder(view)
     }
@@ -35,7 +36,7 @@ abstract class AbstractRecyclerAdapter<T : Any>(
 
     abstract fun onBind(position: Int, listItem: T)
 
-    protected fun bind(tag: String, viewId: Int): View {
+    protected fun bind(tag: Int, viewId: Int): View {
         return views[tag]!!.findViewById(viewId)
     }
 
@@ -44,7 +45,6 @@ abstract class AbstractRecyclerAdapter<T : Any>(
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         init {
-            this@AbstractRecyclerAdapter.views[itemView.tag.toString()] = itemView
             getView(itemView)
             itemView.setOnClickListener(this)
         }

@@ -23,9 +23,8 @@ class BackgroundImagePreferenceFragment :
                     childFragmentManager.findFragmentById(this@BackgroundImagePreferenceFragment.id),
                     AbstractDialogFragment.SELECT_CUSTOM_IMAGE
                 )
-//                pickerDialogFragment.show(childFragmentManager.beginTransaction(), "") // todo
                 childFragmentManager.beginTransaction()
-                    .add(pickerDialogFragment, "")
+                    .add(pickerDialogFragment, "") // todo
                     .addToBackStack(null)
                     .commit()
                 true
@@ -50,14 +49,14 @@ class BackgroundImagePreferenceFragment :
 
     class BackgroundImageDialogFragment : AbstractDialogFragment(
         intArrayOf(
-            R.drawable.background_image
-//            ,
-//            R.drawable.b0,
-//            R.drawable.b1,
-//            R.drawable.b2
+            R.drawable.background_image,
+            R.drawable.b0,
+            R.drawable.b1,
+            R.drawable.b2
         ),
         ImageProvider.ImageType.BACKGROUND_IMAGE
     ) {
+
         override fun provideTexturePositionSavePosition(position: Int) {
             preferenceRepository.setBackgroundImageSavedPosition(position)
         }

@@ -51,28 +51,6 @@ abstract class AbstractDialogFragment(
         textureIds.forEach { textureArray.add(ContextCompat.getDrawable(context!!, it)!!) }
         textureArray.add(ContextCompat.getDrawable(context!!, R.drawable.b0)!!)
 
-        textureAdapter = TextureAdapter(
-            textureArray,
-            object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
-                override fun onClick(view: View?, position: Int, item: Drawable) {
-                    if (position == textureArray.lastIndex) startImagePickerIntent()
-                    else {
-                        dialog?.hide()
-//                        dismiss()
-
-                        val fragment =
-                            ImageViewerFragment.newInstance(textureIds, R.drawable.background_image)
-                        parentFragment!!.parentFragmentManager
-                            .beginTransaction()
-//                            .setTransition()
-                            .replace(R.id.preferences_container, fragment)
-                            .addToBackStack(null)
-                            .commit()
-                    }
-                }
-            }
-        )
-
         preferenceRepository = PreferenceRepository.getInstance(context!!)
         viewPagerCurrentPosition = provideTexturePositionLoadPosition()
 
@@ -89,23 +67,15 @@ abstract class AbstractDialogFragment(
                 positiveButton.isEnabled = position != textureArray.lastIndex
                 viewPagerCurrentPosition = position
                 textureAdapter.getParentView()?.children?.forEachIndexed { index, view ->
-                    val circleImageView =
-                        view.findViewById<CircleImageView>(R.id.circle_image_view)
-//                    if (position != index || index == textureArray.lastIndex) {
-//                        circleImageView.disableStroke()
-//                    } else {
-//                        circleImageView.isStrokeEnabled = true
-//                        circleImageView.setStroke(
-//                            resources.getDimensionPixelSize(R.dimen.circle_image_view_stroke_width),
-//                            Color.GREEN
-//                        )
-//                    }
-
-                    circleImageView.setStroke(
-                        resources.getDimensionPixelSize(R.dimen.circle_image_view_stroke_width),
-                        Color.GREEN
-                    )
-
+                    val circleImageView = view.findViewById<CircleImageView>(R.id.circle_image_view)
+                    if (position != index || index == textureArray.lastIndex)
+                        circleImageView.disableStroke()
+                    else {
+                        circleImageView.setStroke(
+                            resources.getDimensionPixelSize(R.dimen.circle_image_view_stroke_width),
+                            Color.GREEN
+                        )
+                    }
                 }
             }
         }
@@ -113,6 +83,16 @@ abstract class AbstractDialogFragment(
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        textureAdapter = TextureAdapter(
+            textureArray,
+            object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
+                override fun onClick(view: View?, position: Int, item: Drawable) {
+                    if (position == textureArray.lastIndex) startImagePickerIntent()
+                    else startImageViewerFragment()
+                }
+            }
+        )
+
         return AlertDialog.Builder(context!!).run {
             val inflater = requireActivity().layoutInflater
             val view = inflater.inflate(R.layout.fragment_picker_dialog, null).apply {
@@ -173,7 +153,6 @@ abstract class AbstractDialogFragment(
         super.onStart()
 //        dialog!!.window!!.setLayout(1080, 1920 / 2)
         viewPager.registerOnPageChangeCallback(onPageChangeCallback)
-        dialog!!.show()
 
         dialog?.let { positiveButton = (it as AlertDialog).getButton(Dialog.BUTTON_POSITIVE) }
     }
@@ -186,6 +165,17 @@ abstract class AbstractDialogFragment(
     private fun startImagePickerIntent() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
         parentFragment?.startActivityForResult(intent, SELECT_CUSTOM_IMAGE)
+    }
+
+    private fun startImageViewerFragment() {
+        val fragment =
+            ImageViewerFragment.newInstance(textureIds, textureIds[viewPagerCurrentPosition])
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+//            .setTransition()
+            .replace(R.id.preferences_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun storeSelectedImage() {
