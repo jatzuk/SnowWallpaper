@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.ui.preferences.texturepicker
+package dev.jatzuk.snowwallpaper.ui.imagepicker
 
 import android.graphics.drawable.Drawable
 import android.view.View

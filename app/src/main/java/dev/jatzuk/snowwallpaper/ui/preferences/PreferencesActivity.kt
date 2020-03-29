@@ -3,6 +3,7 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
@@ -48,6 +49,7 @@ class PreferencesActivity : AppCompatActivity(),
             setTargetFragment(caller, 0)
         }
         supportFragmentManager.beginTransaction()
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             .replace(R.id.preferences_container, fragment)
             .addToBackStack(null)
             .commit()

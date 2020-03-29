@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.ui.preferences.texturepicker
+package dev.jatzuk.snowwallpaper.ui.imagepicker
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -19,13 +19,13 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 import dev.jatzuk.snowwallpaper.ui.helpers.CircleImageView
-import dev.jatzuk.snowwallpaper.ui.imagepicker.ImageViewerFragment
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 import kotlin.math.abs
 import kotlin.math.max
@@ -37,8 +37,8 @@ abstract class AbstractDialogFragment(
 
     protected lateinit var preferenceRepository: PreferenceRepository
     private lateinit var positiveButton: Button
-    private lateinit var textureAdapter: TextureAdapter<Drawable>
     private lateinit var viewPager: ViewPager2
+    private var textureAdapter: TextureAdapter<Drawable>? = null
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
     private val textureArray = ArrayList<Drawable>()
     private var viewPagerCurrentPosition = 0
@@ -47,7 +47,6 @@ abstract class AbstractDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setStyle(STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-
         textureIds.forEach { textureArray.add(ContextCompat.getDrawable(context!!, it)!!) }
         textureArray.add(ContextCompat.getDrawable(context!!, R.drawable.b0)!!)
 
@@ -66,7 +65,7 @@ abstract class AbstractDialogFragment(
                 super.onPageSelected(position)
                 positiveButton.isEnabled = position != textureArray.lastIndex
                 viewPagerCurrentPosition = position
-                textureAdapter.getParentView()?.children?.forEachIndexed { index, view ->
+                textureAdapter?.getParentView()?.children?.forEachIndexed { index, view ->
                     val circleImageView = view.findViewById<CircleImageView>(R.id.circle_image_view)
                     if (position != index || index == textureArray.lastIndex)
                         circleImageView.disableStroke()
@@ -83,15 +82,16 @@ abstract class AbstractDialogFragment(
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        textureAdapter = TextureAdapter(
-            textureArray,
-            object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
-                override fun onClick(view: View?, position: Int, item: Drawable) {
-                    if (position == textureArray.lastIndex) startImagePickerIntent()
-                    else startImageViewerFragment()
+        textureAdapter =
+            TextureAdapter(
+                textureArray,
+                object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
+                    override fun onClick(view: View?, position: Int, item: Drawable) {
+                        if (position == textureArray.lastIndex) startImagePickerIntent()
+                        else if (position != textureIds.size) startImageViewerFragment()
+                    }
                 }
-            }
-        )
+            )
 
         return AlertDialog.Builder(context!!).run {
             val inflater = requireActivity().layoutInflater
@@ -162,9 +162,17 @@ abstract class AbstractDialogFragment(
         viewPager.unregisterOnPageChangeCallback(onPageChangeCallback)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        textureAdapter = null
+    }
+
     private fun startImagePickerIntent() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
-        parentFragment?.startActivityForResult(intent, SELECT_CUSTOM_IMAGE)
+        parentFragment?.startActivityForResult(
+            intent,
+            SELECT_CUSTOM_IMAGE
+        )
     }
 
     private fun startImageViewerFragment() {
@@ -172,7 +180,7 @@ abstract class AbstractDialogFragment(
             ImageViewerFragment.newInstance(textureIds, textureIds[viewPagerCurrentPosition])
         requireActivity().supportFragmentManager
             .beginTransaction()
-//            .setTransition()
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .replace(R.id.preferences_container, fragment)
             .addToBackStack(null)
             .commit()
@@ -220,10 +228,10 @@ abstract class AbstractDialogFragment(
     private fun notifyAdapter(drawable: Drawable) {
         if (userPickedImage == null) {
             textureArray.add(viewPagerCurrentPosition, drawable)
-            textureAdapter.notifyItemInserted(viewPagerCurrentPosition)
+            textureAdapter?.notifyItemInserted(viewPagerCurrentPosition)
         } else {
             textureArray[viewPagerCurrentPosition - 1] = drawable
-            textureAdapter.notifyItemChanged(viewPagerCurrentPosition - 1)
+            textureAdapter?.notifyItemChanged(viewPagerCurrentPosition - 1)
             viewPager.currentItem = viewPagerCurrentPosition - 1
         }
 

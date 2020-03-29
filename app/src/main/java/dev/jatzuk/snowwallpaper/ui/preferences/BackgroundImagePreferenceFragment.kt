@@ -1,32 +1,21 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.ui.imagepicker.AbstractDialogFragment
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
-import dev.jatzuk.snowwallpaper.ui.preferences.texturepicker.AbstractDialogFragment
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
 @Suppress("unused")
 class BackgroundImagePreferenceFragment :
     AbstractPreferenceFragment(R.xml.preferences_background_image) {
 
-    private lateinit var texturePickerPreference: IntentPreference
-
     override fun setUp() {
-        texturePickerPreference = findPreference("background_image_select_image")!!
-        texturePickerPreference.apply {
+//        todo
+        findPreference<IntentPreference>("background_image_select_image")!!.apply {
             setOnPreferenceClickListener {
-                val pickerDialogFragment = BackgroundImageDialogFragment()
-                pickerDialogFragment.setTargetFragment(
-                    childFragmentManager.findFragmentById(this@BackgroundImagePreferenceFragment.id),
-                    AbstractDialogFragment.SELECT_CUSTOM_IMAGE
-                )
-                childFragmentManager.beginTransaction()
-                    .add(pickerDialogFragment, "") // todo
-                    .addToBackStack(null)
-                    .commit()
+                startDialogFragmentTransition()
                 true
             }
         }
@@ -34,13 +23,11 @@ class BackgroundImagePreferenceFragment :
 
     override fun attachObserver() {}
 
+    override fun provideDialogFragment(): AbstractDialogFragment? = BackgroundImageDialogFragment()
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         appBarTitleViewModel.title.value = (getString(R.string.background_image))
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        childFragmentManager.fragments[0].onActivityResult(requestCode, resultCode, data)
     }
 
     override fun provideBackgroundColor(): Int = Color.BLUE
@@ -67,6 +54,5 @@ class BackgroundImagePreferenceFragment :
 
     companion object {
         private const val TAG = "BackgroundImagePreferenceFragment"
-        private const val SELECT_CUSTOM_BACKGROUND_IMAGE_REQUEST_CODE = 2
     }
 }

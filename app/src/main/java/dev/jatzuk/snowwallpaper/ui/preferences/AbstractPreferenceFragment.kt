@@ -1,5 +1,6 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
@@ -9,10 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.annotation.XmlRes
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.ui.imagepicker.AbstractDialogFragment
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
 abstract class AbstractPreferenceFragment(
@@ -66,9 +69,30 @@ abstract class AbstractPreferenceFragment(
         return recyclerView
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        childFragmentManager.fragments[0].onActivityResult(requestCode, resultCode, data)
+    }
+
     protected abstract fun setUp()
 
     protected abstract fun attachObserver()
+
+    protected fun startDialogFragmentTransition() {
+        val dialogFragment = provideDialogFragment()
+        dialogFragment?.let {
+            it.setTargetFragment(
+                childFragmentManager.findFragmentById(id),
+                AbstractDialogFragment.SELECT_CUSTOM_IMAGE
+            )
+            childFragmentManager.beginTransaction()
+                .add(it, "")
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    protected abstract fun provideDialogFragment(): AbstractDialogFragment?
 
     @ColorInt
     protected open fun provideBackgroundColor(): Int = Color.TRANSPARENT

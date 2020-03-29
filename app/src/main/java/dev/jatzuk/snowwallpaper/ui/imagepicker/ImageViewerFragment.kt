@@ -17,13 +17,11 @@ class ImageViewerFragment : Fragment() {
     @DrawableRes
     private var imageId = 0
     private var position = 0
-    private lateinit var viewPager: ViewPager2
     private lateinit var imagesIds: IntArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        retainInstance = true
 
         arguments?.let {
             imagesIds = it.getIntArray(EXTRA_IMAGE_LIST_IDS)!!
@@ -37,20 +35,19 @@ class ImageViewerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(
+        val view = inflater.inflate(
             R.layout.fragment_image_viewer,
             container,
             false
         )
 
-        viewPager = v.findViewById(R.id.pager)
-        viewPager.apply {
+        view.findViewById<ViewPager2>(R.id.pager).apply {
             adapter = ScreenSlidePagerAdapter(this@ImageViewerFragment)
-            viewPager.setCurrentItem(position, false)
+            setCurrentItem(position, false)
             setPageTransformer(ZoomOutPageTransformer())
         }
 
-        return v
+        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
