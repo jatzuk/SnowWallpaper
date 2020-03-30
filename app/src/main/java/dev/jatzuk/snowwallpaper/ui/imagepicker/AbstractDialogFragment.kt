@@ -124,8 +124,10 @@ abstract class AbstractDialogFragment(
                                     scaleX = scaleFactor
                                     scaleY = scaleFactor
 
-                                    alpha = (minAlpha +
+                                    val zTranslation = (minAlpha +
                                             (((scaleFactor - minScale) / (1 - minScale)) * (1 - minAlpha)))
+                                    alpha = zTranslation
+                                    translationZ = zTranslation
                                 }
                                 else -> alpha = 0f
                             }
