@@ -69,13 +69,11 @@ object ImageProvider {
                 BitmapFactory.decodeStream(context.openFileInput(imageType.path))
             )
         } catch (e: FileNotFoundException) {
-            val resourceId =
-                when (imageType) {
-                    ImageType.SNOWFALL_TEXTURE -> R.drawable.texture_snowfall
-                    ImageType.SNOWFLAKE_TEXTURE -> R.drawable.texture_snowflake
-                    ImageType.THUMBNAIL_IMAGE -> R.drawable.background_image // todo
-                    ImageType.BACKGROUND_IMAGE -> R.drawable.background_image // todo
-                }
+            val resourceId = when (imageType) {
+                ImageType.SNOWFALL_TEXTURE -> R.drawable.texture_snowfall
+                ImageType.SNOWFLAKE_TEXTURE -> R.drawable.texture_snowflake
+                ImageType.BACKGROUND_IMAGE -> R.drawable.background_image // todo
+            }
             putTextureToCache(
                 imageType,
                 ContextCompat.getDrawable(context, resourceId)!!.toBitmap()
@@ -132,14 +130,9 @@ object ImageProvider {
         bitmap: Bitmap,
         imageType: ImageType
     ): Boolean = withContext(Dispatchers.IO) {
-        val resultBitmap = if (imageType == ImageType.THUMBNAIL_IMAGE) {
-            val dstSize = context.resources.getDimensionPixelSize(R.dimen.thumbnail_size)
-            Bitmap.createScaledBitmap(bitmap, dstSize, dstSize, false)
-        } else bitmap
-
-        putTextureToCache(imageType, resultBitmap)
+        putTextureToCache(imageType, bitmap)
         context.openFileOutput(imageType.path, Context.MODE_PRIVATE).use {
-            resultBitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }
     }
 
@@ -153,6 +146,5 @@ object ImageProvider {
         SNOWFALL_TEXTURE("snowfall_texture.png"),
         SNOWFLAKE_TEXTURE("snowflake_texture.png"),
         BACKGROUND_IMAGE("background.png"),
-        THUMBNAIL_IMAGE("thumbnail.png");
     }
 }

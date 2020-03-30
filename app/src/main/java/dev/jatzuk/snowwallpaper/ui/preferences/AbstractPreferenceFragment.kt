@@ -85,7 +85,7 @@ abstract class AbstractPreferenceFragment(
                 AbstractDialogFragment.SELECT_CUSTOM_IMAGE
             )
             childFragmentManager.beginTransaction()
-                .add(it, "")
+                .add(it, dialogFragment::class.java.simpleName)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
                 .commit()

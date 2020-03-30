@@ -20,11 +20,14 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
     private lateinit var preferenceRepository: PreferenceRepository
     private lateinit var intentPreferences: Array<IntentPreference>
+    private lateinit var categoryDisabledDrawable: Drawable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferenceRepository = PreferenceRepository.getInstance(context!!)
         texturesViewModel = ViewModelProvider(this).get(TexturesViewModel::class.java)
+        categoryDisabledDrawable =
+            ContextCompat.getDrawable(context!!, R.drawable.category_disabled)!!
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -57,29 +60,21 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
         preferenceRepository.snowfallPreference.observe(
             viewLifecycleOwner,
             Observer { isEnabled ->
-                if (!isEnabled) {
-                    intentPreferences[0].previewImage =
-                        ContextCompat.getDrawable(context!!, R.drawable.category_disabled)
-                }
+                if (!isEnabled) intentPreferences[0].previewImage = categoryDisabledDrawable
             }
         )
 
         preferenceRepository.snowflakePreference.observe(
             viewLifecycleOwner,
             Observer { isEnabled ->
-                if (!isEnabled) {
-                    intentPreferences[1].previewImage =
-                        ContextCompat.getDrawable(context!!, R.drawable.category_disabled)
-                }
+                if (!isEnabled) intentPreferences[1].previewImage = categoryDisabledDrawable
             }
         )
 
         preferenceRepository.backgroundImagePreference.observe(
             viewLifecycleOwner,
             Observer { isEnabled ->
-                if (!isEnabled)
-                    intentPreferences[2].previewImage =
-                        ContextCompat.getDrawable(context!!, R.drawable.category_disabled)
+                if (!isEnabled) intentPreferences[2].previewImage = categoryDisabledDrawable
             }
         )
     }
