@@ -39,8 +39,8 @@ open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
                 minRadius = preferenceRepository.getSnowflakeMinRadius()
                 maxRadius = preferenceRepository.getSnowflakeMaxRadius()
             } else {
-                minRadius = 50
-                maxRadius = 100
+                minRadius = preferenceRepository.getSnowflakeRadiusWhenUniqueDisabled()
+                maxRadius = minRadius
             }
         } else {
             velocityFactor = preferenceRepository.getSnowfallVelocityFactor() * 2
@@ -49,8 +49,8 @@ open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
                 minRadius = preferenceRepository.getSnowfallMinRadius()
                 maxRadius = preferenceRepository.getSnowfallMaxRadius()
             } else {
-                minRadius = 8
-                maxRadius = 30
+                minRadius = preferenceRepository.getSnowfallRadiusWhenUniqueDisabled()
+                maxRadius = minRadius
             }
         }
 
