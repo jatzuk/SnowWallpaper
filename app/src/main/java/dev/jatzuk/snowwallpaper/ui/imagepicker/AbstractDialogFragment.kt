@@ -179,7 +179,7 @@ abstract class AbstractDialogFragment(
 
     private fun startImageViewerFragment() {
         val fragment =
-            ImageViewerFragment.newInstance(textureIds, textureIds[viewPagerCurrentPosition])
+            ViewPagerFragment.newInstance(textureIds, textureIds[viewPagerCurrentPosition])
         requireActivity().supportFragmentManager
             .beginTransaction()
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

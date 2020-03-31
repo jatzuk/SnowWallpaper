@@ -106,12 +106,12 @@ abstract class AbstractPreferenceFragment(
             parent: RecyclerView,
             state: RecyclerView.State
         ) {
-//            if (parent.getChildAdapterPosition(view) != parent.adapter!!.itemCount - 1)
             outRect.apply {
                 top = spaceHeight / 2
-//                bottom = spaceHeight / 2
                 left = spaceHeight / 2
                 right = spaceHeight / 2
+                if (parent.getChildAdapterPosition(view) == parent.adapter!!.itemCount - 1)
+                    bottom = spaceHeight / 2
             }
         }
     }

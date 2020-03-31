@@ -3,16 +3,17 @@ package dev.jatzuk.snowwallpaper.ui.imagepicker
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.DrawableRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.imagepicker.viewpager.ImageSlidePageFragment
 import dev.jatzuk.snowwallpaper.ui.imagepicker.viewpager.pagetransformers.ZoomOutPageTransformer
+import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
-class ImageViewerFragment : Fragment() {
+class ViewPagerFragment : Fragment() {
 
     @DrawableRes
     private var imageId = 0
@@ -42,17 +43,12 @@ class ImageViewerFragment : Fragment() {
         )
 
         view.findViewById<ViewPager2>(R.id.pager).apply {
-            adapter = ScreenSlidePagerAdapter(this@ImageViewerFragment)
+            adapter = ScreenSlidePagerAdapter(this@ViewPagerFragment)
             setCurrentItem(position, false)
             setPageTransformer(ZoomOutPageTransformer())
         }
 
         return view
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.images)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -63,6 +59,16 @@ class ImageViewerFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.choose_background_image -> {
+                PreferenceRepository.getInstance(context!!)
+                    .setSnowfallTextureSavedPosition(position)
+
+                ImageProvider.saveImage(
+                    context!!,
+                    ImageProvider.ImageType.BACKGROUND_IMAGE,
+                    null,
+                    imagesIds[position]
+                )
+
                 parentFragmentManager.popBackStack(
                     null,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE
@@ -78,6 +84,7 @@ class ImageViewerFragment : Fragment() {
         override fun getItemCount(): Int = imagesIds.size
 
         override fun createFragment(position: Int): Fragment {
+            this@ViewPagerFragment.position = position
             return ImageSlidePageFragment.newInstance(imagesIds[position])
         }
     }
@@ -87,7 +94,7 @@ class ImageViewerFragment : Fragment() {
         private const val EXTRA_IMAGE_LIST_IDS = "extraImagesListIds"
 
         fun newInstance(resourcesIds: IntArray, @DrawableRes drawableId: Int) =
-            ImageViewerFragment().apply {
+            ViewPagerFragment().apply {
                 arguments = Bundle().apply {
                     putIntArray(EXTRA_IMAGE_LIST_IDS, resourcesIds)
                     putInt(EXTRA_IMAGE_ID, drawableId)

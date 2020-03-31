@@ -6,9 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
-    <style name="ToolBar" parent="Theme.AppCompat">
+    <style name="ToolBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textColorPrimary">@color/colorPreferenceTitle</item>
         <item name="android:textColorSecondary">@color/colorPreferenceTitle</item>
     </style>

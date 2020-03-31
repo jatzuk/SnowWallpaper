@@ -145,6 +145,6 @@ object ImageProvider {
     enum class ImageType(val path: String) {
         SNOWFALL_TEXTURE("snowfall_texture.png"),
         SNOWFLAKE_TEXTURE("snowflake_texture.png"),
-        BACKGROUND_IMAGE("background.png"),
+        BACKGROUND_IMAGE("background_image.png"),
     }
 }
