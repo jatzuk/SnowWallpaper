@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/seekbar_background">
+        <shape>
+            <size android:height="16dp" />
+            <corners android:radius="20dp" />
+            <solid android:color="@color/colorPreferenceTitle" />
+        </shape>
+    </item>
+
+    <item android:id="@android:id/progress">
+        <scale android:scaleWidth="100%">
+            <layer-list>
+                <item
+                    android:bottom="-5dp"
+                    android:left="3dp">
+                    <shape>
+                        <corners
+                            android:bottomLeftRadius="20dp"
+                            android:bottomRightRadius="20dp"
+                            android:topLeftRadius="20dp"
+                            android:topRightRadius="20dp" />
+                        <gradient
+                            android:angle="270"
+                            android:centerColor="@color/colorPreferenceSeekBarShadowColor"
+                            android:endColor="@android:color/transparent"
+                            android:startColor="@color/colorPreferenceSeekBarShadowColor" />
+                    </shape>
+                </item>
+
+                <item>
+                    <shape>
+                        <corners
+                            android:bottomLeftRadius="20dp"
+                            android:topLeftRadius="20dp" />
+                        <gradient
+                            android:centerY="0"
+                            android:endColor="@color/colorPreferenceSeekBarSecondaryColor"
+                            android:startColor="@color/colorPreferenceSeekBarSecondaryColor" />
+                    </shape>
+                </item>
+
+                <item>
+                    <shape>
+                        <corners
+                            android:bottomLeftRadius="18dp"
+                            android:topLeftRadius="18dp" />
+                        <gradient
+                            android:angle="270"
+                            android:centerColor="@color/colorPreferenceSeekBarMainColor"
+                            android:centerY="0.2"
+                            android:endColor="@android:color/transparent"
+                            android:startColor="@color/colorPreferenceSeekBarShineColor" />
+                    </shape>
+                </item>
+            </layer-list>
+        </scale>
+    </item>
+
+</layer-list>

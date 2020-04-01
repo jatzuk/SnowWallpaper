@@ -16,4 +16,9 @@
 
     <color name="colorPreferenceCategoryBackground">#FFB852</color>
     <color name="colorPreferenceIntentBackground">#03305A</color>
+
+    <color name="colorPreferenceSeekBarMainColor">#FF9100</color>
+    <color name="colorPreferenceSeekBarSecondaryColor">#ADD5FE</color>
+    <color name="colorPreferenceSeekBarShineColor">#FFFAF3</color>
+    <color name="colorPreferenceSeekBarShadowColor">#4075AC</color>
 </resources>

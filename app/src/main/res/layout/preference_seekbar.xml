@@ -7,6 +7,7 @@
         android:id="@+id/master_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPreferenceSeekBarSecondaryColor"
         android:orientation="vertical">
 
         <include layout="@layout/preference_base" />
@@ -22,13 +23,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="4dp"
                 android:layout_weight="1"
-                android:background="@color/colorSeekbarBackground"
-                android:progressBackgroundTint="@color/colorPrimary"
-                android:progressDrawable="@color/colorPrimaryDark" />
+                android:maxHeight="15dp"
+                android:progressDrawable="@drawable/seek_bar_progress_model"
+                android:splitTrack="false"
+                android:thumb="@drawable/seek_bar_thumb" />
             <!--todo-->
             <TextView
                 android:id="@+id/progress"
