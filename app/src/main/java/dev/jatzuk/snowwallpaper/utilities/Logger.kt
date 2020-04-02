@@ -11,10 +11,6 @@ object Logger {
         lowLevelLog(message, tag, logLevel)
     }
 
-    fun logWithTag(message: String, tag: String, logLevel: Int = Log.DEBUG) {
-        lowLevelLog(message, tag + TAG, logLevel)
-    }
-
     fun errorLog(message: String, tag: String = TAG, e: Throwable? = null) {
         Log.e(tag, message, e)
     }
