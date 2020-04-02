@@ -144,9 +144,9 @@ abstract class AbstractDialogFragment(
             }
 
             setView(view)
-            setTitle("Pick snowfall texture")
-            setPositiveButton("Select this") { _, _ -> storeSelectedImage() }
-            setNegativeButton("Dismiss") { _, _ -> }
+            setTitle(getString(R.string.pick_image))
+            setPositiveButton(getString(R.string.dialog_select_button)) { _, _ -> storeSelectedImage() }
+            setNegativeButton(getString(R.string.dialog_dismiss_button)) { _, _ -> }
             create()
         }
     }
@@ -211,7 +211,7 @@ abstract class AbstractDialogFragment(
                         } else {
                             Toast.makeText(
                                 context,
-                                "selected item is not an image", // todo
+                                getString(R.string.item_is_not_an_image),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }

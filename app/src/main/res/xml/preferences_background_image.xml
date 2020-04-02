@@ -5,13 +5,13 @@
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
         app:key="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
         app:preferenceDefaultValue="false"
-        app:preferenceSummary="@string/background_image_switcher_summary"
-        app:preferenceTitle="@string/preference_switcher_enabled" />
+        app:preferenceSummary="@string/background_image_summary"
+        app:preferenceTitle="@string/background_image_title" />
 
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
         android:dependency="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
-        app:key="background_image_select_image"
-        app:preferenceSummary="summary"
-        app:preferenceTitle="select texture" />
+        app:key="@string/pref_key_background_image_select_texture"
+        app:preferenceSummary="@string/texture_picker_select_summary"
+        app:preferenceTitle="@string/texture_picker_select_title" />
 
 </PreferenceScreen>

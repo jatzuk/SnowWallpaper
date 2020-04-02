@@ -64,27 +64,24 @@ abstract class AbstractPreference : Preference {
             isClickable = false
             setupPreference(this)
 
-            findViewById<TextView>(R.id.title).text = titleString ?: "no title provided" // todo
-            findViewById<TextView>(R.id.summary).text = summaryString ?: "no summary provided"//todo
+            findViewById<TextView>(R.id.title).text =
+                titleString ?: context.getString(R.string.no_title)
+            findViewById<TextView>(R.id.summary).text =
+                summaryString ?: context.getString(R.string.no_summary)
         }
     }
 
-    override fun shouldDisableDependents(): Boolean = when (key) { // todo check logic
+    override fun shouldDisableDependents(): Boolean = when (key) {
         PreferenceRepository.PREF_KEY_IS_SNOWFALL_ENABLED -> {
             !preferenceRepository.getIsSnowfallEnabled()
-        }
-        PreferenceRepository.PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED -> {
-//            !preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
-            false
         }
 
         PreferenceRepository.PREF_KEY_IS_SNOWFLAKE_ENABLED -> {
             !preferenceRepository.getIsSnowflakeEnabled()
         }
-        PreferenceRepository.PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED -> {
-//            !preferenceRepository.getIsSnowflakeUniqueRadiusEnabled()
-            false
-        }
+
+        PreferenceRepository.PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED,
+        PreferenceRepository.PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED -> false
 
         PreferenceRepository.PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED -> {
             !preferenceRepository.getIsBackgroundImageEnabled()

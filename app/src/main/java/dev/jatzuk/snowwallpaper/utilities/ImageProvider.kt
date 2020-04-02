@@ -47,8 +47,8 @@ object ImageProvider {
                 )
             val result = storeImage(context, bmp, imageType)
             val message =
-                if (result) context.getString(R.string.image_storage_successed)
-                else context.getString(R.string.image_storage_failed)
+                if (result) context.getString(R.string.toast_image_storage_succeeded)
+                else context.getString(R.string.toast_image_storage_failed)
             if (result) Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
@@ -72,7 +72,7 @@ object ImageProvider {
             val resourceId = when (imageType) {
                 ImageType.SNOWFALL_TEXTURE -> R.drawable.texture_snowfall
                 ImageType.SNOWFLAKE_TEXTURE -> R.drawable.texture_snowflake
-                ImageType.BACKGROUND_IMAGE -> R.drawable.background_image // todo
+                ImageType.BACKGROUND_IMAGE -> R.drawable.background_image
             }
             putTextureToCache(
                 imageType,

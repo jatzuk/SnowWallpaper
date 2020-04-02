@@ -1,70 +1,77 @@
 <resources>
     <string name="app_name">SnowWallpaper</string>
 
-    <string name="background_snowflakes">Background Snowflakes</string>
-    <string name="background_image">Background Image</string>
+    <!-- category label -->
+    <string name="category_renderer_setup">Rendering setup</string>
+    <string name="category_general">General</string>
 
-    <string name="settings">Settings</string>
+    <!-- preference text -->
+    <string name="snowfall_title">Snowfall</string>
+    <string name="snowfall_summary">Customize snowfall</string>
+
+    <string name="snowflakes_title">Snowflakes</string>
+    <string name="snowflakes_summary">Customize snowflakes</string>
+
+    <string name="background_image_title">Background Image</string>
+    <string name="background_image_summary">Pick image for background</string>
+
+    <string name="cosine_deviation_title">Cosine Deviation</string>
+    <string name="cosine_deviation_summary">Cosine summary</string>
+
+    <string name="frames_per_second_title">Frames per second</string>
+    <string name="frames_per_second_summary">30</string>
+
+    <!-- setup screens-->
+    <string name="snowfall_setup_fragment_title">Snowfall Setup</string>
+    <string name="snowflake_setup_fragment_title">Snowflakes Setup</string>
+    <string name="background_image_fragment_title">Background Image Setup</string>
+
+    <string name="limit_title">Limit</string>
+    <string name="limit_summary">Limit summary</string>
+
+    <string name="velocity_title">Velocity</string>
+    <string name="velocity_summary">Velocity modifier</string>
+
+    <string name="unique_radius_title">Unique Radius</string>
+    <string name="unique_radius_summary">Unique radius summary</string>
+
+    <string name="min_radius_title">Minimum radius</string>
+    <string name="min_radius_summary">Minimum radius summary</string>
+
+    <string name="max_radius_title">Maximum radius</string>
+    <string name="max_radius_summary">Maximum radius summary</string>
+
+    <string name="single_radius_title">single radius title</string>
+    <string name="single_radius_summary">single_radius_summary</string>
+
+    <string name="snowflake_rotation_angle_title">Rotation angle velocity</string>
+    <string name="snowflake_rotation_angle_summary">Rotation angle velocity summary</string>
+
+    <!-- custom prefs views -->
+    <!--    <string name="switcher_enabled_label">Enabled</string> -->
+    <string name="switcher_disabled_label">Disabled</string>
+
+    <!--    actions-->
+    <string name="pick_image">Pick Image</string>
+    <string name="toast_image_storage_succeeded">Image successfully stored</string>
+    <string name="toast_image_storage_failed">We got some troubles storing this image as background</string>
+    <string name="dialog_select_button">Select current</string>
+    <string name="dialog_dismiss_button">Dismiss</string>
+
+    <!--    texture picker-->
+    <string name="texture_picker_select_title">Select image</string>
+    <string name="texture_picker_select_summary">Choose from predefined or use own</string>
+
+    <!-- misc -->
     <string name="preferences">Preferences</string>
-    <string name="setup_activity_label">Setup Wallpaper</string>
-
-    <string name="background_image_settings">Background Settings</string>
-    <string name="images">Images</string>
-    <string name="pick_image_menu_text">Pick image</string>
+    <string name="open_gl20_unsupported_device_info">Your device is not comparable with openGL ES 2.0</string>
+    <string name="item_is_not_an_image">Selected item is not an image</string>
+    <string name="no_title">no title provided</string>
+    <string name="no_summary">no summary provided</string>
 
     <!--    live wallpaper-->
     <string name="author">Jatzuk</string>
-    <string name="description_text">description</string>
-    <string name="wallpaper_icon">wallpaperThumbnail</string>
-
-    <string name="background_snowflakes_switcher">Enabled</string>
-    <string name="snowflakes_limit">Snowflakes Limit</string>
-    <string name="snowflake_min_radius">Minimum radius</string>
-    <string name="snowflake_max_radius">Maximum radius</string>
-    <string name="snowflake_velocity_factor">Velocity factor</string>
-
-    <string name="background_snowflakes_switcher_summary">Snowflakes appearance</string>
-    <string name="background_snowflakes_limit_summary">Amount of snowflakes that falling in the background</string>
-    <string name="background_snowflakes_category_key">background_snowflakes_category_key</string>
-
-    <string name="background_snowflakes_randomize_radius">Unique radius</string>
-    <string name="background_snowflakes_randomize_radius_summary">Each snowflake will set own radius from followed interval</string>
-
-    <string name="background_snowflakes_category_summary">Snowflakes in the background</string>
-    <string name="background_image_category_summary">Background image</string>
-
-    <string name="foreground_snowflakes_category">Snowflakes in the foreground</string>
-    <string name="foreground_snowflakes_category_summary">Snowflakes that looks bigger!</string>
-
-    <string name="background_image_switcher">Background Enabled</string>
-    <string name="background_image_switcher_summary">Background Enabled</string>
-
-    <string name="renderer_frame_limit">Frames per second</string>
-
-    <string name="preference_switcher_enabled">Enabled</string>
-    <string name="preference_switcher_disabled">Disabled</string>
-
-    <string name="preference_general_category">General</string>
-
-    <!--    keys-->
-    <string name="background_snowflakes_global_switcher_key">background_snowflakes_global_switcher_key</string>
-    <string name="background_snowflakes_limit_key">background_snowflakes_limit_key</string>
-    <string name="background_snowflakes_random_radius_key">background_snowflakes_random_radius_key</string>
-    <string name="background_snowflakes_min_radius_key">background_snowflakes_min_radius_key</string>
-    <string name="background_snowflakes_max_radius_key">background_snowflakes_max_radius_key</string>
-    <string name="background_snowflakes_velocity_factor_key">background_snowflakes_velocity_factor_key</string>
-
-    <string name="foreground_snowflake_category_key">foreground_snowflake_category_key</string>
-
-    <string name="background_image_global_switcher_key">PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED</string>
-    <string name="background_image_pick_predefined_image_key">background_image_pick_predefined_image_key</string>
-
-    <string name="background_image_pick_custom_image_key">background_image_pick_custom_image_key</string>
-
-    <!--    actions-->
-    <string name="action_choose_image">Choose an Image</string>
-    <string name="image_storage_successed">Image successfully stored</string>
-    <string name="image_storage_failed">We got some troubles storing this image as background</string>
-    <!--    actions-->
+    <string name="description_text">Cute and simple snowfall simulation</string>
+    <string name="wallpaper_icon">wallpaperThumbnail TODO</string>
 
 </resources>

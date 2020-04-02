@@ -12,8 +12,7 @@ class BackgroundImagePreferenceFragment :
     AbstractPreferenceFragment(R.xml.preferences_background_image) {
 
     override fun setUp() {
-//        todo
-        findPreference<IntentPreference>("background_image_select_image")!!.apply {
+        findPreference<IntentPreference>(getString(R.string.pref_key_background_image_select_texture))!!.apply {
             setOnPreferenceClickListener {
                 startDialogFragmentTransition()
                 true
@@ -27,7 +26,8 @@ class BackgroundImagePreferenceFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        appBarTitleViewModel.title.value = (getString(R.string.background_image))
+        appBarTitleViewModel.title.value =
+            (getString(R.string.background_image_fragment_title))
     }
 
     override fun provideBackgroundColor(): Int = Color.BLUE

@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService
 
 class MainActivity : Activity() {
@@ -26,7 +27,11 @@ class MainActivity : Activity() {
         super.onResume()
 
         if (!isSupportingES2) {
-            Toast.makeText(this, "todo", Toast.LENGTH_LONG).show() // todo
+            Toast.makeText(
+                this,
+                getString(R.string.open_gl20_unsupported_device_info),
+                Toast.LENGTH_LONG
+            ).show()
             finish()
         } else startLiveWallpaperPreview()
     }

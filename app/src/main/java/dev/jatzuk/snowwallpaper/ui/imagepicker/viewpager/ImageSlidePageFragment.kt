@@ -38,7 +38,7 @@ class ImageSlidePageFragment : Fragment() {
 
         removeMargin()
         (activity as AppCompatActivity).supportActionBar!!.apply {
-            title = getString(R.string.pick_image_menu_text)
+            title = getString(R.string.pick_image)
 
             view?.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {

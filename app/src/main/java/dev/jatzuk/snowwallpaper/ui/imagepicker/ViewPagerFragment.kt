@@ -84,7 +84,6 @@ class ViewPagerFragment : Fragment() {
         override fun getItemCount(): Int = imagesIds.size
 
         override fun createFragment(position: Int): Fragment {
-            this@ViewPagerFragment.position = position
             return ImageSlidePageFragment.newInstance(imagesIds[position])
         }
     }

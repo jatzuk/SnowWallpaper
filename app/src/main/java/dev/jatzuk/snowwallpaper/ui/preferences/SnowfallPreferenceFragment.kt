@@ -12,8 +12,7 @@ import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_snowfall) {
 
     override fun setUp() {
-        // todo
-        findPreference<IntentPreference>("snowfall_select_texture")!!.apply {
+        findPreference<IntentPreference>(getString(R.string.pref_key_snowfall_select_texture))!!.apply {
             setOnPreferenceClickListener {
                 startDialogFragmentTransition()
                 true
@@ -27,8 +26,7 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        appBarTitleViewModel.title.value =
-            getString(R.string.background_snowflakes) // todo(change attrib name)
+        appBarTitleViewModel.title.value = getString(R.string.snowfall_setup_fragment_title)
     }
 
     override fun provideBackground(): Drawable? = null

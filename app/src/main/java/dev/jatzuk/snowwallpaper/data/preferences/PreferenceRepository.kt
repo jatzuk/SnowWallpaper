@@ -182,7 +182,7 @@ class PreferenceRepository private constructor(context: Context) {
         private const val SNOWFALL_RADIUS_UNIQUE_DISABLED_DEFAULT_VALUE = 30
 
         private const val SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE = true
-        private const val SNOWFLAKE_LIMIT_DEFAULT_VALUE = 3
+        private const val SNOWFLAKE_LIMIT_DEFAULT_VALUE = 2
         private const val SNOWFLAKE_VELOCITY_DEFAULT_VALUE = 2
         private const val SNOWFLAKE_ROTATION_VELOCITY_DEFAULT_VALUE = 2
         private const val SNOWFLAKE_IS_UNIQUE_RADIUS_ENABLED_DEFAULT_VALUE = true

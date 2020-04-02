@@ -74,7 +74,10 @@ class CustomSwitchPreference(
                 if (!isChecked) RENDERER_FRAMERATE_DEFAULT_VALUE.toString()
                 else RENDERER_FRAMERATE_MAX_VALUE.toString()
             }
-            else -> if (isChecked) summaryStringDefault else "disabled" // todo
+            else -> {
+                if (isChecked) summaryStringDefault
+                else context.getString(R.string.switcher_disabled_label)
+            }
         }
         summaryString = summary
     }
