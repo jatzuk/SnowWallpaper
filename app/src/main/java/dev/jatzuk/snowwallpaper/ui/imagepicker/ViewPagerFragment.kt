@@ -17,10 +17,11 @@ class ViewPagerFragment : Fragment() {
 
     private lateinit var viewPager2: ViewPager2
     private lateinit var imageType: ImageProvider.ImageType
-    @DrawableRes
-    private var imageId = 0
     private var startPosition = 0
     private lateinit var imagesIds: IntArray
+
+    @DrawableRes
+    private var imageId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
