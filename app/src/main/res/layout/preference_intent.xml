@@ -5,6 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/master_layout"
         android:layout_width="match_parent"
+        android:minHeight="@dimen/preference_intent_min_height"
         android:layout_height="match_parent">
 
         <include layout="@layout/preference_base" />

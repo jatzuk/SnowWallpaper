@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 
@@ -29,7 +30,7 @@ class CustomSeekBarPreference(
 
     init {
         if (backgroundImage == null) {
-//            backgroundImage = ContextCompat.getDrawable(context, R.drawable.b1)
+            backgroundImage = ContextCompat.getDrawable(context, R.drawable.b1)
         }
     }
 
