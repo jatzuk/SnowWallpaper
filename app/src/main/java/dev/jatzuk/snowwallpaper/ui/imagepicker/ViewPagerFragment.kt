@@ -15,9 +15,11 @@ import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
 class ViewPagerFragment : Fragment() {
 
+    private lateinit var viewPager2: ViewPager2
+    private lateinit var imageType: ImageProvider.ImageType
     @DrawableRes
     private var imageId = 0
-    private var position = 0
+    private var startPosition = 0
     private lateinit var imagesIds: IntArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,9 +27,10 @@ class ViewPagerFragment : Fragment() {
         setHasOptionsMenu(true)
 
         arguments?.let {
+            imageType = ImageProvider.ImageType.values()[it.getInt(EXTRA_IMAGE_TYPE)]
             imagesIds = it.getIntArray(EXTRA_IMAGE_LIST_IDS)!!
             imageId = it.getInt(EXTRA_IMAGE_ID)
-            position = imagesIds.indexOf(imageId)
+            startPosition = imagesIds.indexOf(imageId)
         }
     }
 
@@ -42,9 +45,9 @@ class ViewPagerFragment : Fragment() {
             false
         )
 
-        view.findViewById<ViewPager2>(R.id.pager).apply {
+        viewPager2 = view.findViewById<ViewPager2>(R.id.pager).apply {
             adapter = ScreenSlidePagerAdapter(this@ViewPagerFragment)
-            setCurrentItem(position, false)
+            setCurrentItem(startPosition, false)
             setPageTransformer(ZoomOutPageTransformer())
         }
 
@@ -59,14 +62,25 @@ class ViewPagerFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.choose_background_image -> {
-                PreferenceRepository.getInstance(context!!)
-                    .setSnowfallTextureSavedPosition(position)
+                val preferenceRepository = PreferenceRepository.getInstance(context!!)
+
+                when (imageType) {
+                    ImageProvider.ImageType.SNOWFALL_TEXTURE -> {
+                        preferenceRepository.setSnowfallTextureSavedPosition(viewPager2.currentItem)
+                    }
+                    ImageProvider.ImageType.SNOWFLAKE_TEXTURE -> {
+                        preferenceRepository.setSnowflakeTextureSavedPosition(viewPager2.currentItem)
+                    }
+                    ImageProvider.ImageType.BACKGROUND_IMAGE -> {
+                        preferenceRepository.setBackgroundImageSavedPosition(viewPager2.currentItem)
+                    }
+                }
 
                 ImageProvider.saveImage(
                     context!!,
-                    ImageProvider.ImageType.BACKGROUND_IMAGE,
+                    imageType,
                     null,
-                    imagesIds[position]
+                    imagesIds[viewPager2.currentItem]
                 )
 
                 parentFragmentManager.popBackStack(
@@ -89,12 +103,18 @@ class ViewPagerFragment : Fragment() {
     }
 
     companion object {
+        private const val EXTRA_IMAGE_TYPE = "image_type"
         private const val EXTRA_IMAGE_ID = "extraImageId"
         private const val EXTRA_IMAGE_LIST_IDS = "extraImagesListIds"
 
-        fun newInstance(resourcesIds: IntArray, @DrawableRes drawableId: Int) =
+        fun newInstance(
+            imageType: ImageProvider.ImageType,
+            resourcesIds: IntArray,
+            @DrawableRes drawableId: Int
+        ) =
             ViewPagerFragment().apply {
                 arguments = Bundle().apply {
+                    putInt(EXTRA_IMAGE_TYPE, imageType.ordinal)
                     putIntArray(EXTRA_IMAGE_LIST_IDS, resourcesIds)
                     putInt(EXTRA_IMAGE_ID, drawableId)
                 }
