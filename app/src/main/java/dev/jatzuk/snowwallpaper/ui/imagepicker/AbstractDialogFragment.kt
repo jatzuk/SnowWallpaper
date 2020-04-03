@@ -145,8 +145,8 @@ abstract class AbstractDialogFragment(
 
             setView(view)
             setTitle(getString(R.string.pick_image))
-            setPositiveButton(getString(R.string.dialog_select_button)) { _, _ -> storeSelectedImage() }
-            setNegativeButton(getString(R.string.dialog_dismiss_button)) { _, _ -> }
+            setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ -> storeSelectedImage() }
+            setNegativeButton(getString(R.string.dialog_negative_button)) { _, _ -> }
             create()
         }
     }

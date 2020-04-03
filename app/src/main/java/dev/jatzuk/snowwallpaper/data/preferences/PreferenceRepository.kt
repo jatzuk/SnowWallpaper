@@ -86,6 +86,46 @@ class PreferenceRepository private constructor(context: Context) {
             SNOWFLAKE_VELOCITY_DEFAULT_VALUE
         )
 
+    fun setSnowflakeRotationAxisXAvailability(isEnabled: Boolean) {
+        preferenceManager.edit()
+            .putBoolean(PREF_KEY_IS_SNOWFLAKE_AXIS_X_ENABLED, isEnabled).apply()
+    }
+
+    fun setSnowflakeRotationAxisYAvailability(isEnabled: Boolean) {
+        preferenceManager.edit()
+            .putBoolean(PREF_KEY_IS_SNOWFLAKE_AXIS_Y_ENABLED, isEnabled).apply()
+    }
+
+    fun setSnowflakeRotationAxisZAvailability(isEnabled: Boolean) {
+        preferenceManager.edit()
+            .putBoolean(PREF_KEY_IS_SNOWFLAKE_AXIS_Z_ENABLED, isEnabled).apply()
+    }
+
+    fun getSnowflakeAvailableRotationAxes(): BooleanArray {
+        val x = getIsSnowflakeRotationAxisXAvailable()
+        val y = getIsSnowflakeRotationAxisYAvailable()
+        val z = getIsSnowflakeRotationAxisZAvailable()
+        return booleanArrayOf(x, y, z)
+    }
+
+    private fun getIsSnowflakeRotationAxisXAvailable(): Boolean =
+        preferenceManager.getBoolean(
+            PREF_KEY_IS_SNOWFLAKE_AXIS_X_ENABLED,
+            SNOWFLAKE_IS_ROTATION_AXIS_X_ENABLED_DEFAULT_VALUE
+        )
+
+    private fun getIsSnowflakeRotationAxisYAvailable(): Boolean =
+        preferenceManager.getBoolean(
+            PREF_KEY_IS_SNOWFLAKE_AXIS_Y_ENABLED,
+            SNOWFLAKE_IS_ROTATION_AXIS_Y_ENABLED_DEFAULT_VALUE
+        )
+
+    private fun getIsSnowflakeRotationAxisZAvailable(): Boolean =
+        preferenceManager.getBoolean(
+            PREF_KEY_IS_SNOWFLAKE_AXIS_Z_ENABLED,
+            SNOWFLAKE_IS_ROTATION_AXIS_Z_ENABLED_DEFAULT_VALUE
+        )
+
     fun getSnowflakeRotationVelocity(): Int =
         preferenceManager.getInt(
             PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY,
@@ -158,7 +198,6 @@ class PreferenceRepository private constructor(context: Context) {
             0
         )
 
-
     fun setBackgroundImageSavedPosition(position: Int) {
         preferenceManager.edit().putInt(BACKGROUND_IMAGE_SAVED_POSITION, position).apply()
     }
@@ -184,6 +223,9 @@ class PreferenceRepository private constructor(context: Context) {
         private const val SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFLAKE_LIMIT_DEFAULT_VALUE = 2
         private const val SNOWFLAKE_VELOCITY_DEFAULT_VALUE = 2
+        private const val SNOWFLAKE_IS_ROTATION_AXIS_X_ENABLED_DEFAULT_VALUE = false
+        private const val SNOWFLAKE_IS_ROTATION_AXIS_Y_ENABLED_DEFAULT_VALUE = false
+        private const val SNOWFLAKE_IS_ROTATION_AXIS_Z_ENABLED_DEFAULT_VALUE = false
         private const val SNOWFLAKE_ROTATION_VELOCITY_DEFAULT_VALUE = 2
         private const val SNOWFLAKE_IS_UNIQUE_RADIUS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFLAKE_MIN_RADIUS_DEFAULT_VALUE = 30
@@ -237,6 +279,18 @@ class PreferenceRepository private constructor(context: Context) {
         const val PREF_KEY_SNOWFLAKE_VELOCITY_FACTOR =
             "PREF_KEY_SNOWFLAKE_VELOCITY_FACTOR"
 
+        const val PREF_KEY_IS_SNOWFLAKE_AXIS_X_ENABLED =
+            "PREF_KEY_SNOWFLAKE_AXIS_X_ENABLED"
+
+        const val PREF_KEY_IS_SNOWFLAKE_AXIS_Y_ENABLED =
+            "PREF_KEY_SNOWFLAKE_AXIS_Y_ENABLED"
+
+        const val PREF_KEY_IS_SNOWFLAKE_AXIS_Z_ENABLED =
+            "PREF_KEY_SNOWFLAKE_AXIS_Z_ENABLED"
+
+        const val PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY =
+            "PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY"
+
         const val PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED =
             "PREF_KEY_IS_SNOWFLAKE_UNIQUE_RADIUS_ENABLED"
 
@@ -248,9 +302,6 @@ class PreferenceRepository private constructor(context: Context) {
 
         const val PREF_KEY_SNOWFLAKE_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED =
             "PREF_KEY_SNOWFLAKE_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED"
-
-        const val PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY =
-            "PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY"
 
         const val PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED =
             "PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"

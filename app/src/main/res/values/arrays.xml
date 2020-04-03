@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer-array name="renderer_frame_limit_entries">
-        <item>30</item>
-        <item>60</item>
-    </integer-array>
+    <string-array name="snowflake_axis_rotations">
+        <item>X</item>
+        <item>Y</item>
+        <item>Z</item>
+    </string-array>
 </resources>

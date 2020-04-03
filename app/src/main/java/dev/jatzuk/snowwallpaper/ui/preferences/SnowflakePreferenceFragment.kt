@@ -3,6 +3,7 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import androidx.fragment.app.FragmentTransaction
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.ui.imagepicker.AbstractDialogFragment
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
@@ -14,15 +15,38 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
     override fun setUp() {
         findPreference<IntentPreference>(getString(R.string.pref_key_snowflake_select_texture))!!.apply {
             setOnPreferenceClickListener {
-                startDialogFragmentTransition()
+                startDialogFragment(SnowflakeDialogFragment())
+                true
+            }
+        }
+
+        findPreference<IntentPreference>(getString(R.string.pref_key_snowflake_rotation_axes))!!.apply {
+            setOnPreferenceClickListener {
+//                startAxesDialogFragment()
+                startDialogFragment(SnowflakeAxesChooserDialog())
                 true
             }
         }
     }
 
+    private fun startAxesDialogFragment() {
+        val dialogFragment = SnowflakeAxesChooserDialog()
+        dialogFragment.let {
+            it.setTargetFragment(
+                childFragmentManager.findFragmentById(id),
+                AbstractDialogFragment.SELECT_CUSTOM_IMAGE
+            )
+            childFragmentManager.beginTransaction()
+                .add(it, dialogFragment::class.java.simpleName)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
     override fun attachObserver() {}
 
-    override fun provideDialogFragment(): AbstractDialogFragment? = SnowflakeDialogFragment()
+//    override fun provideDialogFragment(): AbstractDialogFragment? = SnowflakeDialogFragment()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

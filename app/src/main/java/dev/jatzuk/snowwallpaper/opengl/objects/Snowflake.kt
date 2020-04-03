@@ -21,7 +21,8 @@ open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
     private var velocityFactor: Int
     private var velocity: Int
     private var angle = assignDefaultAngle()
-    var rotationAxis = getRandomRotationAxis()
+    private var availableRotationAxes = ArrayList<RotationAxis>()
+    var rotationAxis: RotationAxis
     private val rotationIncrement: Float
 
     private var degreeIncrement: Float
@@ -54,13 +55,15 @@ open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
             }
         }
 
-
         velocity = getRandomVelocity()
 
         radius = getRandomRadius()
 
         x = getRandomX()
         y = getRandomY()
+
+        checkAvailableRotationAxes()
+        rotationAxis = getRandomRotationAxis()
 
         rotationIncrement =
             preferenceRepository.getSnowflakeRotationVelocity().toFloat() / 2
@@ -98,9 +101,25 @@ open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
     private fun getRandomRadius(): Int = Random.nextInt(minRadius, maxRadius + 1)
 
     private fun assignDefaultAngle() =
-        (Random.nextFloat() * ANGLE_SEED) / ANGLE_SEED * ANGE_RANGE + HALF_PI - HALF_ANGLE_RANGE
+        (Random.nextFloat() * ANGLE_SEED) / ANGLE_SEED * ENGAGE_RANGE + HALF_PI - HALF_ANGLE_RANGE
 
-    private fun getRandomRotationAxis(): RotationAxis = RotationAxis.values()[Random.nextInt(2)]
+    private fun getRandomRotationAxis(): RotationAxis =
+        try {
+            availableRotationAxes[Random.nextInt(availableRotationAxes.size)]
+        } catch (e: IllegalArgumentException) {
+            RotationAxis.DISABLED
+        }
+
+    private fun checkAvailableRotationAxes() {
+        val availableRotationAxes = preferenceRepository.getSnowflakeAvailableRotationAxes()
+        val (isRotatesX, isRotatesY, isRotatesZ) = availableRotationAxes
+        if (!isRotatesX && !isRotatesY && !isRotatesZ) rotationAxis = RotationAxis.DISABLED
+        else {
+            if (isRotatesX) this.availableRotationAxes.add(RotationAxis.X)
+            if (isRotatesY) this.availableRotationAxes.add(RotationAxis.Y)
+            if (isRotatesZ) this.availableRotationAxes.add(RotationAxis.Z)
+        }
+    }
 
     private fun getRandomDegreeIncrement(): Float =
         Random.nextFloat(rotationIncrement / 2f, rotationIncrement * 2)
@@ -108,15 +127,14 @@ open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
     private fun Random.nextFloat(lower: Float, upper: Float) = nextFloat() * (upper - lower) + lower
 
     enum class RotationAxis {
-        Y, Z
+        X, Y, Z, DISABLED
     }
 
     companion object {
         private const val TAG = "Snowflake"
-        private const val ANGE_RANGE = 0.2f
-        private const val HALF_ANGLE_RANGE = ANGE_RANGE / 2f
+        private const val ENGAGE_RANGE = 0.2f
+        private const val HALF_ANGLE_RANGE = ENGAGE_RANGE / 2f
         private const val HALF_PI = PI.toFloat() / 2f
         private const val ANGLE_SEED = 25f
-        private const val ANGLE_DIVISOR = 5_000f
     }
 }

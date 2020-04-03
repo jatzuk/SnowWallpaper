@@ -89,8 +89,10 @@ class TexturedSnowflake(context: Context) {
         rotationAxis: Snowflake.RotationAxis
     ) {
         when (rotationAxis) {
+            Snowflake.RotationAxis.X -> rotateM(modelMatrix, 0, angle, 1f, 0f, 0f)
             Snowflake.RotationAxis.Y -> rotateM(modelMatrix, 0, angle, 0f, 1f, 0f)
             Snowflake.RotationAxis.Z -> rotateM(modelMatrix, 0, angle, 0f, 0f, 1f)
+            else -> Unit
         }
     }
 

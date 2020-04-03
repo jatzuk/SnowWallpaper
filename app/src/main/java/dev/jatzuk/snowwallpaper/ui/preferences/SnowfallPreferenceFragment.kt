@@ -14,15 +14,13 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
     override fun setUp() {
         findPreference<IntentPreference>(getString(R.string.pref_key_snowfall_select_texture))!!.apply {
             setOnPreferenceClickListener {
-                startDialogFragmentTransition()
+                startDialogFragment(SnowfallDialogFragment())
                 true
             }
         }
     }
 
     override fun attachObserver() {}
-
-    override fun provideDialogFragment(): AbstractDialogFragment? = SnowfallDialogFragment()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

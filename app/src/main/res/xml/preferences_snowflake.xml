@@ -32,6 +32,12 @@
         app:preferenceSummary="@string/velocity_summary"
         app:preferenceTitle="@string/velocity_title" />
 
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
+        android:dependency="PREF_KEY_IS_SNOWFLAKE_ENABLED"
+        app:key="@string/pref_key_snowflake_rotation_axes"
+        app:preferenceSummary="@string/snowflake_rotation_axes_summary"
+        app:preferenceTitle="@string/snowflake_rotation_axes_title" />
+
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
         android:dependency="PREF_KEY_IS_SNOWFLAKE_ENABLED"
         app:key="PREF_KEY_SNOWFLAKE_ROTATION_VELOCITY"

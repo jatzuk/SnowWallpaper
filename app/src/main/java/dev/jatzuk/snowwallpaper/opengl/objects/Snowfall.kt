@@ -11,7 +11,7 @@ import dev.jatzuk.snowwallpaper.opengl.programs.SnowfallProgram
 import dev.jatzuk.snowwallpaper.opengl.util.loadTextureForOpenGL
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
-class SnowfallBackground(context: Context) {
+class Snowfall(context: Context) {
 
     private val snowfallProgram = SnowfallProgram(context)
     private val textureId = loadTextureForOpenGL(context, ImageProvider.ImageType.SNOWFALL_TEXTURE)

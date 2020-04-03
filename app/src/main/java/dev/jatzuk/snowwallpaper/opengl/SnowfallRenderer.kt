@@ -7,7 +7,7 @@ import android.opengl.Matrix.*
 import android.os.SystemClock
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.objects.BackgroundImage
-import dev.jatzuk.snowwallpaper.opengl.objects.SnowfallBackground
+import dev.jatzuk.snowwallpaper.opengl.objects.Snowfall
 import dev.jatzuk.snowwallpaper.opengl.objects.TexturedSnowflake
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.ratio
@@ -23,7 +23,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private val mvpMatrix = FloatArray(16)
     private val viewProjectionMatrix = FloatArray(16)
 
-    private var snowfallBackground: SnowfallBackground? = null
+    private var snowfall: Snowfall? = null
     private var texturedSnowflake: TexturedSnowflake? = null
     private var backgroundImage: BackgroundImage? = null
 
@@ -72,10 +72,10 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         isSnowflakeProgramUsed = preferenceRepository.getIsSnowflakeEnabled()
         isBackgroundImageUsed = preferenceRepository.getIsBackgroundImageEnabled()
 
-        snowfallBackground =
-            if (isSnowfallBackgroundProgramUsed) SnowfallBackground(context) else null
+        snowfall =
+            if (isSnowfallBackgroundProgramUsed) Snowfall(context) else null
 
-        var usageMessage = if (snowfallBackground != null) IS_USING else IS_NOT_USING
+        var usageMessage = if (snowfall != null) IS_USING else IS_NOT_USING
         logging("snowfall program $usageMessage", TAG)
 
         texturedSnowflake = if (isSnowflakeProgramUsed) TexturedSnowflake(context) else null
@@ -99,7 +99,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
         backgroundImage?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
-        snowfallBackground?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
+        snowfall?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
         texturedSnowflake?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
     }
 

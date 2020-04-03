@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.annotation.XmlRes
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceFragmentCompat
@@ -77,8 +78,8 @@ abstract class AbstractPreferenceFragment(
 
     protected abstract fun attachObserver()
 
-    protected fun startDialogFragmentTransition() {
-        val dialogFragment = provideDialogFragment()
+    protected fun startDialogFragment(dialogFragment: DialogFragment?) {
+//        val dialogFragment = dialogFragment
         dialogFragment?.let {
             it.setTargetFragment(
                 childFragmentManager.findFragmentById(id),
@@ -92,7 +93,7 @@ abstract class AbstractPreferenceFragment(
         }
     }
 
-    protected abstract fun provideDialogFragment(): AbstractDialogFragment?
+//    protected abstract fun provideDialogFragment(): AbstractDialogFragment?
 
     @ColorInt
     protected open fun provideBackgroundColor(): Int = Color.TRANSPARENT

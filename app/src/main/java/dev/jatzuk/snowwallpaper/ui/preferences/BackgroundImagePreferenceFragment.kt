@@ -14,15 +14,13 @@ class BackgroundImagePreferenceFragment :
     override fun setUp() {
         findPreference<IntentPreference>(getString(R.string.pref_key_background_image_select_texture))!!.apply {
             setOnPreferenceClickListener {
-                startDialogFragmentTransition()
+                startDialogFragment(BackgroundImageDialogFragment())
                 true
             }
         }
     }
 
     override fun attachObserver() {}
-
-    override fun provideDialogFragment(): AbstractDialogFragment? = BackgroundImageDialogFragment()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

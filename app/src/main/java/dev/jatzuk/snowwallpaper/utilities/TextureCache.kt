@@ -12,7 +12,7 @@ class TextureCache : LruCache<String, Bitmap>(CACHE_SIZE) {
     fun putBitmap(key: String, bitmap: Bitmap): Bitmap? {
         val result = super.put(key, bitmap)
         if (result != bitmap) {
-//            notify that new texture inserted in the cache
+//      todo notify that new texture inserted in the cache
         }
         return result
     }
