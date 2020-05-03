@@ -102,6 +102,13 @@ class CustomSeekBarPreference(
             preferenceRepository.getSnowflakeRadiusWhenUniqueDisabled()
         }
 
+        PreferenceRepository.PREF_KEY_ROLL_SENSOR_VALUE -> {
+            preferenceRepository.getRollSensorSensitivity()
+        }
+        PreferenceRepository.PREF_KEY_PITCH_SENSOR_VALUE -> {
+            preferenceRepository.getPitchSensorSensitivity()
+        }
+
         PreferenceRepository.PREF_KEY_COSINE_DEVIATION -> {
             preferenceRepository.getCosineDeviation()
         }

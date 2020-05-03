@@ -44,6 +44,13 @@ class CustomSwitchPreference(
                         preferenceRepository.getIsBackgroundImageEnabled()
                     }
 
+                    PreferenceRepository.PREF_KEY_IS_ROLL_SENSOR_ENABLED -> {
+                        preferenceRepository.getIsRollSensorEnabled()
+                    }
+                    PreferenceRepository.PREF_KEY_IS_PITCH_SENSOR_ENABLED -> {
+                        preferenceRepository.getIsPitchSensorEnabled()
+                    }
+
                     // for the same code style
                     @Suppress("RemoveRedundantQualifierName")
                     PreferenceRepository.PREF_KEY_RENDERER_FRAME_LIMIT -> {

@@ -54,7 +54,7 @@ class TexturedSnowflake(context: Context) {
         snowflakes.forEachIndexed { index, snowflake ->
             setIdentityM(modelMatrix, 0)
 
-            if (snowflake.isMajorSnowflake) {
+            if (snowflake.shouldRotate) {
                 val x = snowflake.x * 2f / width - 1f
                 val y = snowflake.y * -2f / height + 1f
                 rotate(modelMatrix, x, y, snowflake.rotationAxis, snowflake.rotationDegrees)

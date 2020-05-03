@@ -86,6 +86,13 @@ abstract class AbstractPreference : Preference {
         PreferenceRepository.PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED -> {
             !preferenceRepository.getIsBackgroundImageEnabled()
         }
+
+        PreferenceRepository.PREF_KEY_IS_ROLL_SENSOR_ENABLED -> {
+            !preferenceRepository.getIsRollSensorEnabled()
+        }
+        PreferenceRepository.PREF_KEY_IS_PITCH_SENSOR_ENABLED -> {
+            !preferenceRepository.getIsPitchSensorEnabled()
+        }
         else -> super.shouldDisableDependents()
     }
 

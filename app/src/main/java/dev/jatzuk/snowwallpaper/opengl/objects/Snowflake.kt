@@ -3,6 +3,7 @@ package dev.jatzuk.snowwallpaper.opengl.objects
 import android.content.Context
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.height
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.pitch
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.roll
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.width
 import kotlin.math.PI
@@ -10,10 +11,11 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
+class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = false) {
 
     var x: Float
     var y: Float
+    var z: Float
     private var isRadiusUnique: Boolean
     private val minRadius: Int
     private val maxRadius: Int
@@ -21,6 +23,7 @@ open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
     private var velocityFactor: Int
     private var velocity: Int
     private var angle = assignDefaultAngle()
+    var shouldRotate = false
     private var availableRotationAxes = ArrayList<RotationAxis>()
     var rotationAxis: RotationAxis
     private val rotationIncrement: Float
@@ -33,7 +36,7 @@ open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
     private var deviation = preferenceRepository.getCosineDeviation()
 
     init {
-        if (isMajorSnowflake) {
+        if (isTexturedSnowflake) {
             velocityFactor = preferenceRepository.getSnowflakeVelocityFactor()
             isRadiusUnique = preferenceRepository.getIsSnowflakeUniqueRadiusEnabled()
             if (isRadiusUnique) {
@@ -61,8 +64,10 @@ open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
 
         x = getRandomX()
         y = getRandomY()
+        z = 0f
 
         checkAvailableRotationAxes()
+        shouldRotate = availableRotationAxes.isNotEmpty()
         rotationAxis = getRandomRotationAxis()
 
         rotationIncrement =
@@ -77,6 +82,11 @@ open class Snowflake(context: Context, val isMajorSnowflake: Boolean = false) {
         angle += roll
         x += velocity * cos(angle) * deviation
         y += velocity * sin(angle)
+
+        if (isTexturedSnowflake) {
+            if (pitch > 0 && z < radius * 2) z += pitch
+            else if (pitch < 0 && z > -radius / 2) z += pitch
+        }
     }
 
     private fun isOutside() = x < -radius || x > width + radius || y > height + radius

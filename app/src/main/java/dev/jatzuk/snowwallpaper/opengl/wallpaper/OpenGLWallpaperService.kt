@@ -1,7 +1,6 @@
 package dev.jatzuk.snowwallpaper.opengl.wallpaper
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -11,54 +10,35 @@ import android.opengl.GLSurfaceView
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
 import androidx.core.graphics.drawable.toDrawable
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
-import kotlin.math.PI
-import kotlin.math.atan2
 
 class OpenGLWallpaperService : WallpaperService() {
 
     private lateinit var sensorManager: SensorManager
     private lateinit var sensorEventListener: SensorEventListener
-    private var orientation = Configuration.ORIENTATION_PORTRAIT
-
-    override fun onCreate() {
-        super.onCreate()
-
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        sensorEventListener = object : SensorEventListener {
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-
-            override fun onSensorChanged(event: SensorEvent?) {
-                event?.let {
-                    val x = it.values[0]
-                    val y = it.values[1]
-
-                    roll =
-                        if (orientation == Configuration.ORIENTATION_LANDSCAPE && x > 0)
-                            -calculateRoll(y, x)
-                        else calculateRoll(x, y)
-                }
-            }
-        }
-    }
 
     override fun onCreateEngine(): Engine = WallpaperEngine()
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        orientation = newConfig.orientation
-    }
-
-    private fun calculateRoll(x: Float, y: Float) = (atan2(x, y) / PI / 180).toFloat()
-
     private inner class WallpaperEngine : Engine() {
 
+        private lateinit var preferenceRepository: PreferenceRepository
+        private var isRollSensorEnabled = true
+        private var isPitchSensorEnabled = true
+        private var rollSensorSensitivity = 0f
+        private var pitchSensorSensitivity = 0f
         private lateinit var glSurfaceView: WallpaperGLSurfaceView
         private lateinit var renderer: SnowfallRenderer
         private var isRendererSet = false
 
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
+
+            preferenceRepository = PreferenceRepository.getInstance(applicationContext)
+
+            updateSensorSensitivityValues()
+
+            if (isRollSensorEnabled || isPitchSensorEnabled) createSensorListener()
 
             glSurfaceView = WallpaperGLSurfaceView(this@OpenGLWallpaperService)
             renderer = SnowfallRenderer(this@OpenGLWallpaperService)
@@ -76,6 +56,7 @@ class OpenGLWallpaperService : WallpaperService() {
 
             if (isRendererSet) {
                 if (visible) {
+                    updateSensorSensitivityValues()
                     registerSensorListener()
                     glSurfaceView.onResume()
                 } else {
@@ -90,6 +71,30 @@ class OpenGLWallpaperService : WallpaperService() {
             glSurfaceView.onWallpaperDestroy()
         }
 
+        private fun createSensorListener() {
+            sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+            sensorEventListener = object : SensorEventListener {
+                override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+                override fun onSensorChanged(event: SensorEvent?) {
+                    event?.let {
+                        roll =
+                            if (isRollSensorEnabled) it.values[0] * rollSensorSensitivity else 0f
+                        pitch =
+                            if (isPitchSensorEnabled) -it.values[2] * pitchSensorSensitivity else 0f
+                    }
+                }
+            }
+        }
+
+        private fun updateSensorSensitivityValues() {
+            isRollSensorEnabled = preferenceRepository.getIsRollSensorEnabled()
+            isPitchSensorEnabled = preferenceRepository.getIsPitchSensorEnabled()
+
+            rollSensorSensitivity = preferenceRepository.getRollSensorSensitivity() * ROLL_RATIO
+            pitchSensorSensitivity = preferenceRepository.getPitchSensorSensitivity() * PITH_RATIO
+        }
+
         private fun registerSensorListener() {
             sensorManager.registerListener(
                 sensorEventListener,
@@ -102,6 +107,7 @@ class OpenGLWallpaperService : WallpaperService() {
             sensorManager.unregisterListener(sensorEventListener)
         }
 
+        @Deprecated("prob to remove") // todo
         private fun scaleBitmap(bitmap: Bitmap) {
             val scaledBitmap = if (bitmap.width >= bitmap.height) {
                 Bitmap.createBitmap(
@@ -137,8 +143,11 @@ class OpenGLWallpaperService : WallpaperService() {
     companion object {
         private const val SENSOR_INFO_TAG = "SENSOR_INFO_TAG"
         private const val TAG = "OpenGLWallpaperService"
+        private const val ROLL_RATIO = 0.0001f
+        private const val PITH_RATIO = 0.01f
         var ratio = 0f
         var roll = 0f
+        var pitch = 0f
         var width = 0
         var height = 0
     }

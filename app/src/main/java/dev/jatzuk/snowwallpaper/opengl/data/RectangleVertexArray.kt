@@ -19,37 +19,37 @@ class RectangleVertexArray(
         for (flake in snowflakes) {
             val areaFactor = flake.radius * ratio
             if (height > width) {
-                floatBuffer.put(flake.x - flake.radius)
-                floatBuffer.put(flake.y + areaFactor)
+                floatBuffer.put(flake.x - flake.radius - flake.z)
+                floatBuffer.put(flake.y + areaFactor + flake.z)
                 floatBuffer.shiftPositionOnTo(3)
 
-                floatBuffer.put(flake.x - flake.radius)
-                floatBuffer.put(flake.y - areaFactor)
+                floatBuffer.put(flake.x - flake.radius - flake.z)
+                floatBuffer.put(flake.y - areaFactor - flake.z)
                 floatBuffer.shiftPositionOnTo(3)
 
-                floatBuffer.put(flake.x + flake.radius)
-                floatBuffer.put(flake.y + areaFactor)
+                floatBuffer.put(flake.x + flake.radius + flake.z)
+                floatBuffer.put(flake.y + areaFactor + flake.z)
                 floatBuffer.shiftPositionOnTo(3)
 
-                floatBuffer.put(flake.x + flake.radius)
-                floatBuffer.put(flake.y - areaFactor)
+                floatBuffer.put(flake.x + flake.radius + flake.z)
+                floatBuffer.put(flake.y - areaFactor - flake.z)
                 floatBuffer.shiftPositionOnTo(3)
 
             } else {
-                floatBuffer.put(flake.x - areaFactor)
-                floatBuffer.put(flake.y + flake.radius)
+                floatBuffer.put(flake.x - areaFactor - flake.z)
+                floatBuffer.put(flake.y + flake.radius + flake.z)
                 floatBuffer.shiftPositionOnTo(3)
 
-                floatBuffer.put(flake.x - areaFactor)
-                floatBuffer.put(flake.y - flake.radius)
+                floatBuffer.put(flake.x - areaFactor - flake.z)
+                floatBuffer.put(flake.y - flake.radius - flake.z)
                 floatBuffer.shiftPositionOnTo(3)
 
-                floatBuffer.put(flake.x + areaFactor)
-                floatBuffer.put(flake.y + flake.radius)
+                floatBuffer.put(flake.x + areaFactor + flake.z)
+                floatBuffer.put(flake.y + flake.radius + flake.z)
                 floatBuffer.shiftPositionOnTo(3)
 
-                floatBuffer.put(flake.x + areaFactor)
-                floatBuffer.put(flake.y - flake.radius)
+                floatBuffer.put(flake.x + areaFactor + flake.z)
+                floatBuffer.put(flake.y - flake.radius - flake.z)
                 floatBuffer.shiftPositionOnTo(3)
             }
         }

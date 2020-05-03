@@ -2,8 +2,9 @@
     <string name="app_name">SnowWallpaper</string>
 
     <!-- category label -->
-    <string name="category_renderer_setup">Rendering setup</string>
+    <string name="category_renderer">Renderer</string>
     <string name="category_general">General</string>
+    <string name="category_sensors">Sensors</string>
 
     <!-- preference text -->
     <string name="snowfall_title">Snowfall</string>
@@ -20,6 +21,17 @@
 
     <string name="frames_per_second_title">Frames per second</string>
     <string name="frames_per_second_summary">30</string>
+
+    <string name="sensor_roll_title">Roll sensor</string>
+    <string name="sensor_roll_summary">Affects snowflake position around Z axis</string>
+
+    <string name="sensor_pitch_title">Pitch sensor</string>
+    <string name="sensor_pitch_summary">Affects snowflake position around X axis</string>
+
+    <string name="sensor_roll_value_picker_title">Roll sensor sensitivity</string>
+    <string name="sensor_pitch_value_picker_title">Pitch sensor sensitivity</string>
+
+    <string name="sensor_value_picker_summary">Sensitivity ratio</string>
 
     <!-- setup screens-->
     <string name="snowfall_setup_fragment_title">Snowfall Setup</string>

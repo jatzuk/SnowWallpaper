@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory app:preferenceTitle="@string/category_renderer_setup">
+    <dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory app:preferenceTitle="@string/category_renderer">
 
         <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
             app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.SnowfallPreferenceFragment"
@@ -39,6 +40,38 @@
             app:preferenceSummary="@string/frames_per_second_summary"
             app:preferenceTitle="@string/frames_per_second_title" />
 
+    </dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory>
+
+    <dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory app:preferenceTitle="@string/category_sensors">
+        <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
+            app:key="PREF_KEY_IS_ROLL_SENSOR_ENABLED"
+            app:preferenceDefaultValue="true"
+            app:preferenceSummary="@string/sensor_roll_summary"
+            app:preferenceTitle="@string/sensor_roll_title" />
+
+        <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
+            android:dependency="PREF_KEY_IS_ROLL_SENSOR_ENABLED"
+            app:key="PREF_KEY_ROLL_SENSOR_VALUE"
+            app:preferenceDefaultValue="5"
+            app:preferenceMax="10"
+            app:preferenceMin="1"
+            app:preferenceSummary="@string/sensor_value_picker_summary"
+            app:preferenceTitle="@string/sensor_roll_value_picker_title" />
+
+        <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
+            app:key="PREF_KEY_IS_PITCH_SENSOR_ENABLED"
+            app:preferenceDefaultValue="true"
+            app:preferenceSummary="@string/sensor_pitch_summary"
+            app:preferenceTitle="@string/sensor_pitch_title" />
+
+        <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
+            android:dependency="PREF_KEY_IS_PITCH_SENSOR_ENABLED"
+            app:key="PREF_KEY_PITCH_SENSOR_VALUE"
+            app:preferenceDefaultValue="4"
+            app:preferenceMax="10"
+            app:preferenceMin="1"
+            app:preferenceSummary="@string/sensor_value_picker_summary"
+            app:preferenceTitle="@string/sensor_pitch_value_picker_title" />
     </dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory>
 
 </PreferenceScreen>
