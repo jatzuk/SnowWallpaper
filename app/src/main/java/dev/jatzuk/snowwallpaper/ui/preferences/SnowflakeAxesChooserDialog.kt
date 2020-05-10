@@ -3,8 +3,13 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
@@ -54,5 +59,17 @@ class SnowflakeAxesChooserDialog : DialogFragment() {
             setNegativeButton(getString(R.string.dialog_negative_button)) { _, _ -> }
             create()
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+//        TODO("customize dialog")
+        dialog?.window?.setBackgroundDrawable(
+            ColorDrawable(ContextCompat.getColor(context!!, R.color.colorPreferenceTitle))
+        )
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 }
