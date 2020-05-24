@@ -232,6 +232,10 @@ class PreferenceRepository private constructor(context: Context) {
             0
         )
 
+    fun resetPreferencesToDefault() {
+        preferenceManager.edit().clear().apply()
+    }
+
     companion object {
         @Volatile
         private var instance: PreferenceRepository? = null

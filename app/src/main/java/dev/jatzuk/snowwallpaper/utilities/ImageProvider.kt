@@ -90,6 +90,17 @@ object ImageProvider {
         return textureCache.get(imageType.name)
     }
 
+    fun clearStoredImages(context: Context) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                context.filesDir.delete()
+            } catch (e: IOException) {
+                errorLog("file cannot be deleted", TAG, e)
+            }
+            textureCache.evictAll()
+        }
+    }
+
     private suspend fun decodeSampledBitmapFromResource(
         resources: Resources,
         @DrawableRes resourceId: Int,

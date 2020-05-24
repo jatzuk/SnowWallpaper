@@ -3,6 +3,9 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.FragmentManager
@@ -13,6 +16,7 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider.texturesViewModel
+import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 
 class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
@@ -23,6 +27,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         preferenceRepository = PreferenceRepository.getInstance(context!!)
         texturesViewModel = ViewModelProvider(this).get(TexturesViewModel::class.java)
         categoryDisabledDrawable =
@@ -32,6 +37,19 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         appBarTitleViewModel.title.value = getString(R.string.preferences)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_reset_settings, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+//            todo update ui on delete
+            R.id.reset_settings -> resetSettingsToDefault()
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun setUp() {
@@ -82,6 +100,13 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
     override fun provideBackground(): Drawable? = null
 //        ContextCompat.getDrawable(context!!, R.drawable.background_preferences_main_screen)
+
+    private fun resetSettingsToDefault(): Boolean {
+        ImageProvider.clearStoredImages(context!!)
+        preferenceRepository.resetPreferencesToDefault()
+        logging("deleting message", TAG)
+        return true
+    }
 
     companion object {
         const val TAG = "PreferencesFragment"
