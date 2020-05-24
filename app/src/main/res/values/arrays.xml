@@ -5,4 +5,10 @@
         <item>Y</item>
         <item>Z</item>
     </string-array>
+
+    <string-array name="snowflake_axis_rotations_info">
+        <item>Rotate around X-axis</item>
+        <item>Rotate around Y-axis</item>
+        <item>Rotate around Z-axis</item>
+    </string-array>
 </resources>

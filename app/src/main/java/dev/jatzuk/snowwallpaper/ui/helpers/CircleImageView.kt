@@ -67,7 +67,6 @@ class CircleImageView : AppCompatImageView {
 
     fun setStroke(width: Int, color: Int) {
         strokePaint = Paint().apply {
-            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
             this.color = color
             style = Paint.Style.STROKE
             strokeWidth = width.toFloat()

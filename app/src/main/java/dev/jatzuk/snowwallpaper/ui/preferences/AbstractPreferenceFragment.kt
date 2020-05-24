@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.ui.imagepicker.AbstractDialogFragment
+import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
 abstract class AbstractPreferenceFragment(
@@ -83,7 +83,7 @@ abstract class AbstractPreferenceFragment(
         dialogFragment?.let {
             it.setTargetFragment(
                 childFragmentManager.findFragmentById(id),
-                AbstractDialogFragment.SELECT_CUSTOM_IMAGE
+                TexturedAbstractDialogFragment.SELECT_CUSTOM_IMAGE
             )
             childFragmentManager.beginTransaction()
                 .add(it, dialogFragment::class.java.simpleName)

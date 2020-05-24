@@ -3,7 +3,7 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 import android.graphics.Color
 import android.os.Bundle
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.ui.imagepicker.AbstractDialogFragment
+import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
@@ -32,7 +32,7 @@ class BackgroundImagePreferenceFragment :
 
 //    override fun provideBackground(): Drawable? = ContextCompat.getDrawable(context!!, R.drawable.b1)
 
-    class BackgroundImageDialogFragment : AbstractDialogFragment(
+    class BackgroundImageDialogFragment : TexturedAbstractDialogFragment(
         intArrayOf(
             R.drawable.background_image,
             R.drawable.b0,

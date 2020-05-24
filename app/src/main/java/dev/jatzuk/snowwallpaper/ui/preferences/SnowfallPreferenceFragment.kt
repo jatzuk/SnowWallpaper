@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.ui.imagepicker.AbstractDialogFragment
+import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
@@ -32,7 +32,7 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
 
     override fun provideBackgroundColor(): Int = Color.CYAN
 
-    class SnowfallDialogFragment : AbstractDialogFragment(
+    class SnowfallDialogFragment : TexturedAbstractDialogFragment(
         intArrayOf(R.drawable.texture_snowflake, R.drawable.texture_snowfall),
         ImageProvider.ImageType.SNOWFALL_TEXTURE
     ) {

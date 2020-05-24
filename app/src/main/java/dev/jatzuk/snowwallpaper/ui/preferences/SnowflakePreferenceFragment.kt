@@ -3,9 +3,8 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.fragment.app.FragmentTransaction
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.ui.imagepicker.AbstractDialogFragment
+import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
@@ -22,25 +21,9 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
 
         findPreference<IntentPreference>(getString(R.string.pref_key_snowflake_rotation_axes))!!.apply {
             setOnPreferenceClickListener {
-//                startAxesDialogFragment()
                 startDialogFragment(SnowflakeAxesChooserDialog())
                 true
             }
-        }
-    }
-
-    private fun startAxesDialogFragment() {
-        val dialogFragment = SnowflakeAxesChooserDialog()
-        dialogFragment.let {
-            it.setTargetFragment(
-                childFragmentManager.findFragmentById(id),
-                AbstractDialogFragment.SELECT_CUSTOM_IMAGE
-            )
-            childFragmentManager.beginTransaction()
-                .add(it, dialogFragment::class.java.simpleName)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit()
         }
     }
 
@@ -57,7 +40,7 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
 
     override fun provideBackgroundColor(): Int = Color.CYAN
 
-    class SnowflakeDialogFragment : AbstractDialogFragment(
+    class SnowflakeDialogFragment : TexturedAbstractDialogFragment(
         intArrayOf(
             R.drawable.texture_snowflake,
             R.drawable.texture_snowfall,

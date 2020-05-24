@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -33,7 +34,7 @@ import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 import kotlin.math.abs
 import kotlin.math.max
 
-abstract class AbstractDialogFragment(
+abstract class TexturedAbstractDialogFragment(
     private val textureIds: IntArray,
     private val imageType: ImageProvider.ImageType
 ) : DialogFragment() {
@@ -85,16 +86,15 @@ abstract class AbstractDialogFragment(
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        textureAdapter =
-            TextureAdapter(
-                textureArray,
-                object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
-                    override fun onClick(view: View?, position: Int, item: Drawable) {
-                        if (position == textureArray.lastIndex) startImagePickerIntent()
-                        else if (position != textureIds.size) startImageViewerFragment()
-                    }
+        textureAdapter = TextureAdapter(
+            textureArray,
+            object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
+                override fun onClick(view: View?, position: Int, item: Drawable) {
+                    if (position == textureArray.lastIndex) startImagePickerIntent()
+                    else if (position != textureIds.size) startImageViewerFragment()
                 }
-            )
+            }
+        )
 
         return AlertDialog.Builder(context!!).run {
             val inflater = requireActivity().layoutInflater
@@ -130,7 +130,10 @@ abstract class AbstractDialogFragment(
                                     val zTranslation = (minAlpha +
                                             (((scaleFactor - minScale) / (1 - minScale)) * (1 - minAlpha)))
                                     alpha = zTranslation
-                                    translationZ = zTranslation
+
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        translationZ = zTranslation
+                                    }
                                 }
                                 else -> alpha = 0f
                             }
