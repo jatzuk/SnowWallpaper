@@ -16,7 +16,6 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider.texturesViewModel
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 
 class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
@@ -46,8 +45,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-//            todo update ui on delete
-            R.id.reset_settings -> resetSettingsToDefault()
+            R.id.reset_settings -> showConfirmDialog()
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -101,10 +99,20 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     override fun provideBackground(): Drawable? = null
 //        ContextCompat.getDrawable(context!!, R.drawable.background_preferences_main_screen)
 
-    private fun resetSettingsToDefault(): Boolean {
-        ImageProvider.clearStoredImages(context!!)
-        preferenceRepository.resetPreferencesToDefault()
-        logging("deleting message", TAG)
+    private fun showConfirmDialog(): Boolean {
+        ResetPreferenceDialogFragment(
+            getString(R.string.reset_settings_label),
+            getString(R.string.reset_settings_message)
+        ).apply {
+            invokeOnPositiveAction {
+                ImageProvider.clearStoredImages(context!!)
+                preferenceRepository.resetPreferencesToDefault()
+                activity!!.finish()
+            }
+        }.also {
+            it.show(activity!!.supportFragmentManager, null)
+        }
+
         return true
     }
 

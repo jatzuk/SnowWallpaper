@@ -79,9 +79,7 @@ object ImageProvider {
                 ContextCompat.getDrawable(context, resourceId)!!.toBitmap()
             )
         } catch (e: IOException) {
-            errorLog(
-                "Failed to load image type: ${imageType.name} from internal storage", TAG, e
-            )
+            errorLog("Failed to load image type: ${imageType.name} from internal storage", TAG, e)
             null
         }
     }
@@ -93,7 +91,7 @@ object ImageProvider {
     fun clearStoredImages(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                context.filesDir.delete()
+                context.filesDir.listFiles()?.forEach { it.delete() }
             } catch (e: IOException) {
                 errorLog("file cannot be deleted", TAG, e)
             }

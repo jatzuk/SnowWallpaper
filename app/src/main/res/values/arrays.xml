@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="snowflake_axis_rotations">
-        <item>X</item>
-        <item>Y</item>
-        <item>Z</item>
-    </string-array>
-
     <string-array name="snowflake_axis_rotations_info">
-        <item>Rotate around X-axis</item>
-        <item>Rotate around Y-axis</item>
-        <item>Rotate around Z-axis</item>
+        <item>@string/x_axis_rotation</item>
+        <item>@string/y_axis_rotation</item>
+        <item>@string/z_axis_rotation</item>
     </string-array>
 </resources>

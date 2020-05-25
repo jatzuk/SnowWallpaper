@@ -262,7 +262,7 @@ class PreferenceRepository private constructor(context: Context) {
 
         private const val BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE = false
 
-        private const val COSINE_DEVIATION_DEFAULT_VALUE = 1
+        private const val COSINE_DEVIATION_DEFAULT_VALUE = 2
         private const val SENSOR_ROLL_IS_ENABLED_DEFAULT_VALUE = true
         private const val SENSOR_PITCH_IS_ENABLED_DEFAULT_VALUE = true
         private const val SENSOR_ROLL_DEFAULT_VALUE = 5

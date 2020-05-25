@@ -28,7 +28,7 @@
 
         <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
             app:key="PREF_KEY_COSINE_DEVIATION"
-            app:preferenceDefaultValue="1"
+            app:preferenceDefaultValue="2"
             app:preferenceMax="5"
             app:preferenceMin="1"
             app:preferenceSummary="@string/cosine_deviation_summary"

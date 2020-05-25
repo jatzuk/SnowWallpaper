@@ -4,7 +4,7 @@
     <item
         android:id="@+id/choose_background_image"
         android:icon="@drawable/ic_apply_choice"
-        android:title="select"
+        android:title="@string/select"
         app:showAsAction="always|withText" />
 </menu>
 

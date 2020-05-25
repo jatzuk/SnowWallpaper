@@ -96,7 +96,7 @@ abstract class TexturedAbstractDialogFragment(
             }
         )
 
-        return AlertDialog.Builder(context!!).run {
+        return AlertDialog.Builder(context!!, R.style.DefaultAlertDialog).run {
             val inflater = requireActivity().layoutInflater
             val view = inflater.inflate(R.layout.fragment_picker_dialog, null).apply {
                 findViewById<ViewPager2>(R.id.pager).run {
