@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPreferenceTitle</item>
+        <item name="colorPrimaryDark">@color/colorPreferenceCategoryBackground</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="windowActionBarOverlay">true</item>
@@ -62,12 +62,14 @@
         <item name="android:textColor">@color/colorPreferenceTitle</item>
     </style>
 
-    <style name="DefaultAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <!--        <item name="colorAccent">@android:color/white</item>-->
-        <!--        <item name="android:textColorPrimary">@android:color/white</item>-->
-        <!--        <item name="colorPrimary">@color/colorAccent</item>-->
-        <!--        todo-->
-        <item name="colorButtonNormal">@android:color/white</item>
+    <style name="DefaultAlertDialog" parent="Theme.AppCompat.Light.Dialog">
+        <!--        message-->
+        <item name="android:textColorPrimary">@color/colorPreferenceTitle</item>
+        <!--        checkboxes-->
+        <item name="colorAccent">@color/colorPreferenceTitle</item>
+        <!--        multi choice items-->
+        <item name="textColorAlertDialogListItem">@color/colorPreferenceTitle</item>
+        <item name="android:background">@color/colorPreferenceIntentBackground</item>
     </style>
 
 </resources>

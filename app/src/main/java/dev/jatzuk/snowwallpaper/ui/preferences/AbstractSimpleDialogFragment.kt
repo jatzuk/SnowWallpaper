@@ -2,13 +2,8 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.app.Dialog
 import android.content.DialogInterface
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
@@ -47,17 +42,6 @@ abstract class AbstractSimpleDialogFragment : DialogFragment() {
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
-    final override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        dialog?.window?.setBackgroundDrawable(
-            ColorDrawable(ContextCompat.getColor(context!!, provideBackgroundColor()))
-        )
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     private fun invokeOnPositiveAction() {
         positiveActionCallback?.invoke() ?: errorLog("Positive action callback is null", TAG)
     }
@@ -66,8 +50,6 @@ abstract class AbstractSimpleDialogFragment : DialogFragment() {
         negativeActionCallback?.invoke() ?: errorLog("Negative action callback is null", TAG)
         dismiss()
     }
-
-    protected open fun provideBackgroundColor(): Int = R.color.colorPreferenceCategoryBackground
 
     open fun invokeOnPositiveAction(callback: () -> Unit) {
         positiveActionCallback = callback

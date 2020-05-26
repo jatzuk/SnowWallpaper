@@ -4,16 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -75,8 +71,7 @@ abstract class TexturedAbstractDialogFragment(
                         circleImageView.disableStroke()
                     else {
                         circleImageView.setStroke(
-                            resources.getDimensionPixelSize(R.dimen.circle_image_view_stroke_width),
-                            Color.GREEN
+                            resources.getDimensionPixelSize(R.dimen.circle_image_view_stroke_width)
                         )
                     }
                 }
@@ -157,21 +152,8 @@ abstract class TexturedAbstractDialogFragment(
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-//        TODO("customize dialog")
-        dialog?.window?.setBackgroundDrawable(
-            ColorDrawable(ContextCompat.getColor(context!!, R.color.colorPreferenceTitle))
-        )
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onStart() {
         super.onStart()
-//        dialog!!.window!!.setLayout(1080, 1920 / 2)
         viewPager.registerOnPageChangeCallback(onPageChangeCallback)
 
         dialog?.let { positiveButton = (it as AlertDialog).getButton(Dialog.BUTTON_POSITIVE) }

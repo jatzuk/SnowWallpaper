@@ -1,7 +1,6 @@
 package dev.jatzuk.snowwallpaper.ui.preferences.custom
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
@@ -51,10 +50,7 @@ class IntentPreference(
                 previewImage!!,
                 resources.getDimensionPixelSize(R.dimen.intent_preview_image_size)
             )
-            setStroke(
-                resources.getDimensionPixelOffset(R.dimen.intent_preview_image_stroke_width),
-                Color.BLACK
-            )
+            setStroke(resources.getDimensionPixelOffset(R.dimen.intent_preview_image_stroke_width))
             visibility = View.VISIBLE
             invalidate()
         }

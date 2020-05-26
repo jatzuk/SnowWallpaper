@@ -5,6 +5,7 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import dev.jatzuk.snowwallpaper.R
 
@@ -65,7 +66,10 @@ class CircleImageView : AppCompatImageView {
         return output
     }
 
-    fun setStroke(width: Int, color: Int) {
+    fun setStroke(
+        width: Int,
+        color: Int = ContextCompat.getColor(context, R.color.colorPreferenceTitle)
+    ) {
         strokePaint = Paint().apply {
             this.color = color
             style = Paint.Style.STROKE
