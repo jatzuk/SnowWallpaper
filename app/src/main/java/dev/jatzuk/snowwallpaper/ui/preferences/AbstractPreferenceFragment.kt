@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.annotation.XmlRes
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -83,7 +84,11 @@ abstract class AbstractPreferenceFragment(
                 childFragmentManager.findFragmentById(id),
                 TexturedAbstractDialogFragment.SELECT_CUSTOM_IMAGE
             )
-            it.show(requireActivity().supportFragmentManager, null)
+            childFragmentManager.beginTransaction()
+                .add(it, dialogFragment::class.java.simpleName)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
+                .commit()
         }
     }
 
