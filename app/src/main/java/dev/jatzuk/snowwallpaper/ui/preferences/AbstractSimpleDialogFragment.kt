@@ -14,14 +14,22 @@ import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
 
-abstract class AbstractSimpleDialogFragment(
-    private val title: String,
-    private val message: String? = null,
-    private val hasMultiChoiceItems: Boolean = false
-) : DialogFragment() {
+abstract class AbstractSimpleDialogFragment : DialogFragment() {
 
+    private lateinit var title: String
+    private var message: String? = null
+    private var hasMultiChoiceItems = false
     private var positiveActionCallback: (() -> Unit)? = null
     private var negativeActionCallback: (() -> Unit)? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            title = it.getString(TITLE_ARGUMENT_KEY) ?: getString(R.string.no_title_provided)
+            message = it.getString(MESSAGE_ARGUMENT_KEY)
+            hasMultiChoiceItems = it.getBoolean(MULTI_CHOICE_KEY)
+        }
+    }
 
     final override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -56,6 +64,7 @@ abstract class AbstractSimpleDialogFragment(
 
     private fun invokeOnNegativeAction() {
         negativeActionCallback?.invoke() ?: errorLog("Negative action callback is null", TAG)
+        dismiss()
     }
 
     protected open fun provideBackgroundColor(): Int = R.color.colorPreferenceCategoryBackground
@@ -83,20 +92,34 @@ abstract class AbstractSimpleDialogFragment(
 
     companion object {
         private const val TAG = "AbstractSimpleDialogFragment"
+        const val TITLE_ARGUMENT_KEY = "TITLE_ARGUMENT_KEY"
+        const val MESSAGE_ARGUMENT_KEY = "MESSAGE_ARGUMENT_KEY"
+        const val MULTI_CHOICE_KEY = "MULTI_CHOICE_KEY"
     }
 }
 
 //Fragment null must be a public static class to be  properly recreated from instance state.
-class ResetPreferenceDialogFragment(
-    title: String,
-    message: String
-) : AbstractSimpleDialogFragment(title, message)
+class ResetPreferenceDialogFragment : AbstractSimpleDialogFragment() {
 
-class SnowflakeAxesChooserDialog(title: String) :
-    AbstractSimpleDialogFragment(title, hasMultiChoiceItems = true) {
+    companion object {
+        fun newInstance(title: String, message: String): AbstractSimpleDialogFragment {
+            return ResetPreferenceDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putString(TITLE_ARGUMENT_KEY, title)
+                    putString(MESSAGE_ARGUMENT_KEY, message)
+                }
+            }
+        }
+    }
+}
 
-    private val preferenceRepository: PreferenceRepository by lazy {
-        PreferenceRepository.getInstance(activity!!)
+class SnowflakeAxesChooserDialog : AbstractSimpleDialogFragment() {
+
+    private lateinit var preferenceRepository: PreferenceRepository
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        preferenceRepository = PreferenceRepository.getInstance(requireContext())
     }
 
     override fun invokeOnPositiveAction(callback: () -> Unit) {}
@@ -112,6 +135,17 @@ class SnowflakeAxesChooserDialog(title: String) :
                 0 -> preferenceRepository.setSnowflakeRotationAxisXAvailability(isChecked)
                 1 -> preferenceRepository.setSnowflakeRotationAxisYAvailability(isChecked)
                 2 -> preferenceRepository.setSnowflakeRotationAxisZAvailability(isChecked)
+            }
+        }
+    }
+
+    companion object {
+        fun newInstance(title: String): AbstractSimpleDialogFragment {
+            return SnowflakeAxesChooserDialog().apply {
+                arguments = Bundle().apply {
+                    putString(TITLE_ARGUMENT_KEY, title)
+                    putBoolean(MULTI_CHOICE_KEY, true)
+                }
             }
         }
     }

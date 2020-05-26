@@ -88,6 +88,7 @@
     <string name="select">Select</string>
     <string name="reset_settings_label">Reset settings</string>
     <string name="reset_settings_message">Do you want to proceed?\nThis action will reset your settings to defaults</string>
+    <string name="no_title_provided">No title provided</string>
 
     <!--    live wallpaper-->
     <string name="author">Jatzuk</string>

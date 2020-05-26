@@ -152,7 +152,7 @@ abstract class TexturedAbstractDialogFragment(
             setView(view)
             setTitle(getString(R.string.pick_image))
             setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ -> storeSelectedImage() }
-            setNegativeButton(getString(R.string.dialog_negative_button)) { _, _ -> }
+            setNegativeButton(getString(R.string.dialog_negative_button)) { _, _ -> dismiss() }
             create()
         }
     }

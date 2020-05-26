@@ -22,7 +22,9 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
         findPreference<IntentPreference>(getString(R.string.pref_key_snowflake_rotation_axes))!!.apply {
             setOnPreferenceClickListener {
                 startDialogFragment(
-                    SnowflakeAxesChooserDialog(getString(R.string.snowflake_rotation_axes_title))
+                    SnowflakeAxesChooserDialog.newInstance(
+                        getString(R.string.snowflake_rotation_axes_title)
+                    )
                 )
                 true
             }
