@@ -23,11 +23,17 @@ class PreferencesActivity : AppCompatActivity(),
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val retainFragment = PreferencesFragment.findOrCreateRetainFragment(supportFragmentManager)
+//        val retainFragment = PreferencesFragment.findOrCreateRetainFragment(supportFragmentManager)
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.preferences_container, retainFragment, PreferencesFragment.TAG)
-            .commit()
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(
+                    R.id.preferences_container,
+                    PreferencesFragment(),
+                    PreferencesFragment::class.java.simpleName
+                )
+                .commit()
+        }
 
         appBarTitleViewModel = ViewModelProvider(this).get(AppBarTitleViewModel::class.java)
         appBarTitleViewModel.title.observe(this, Observer {

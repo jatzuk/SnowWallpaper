@@ -100,7 +100,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 //        ContextCompat.getDrawable(context!!, R.drawable.background_preferences_main_screen)
 
     private fun showConfirmDialog(): Boolean {
-        ResetPreferenceDialogFragment(
+        ResetPreferenceDialogFragment.newInstance(
             getString(R.string.reset_settings_label),
             getString(R.string.reset_settings_message)
         ).apply {
@@ -109,9 +109,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
                 preferenceRepository.resetPreferencesToDefault()
                 activity!!.finish()
             }
-        }.also {
-            it.show(activity!!.supportFragmentManager, null)
-        }
+        }.also { it.show(requireActivity().supportFragmentManager, null) }
 
         return true
     }
@@ -119,6 +117,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     companion object {
         const val TAG = "PreferencesFragment"
 
+        //        todo del or fix
         fun findOrCreateRetainFragment(fm: FragmentManager): PreferencesFragment {
             return (fm.findFragmentByTag(TAG) as? PreferencesFragment) ?: run {
                 PreferencesFragment().also {
