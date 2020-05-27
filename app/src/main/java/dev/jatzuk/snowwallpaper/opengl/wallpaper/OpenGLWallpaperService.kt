@@ -8,7 +8,10 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.opengl.GLSurfaceView
 import android.service.wallpaper.WallpaperService
+import android.view.Display
+import android.view.Surface
 import android.view.SurfaceHolder
+import android.view.WindowManager
 import androidx.core.graphics.drawable.toDrawable
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
@@ -30,11 +33,13 @@ class OpenGLWallpaperService : WallpaperService() {
         private lateinit var glSurfaceView: WallpaperGLSurfaceView
         private lateinit var renderer: SnowfallRenderer
         private var isRendererSet = false
+        private var display: Display? = null
 
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
 
             preferenceRepository = PreferenceRepository.getInstance(applicationContext)
+            display = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
 
             updateSensorSensitivityValues()
 
@@ -69,6 +74,7 @@ class OpenGLWallpaperService : WallpaperService() {
         override fun onDestroy() {
             super.onDestroy()
             glSurfaceView.onWallpaperDestroy()
+            display = null
         }
 
         private fun createSensorListener() {
@@ -78,8 +84,13 @@ class OpenGLWallpaperService : WallpaperService() {
 
                 override fun onSensorChanged(event: SensorEvent?) {
                     event?.let {
+                        val rollAdjustment = when (display?.rotation) {
+                            Surface.ROTATION_90 -> -it.values[1]
+                            Surface.ROTATION_270 -> it.values[1]
+                            else -> it.values[0]
+                        }
                         roll =
-                            if (isRollSensorEnabled) it.values[0] * rollSensorSensitivity else 0f
+                            if (isRollSensorEnabled) rollAdjustment * rollSensorSensitivity else 0f
                         pitch =
                             if (isPitchSensorEnabled) -it.values[2] * pitchSensorSensitivity else 0f
                     }
