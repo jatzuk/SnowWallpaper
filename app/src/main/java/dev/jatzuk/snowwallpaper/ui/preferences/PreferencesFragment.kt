@@ -1,5 +1,7 @@
 package dev.jatzuk.snowwallpaper.ui.preferences
 
+//import dev.jatzuk.snowwallpaper.utilities.ImageProvider.texturesViewModel
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -10,25 +12,23 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider.texturesViewModel
-import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 
 class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
     private lateinit var preferenceRepository: PreferenceRepository
     private lateinit var intentPreferences: Array<IntentPreference>
     private lateinit var categoryDisabledDrawable: Drawable
+    private var observer: Observer<HashMap<ImageProvider.ImageType, Bitmap?>>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         preferenceRepository = PreferenceRepository.getInstance(context!!)
-        texturesViewModel = ViewModelProvider(this).get(TexturesViewModel::class.java)
+//        texturesViewModel = ViewModelProvider(this).get(TexturesViewModel::class.java)
         categoryDisabledDrawable =
             ContextCompat.getDrawable(context!!, R.drawable.category_disabled)!!
     }
@@ -59,17 +59,19 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     }
 
     override fun attachObserver() {
-        texturesViewModel?.getTextures()?.observe(
-            viewLifecycleOwner,
-            Observer {
-                intentPreferences.forEachIndexed { index, preference ->
-                    preference.apply {
-                        previewImage =
-                            it[ImageProvider.ImageType.values()[index]]?.toDrawable(resources)
-                    }
+        observer = Observer {
+            intentPreferences.forEachIndexed { index, preference ->
+                preference.apply {
+                    previewImage =
+                        it[ImageProvider.ImageType.values()[index]]?.toDrawable(resources)
                 }
             }
-        )
+
+        }
+//        texturesViewModel?.getTextures()?.observe(
+//            viewLifecycleOwner,
+//            observer!!
+//        )
 
 //        todo replace with normal realization
         preferenceRepository.snowfallPreference.observe(
@@ -92,6 +94,18 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
                 if (!isEnabled) intentPreferences[2].previewImage = categoryDisabledDrawable
             }
         )
+    }
+
+    override fun detachObserver() {
+        super.detachObserver()
+        observer?.let {
+//            texturesViewModel?.getTextures()?.removeObserver(it)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        observer = null
     }
 
     override fun provideBackgroundColor(): Int = Color.YELLOW

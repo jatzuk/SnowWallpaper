@@ -13,7 +13,6 @@ import androidx.core.graphics.drawable.toBitmap
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
-import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +24,7 @@ object ImageProvider {
 
     private const val TAG = "ImageProvider"
     private val textureCache = TextureCache()
-    var texturesViewModel: TexturesViewModel? = null
+//    var texturesViewModel: TexturesViewModel? = null
 
     fun saveImage(
         context: Context,
@@ -147,7 +146,7 @@ object ImageProvider {
 
     private fun putTextureToCache(imageType: ImageType, bitmap: Bitmap): Bitmap {
         textureCache.putBitmap(imageType.name, bitmap)
-        texturesViewModel?.getTextures()?.value?.set(imageType, bitmap)
+//        texturesViewModel?.getTextures()?.value?.set(imageType, bitmap)
         return bitmap
     }
 

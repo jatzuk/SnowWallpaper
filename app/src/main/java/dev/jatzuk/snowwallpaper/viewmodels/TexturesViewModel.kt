@@ -8,15 +8,21 @@ import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
 class TexturesViewModel : ViewModel() {
 
-    private val textures: MutableLiveData<HashMap<ImageProvider.ImageType, Bitmap?>> by lazy {
+//    private var textures: MutableLiveData<HashMap<ImageProvider.ImageType, Bitmap?>> by lazy {
 //        MutableLiveData<HashMap<ImageProvider.ImageType, Bitmap?>>().also { loadTextures() }
-        loadTextures()
+//        loadTextures()
+//    }
+
+    private var textures: MutableLiveData<HashMap<ImageProvider.ImageType, Bitmap?>>? = null
+
+    init {
+        textures = loadTextures()
     }
 
-    fun getTextures(): LiveData<HashMap<ImageProvider.ImageType, Bitmap?>> = textures
+    fun getTextures(): LiveData<HashMap<ImageProvider.ImageType, Bitmap?>>? = textures
 
     //    todo
-    private fun loadTextures(): MutableLiveData<HashMap<ImageProvider.ImageType, Bitmap?>> {
+    private fun loadTextures(): MutableLiveData<HashMap<ImageProvider.ImageType, Bitmap?>>? {
         val snowfallTexture =
             ImageProvider.getBitmapFromCache(ImageProvider.ImageType.SNOWFALL_TEXTURE)
         val snowflakeTexture =
@@ -29,5 +35,11 @@ class TexturesViewModel : ViewModel() {
         map[ImageProvider.ImageType.SNOWFLAKE_TEXTURE] = snowflakeTexture
         map[ImageProvider.ImageType.BACKGROUND_IMAGE] = backgroundImageTexture
         return MutableLiveData(map)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        textures?.value?.clear()
+        textures = null
     }
 }

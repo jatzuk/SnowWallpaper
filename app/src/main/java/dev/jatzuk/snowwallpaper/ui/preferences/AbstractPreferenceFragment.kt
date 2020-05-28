@@ -58,6 +58,11 @@ abstract class AbstractPreferenceFragment(
         attachObserver()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        detachObserver()
+    }
+
     override fun onCreateRecyclerView(
         inflater: LayoutInflater?,
         parent: ViewGroup?,
@@ -77,6 +82,10 @@ abstract class AbstractPreferenceFragment(
     protected abstract fun setUp()
 
     protected abstract fun attachObserver()
+
+    open fun detachObserver() {
+
+    }
 
     protected fun startDialogFragment(dialogFragment: DialogFragment?) {
         dialogFragment?.let {

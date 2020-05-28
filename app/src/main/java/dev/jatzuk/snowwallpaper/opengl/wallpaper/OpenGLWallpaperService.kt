@@ -13,6 +13,7 @@ import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.WindowManager
 import androidx.core.graphics.drawable.toDrawable
+import com.google.firebase.analytics.FirebaseAnalytics
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 
@@ -20,6 +21,7 @@ class OpenGLWallpaperService : WallpaperService() {
 
     private lateinit var sensorManager: SensorManager
     private lateinit var sensorEventListener: SensorEventListener
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreateEngine(): Engine = WallpaperEngine()
 
@@ -37,6 +39,12 @@ class OpenGLWallpaperService : WallpaperService() {
 
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
+
+            firebaseAnalytics = FirebaseAnalytics.getInstance(applicationContext)
+//            val bundle = Bundle().apply {
+//                putString(APP_START_LOG_KEY, APP_START_LOG_KEY)
+//            }
+            firebaseAnalytics.logEvent("${this::class.java.simpleName} started", null)
 
             preferenceRepository = PreferenceRepository.getInstance(applicationContext)
             display = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
@@ -161,5 +169,8 @@ class OpenGLWallpaperService : WallpaperService() {
         var pitch = 0f
         var width = 0
         var height = 0
+
+        //        firebase keys
+        private const val APP_START_LOG_KEY = "APP_START_LOG_KEY"
     }
 }
