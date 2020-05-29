@@ -117,7 +117,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         val elapsedSec = (elapsedMs - startTimeMs) / 1000
 
         if (elapsedSec >= 1) {
-            logging("FPS: ${frames / elapsedSec}", TAG)
+            logging("FPS: ${frames / elapsedSec}", TAG, translateToFirebase = false)
             startTimeMs = SystemClock.elapsedRealtime()
             frames = 0
         }

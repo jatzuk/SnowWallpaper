@@ -3,8 +3,8 @@ package dev.jatzuk.snowwallpaper.opengl.util
 import android.content.Context
 import android.content.res.Resources
 import android.opengl.GLES20.*
-import dev.jatzuk.snowwallpaper.utilities.Logger.isLogging
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
+import dev.jatzuk.snowwallpaper.utilities.Logger.isLogging
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import java.io.IOException
 import java.io.InputStreamReader
@@ -69,8 +69,9 @@ object ShaderHelper {
         glCompileShader(shaderObjectId)
         val compileStatus = intArrayOf(0)
         glGetShaderiv(shaderObjectId, GL_COMPILE_STATUS, compileStatus, 0)
-        logging("Results of compiling shader:\n$shaderCode${glGetShaderInfoLog(shaderObjectId)}",
-            TAG
+        logging(
+            "Results of compiling shader:\n$shaderCode${glGetShaderInfoLog(shaderObjectId)}",
+            TAG, translateToFirebase = false
         )
 
         if (compileStatus[0] == 0) {

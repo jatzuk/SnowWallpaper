@@ -7,25 +7,26 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.opengl.GLSurfaceView
+import android.os.SystemClock
 import android.service.wallpaper.WallpaperService
 import android.view.Display
 import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.WindowManager
 import androidx.core.graphics.drawable.toDrawable
-import com.google.firebase.analytics.FirebaseAnalytics
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
+import dev.jatzuk.snowwallpaper.utilities.Logger
+import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 
 class OpenGLWallpaperService : WallpaperService() {
 
     private lateinit var sensorManager: SensorManager
     private lateinit var sensorEventListener: SensorEventListener
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreateEngine(): Engine = WallpaperEngine()
 
-    private inner class WallpaperEngine : Engine() {
+    private inner class WallpaperEngine : Engine(), SensorEventListener {
 
         private lateinit var preferenceRepository: PreferenceRepository
         private var isRollSensorEnabled = true
@@ -36,25 +37,29 @@ class OpenGLWallpaperService : WallpaperService() {
         private lateinit var renderer: SnowfallRenderer
         private var isRendererSet = false
         private var display: Display? = null
+        private var lastLogTime = 0L
+        private var sensorLogInterval = 10_000
 
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
 
-            firebaseAnalytics = FirebaseAnalytics.getInstance(applicationContext)
-//            val bundle = Bundle().apply {
-//                putString(APP_START_LOG_KEY, APP_START_LOG_KEY)
-//            }
-            firebaseAnalytics.logEvent("${this::class.java.simpleName} started", null)
+            Logger.initFirebaseAnalytics(applicationContext)
+
+            logging("$wallpaperEngineClassName firebaseAnalytics initialized", TAG)
+            logging("$wallpaperEngineClassName onCreate()", TAG)
 
             preferenceRepository = PreferenceRepository.getInstance(applicationContext)
             display = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
 
             updateSensorSensitivityValues()
 
-            if (isRollSensorEnabled || isPitchSensorEnabled) createSensorListener()
+            if (isRollSensorEnabled || isPitchSensorEnabled) {
+                logging("$wallpaperEngineClassName createSensorListener()", SENSOR_INFO_TAG)
+                sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+            }
 
-            glSurfaceView = WallpaperGLSurfaceView(this@OpenGLWallpaperService)
-            renderer = SnowfallRenderer(this@OpenGLWallpaperService)
+            glSurfaceView = WallpaperGLSurfaceView(applicationContext)
+            renderer = SnowfallRenderer(applicationContext)
 
             glSurfaceView.run {
                 setEGLContextClientVersion(2)
@@ -66,6 +71,9 @@ class OpenGLWallpaperService : WallpaperService() {
 
         override fun onVisibilityChanged(visible: Boolean) {
             super.onVisibilityChanged(visible)
+
+            logging("$wallpaperEngineClassName onVisibilityChanged(): $visible", TAG)
+            logging("$wallpaperEngineClassName isRendererSet: $isRendererSet", TAG)
 
             if (isRendererSet) {
                 if (visible) {
@@ -81,32 +89,38 @@ class OpenGLWallpaperService : WallpaperService() {
 
         override fun onDestroy() {
             super.onDestroy()
+            logging("$wallpaperEngineClassName onDestroy()", TAG)
             glSurfaceView.onWallpaperDestroy()
             display = null
+            isRendererSet = false
+            unregisterSensorListener()
         }
 
-        private fun createSensorListener() {
-            sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-            sensorEventListener = object : SensorEventListener {
-                override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
-                override fun onSensorChanged(event: SensorEvent?) {
-                    event?.let {
-                        val rollAdjustment = when (display?.rotation) {
-                            Surface.ROTATION_90 -> -it.values[1]
-                            Surface.ROTATION_270 -> it.values[1]
-                            else -> it.values[0]
-                        }
-                        roll =
-                            if (isRollSensorEnabled) rollAdjustment * rollSensorSensitivity else 0f
-                        pitch =
-                            if (isPitchSensorEnabled) -it.values[2] * pitchSensorSensitivity else 0f
-                    }
+        override fun onSensorChanged(event: SensorEvent?) {
+            logOnSensorChanged()
+//            if (!isRendererSet) unregisterSensorListener()
+            event?.let {
+                logging(
+                    "event values: ${it.values}",
+                    SENSOR_INFO_TAG,
+                    translateToFirebase = false
+                )
+                val rollAdjustment = when (display?.rotation) {
+                    Surface.ROTATION_90 -> -it.values[1]
+                    Surface.ROTATION_270 -> it.values[1]
+                    else -> it.values[0]
                 }
+                roll =
+                    if (isRollSensorEnabled) rollAdjustment * rollSensorSensitivity else 0f
+                pitch =
+                    if (isPitchSensorEnabled) -it.values[2] * pitchSensorSensitivity else 0f
             }
         }
 
         private fun updateSensorSensitivityValues() {
+            logging("$wallpaperEngineClassName updateSensorSensitivityValues()", SENSOR_INFO_TAG)
             isRollSensorEnabled = preferenceRepository.getIsRollSensorEnabled()
             isPitchSensorEnabled = preferenceRepository.getIsPitchSensorEnabled()
 
@@ -115,15 +129,17 @@ class OpenGLWallpaperService : WallpaperService() {
         }
 
         private fun registerSensorListener() {
+            logging("$wallpaperEngineClassName registerSensorListener()", SENSOR_INFO_TAG)
             sensorManager.registerListener(
-                sensorEventListener,
+                this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL
             )
         }
 
         private fun unregisterSensorListener() {
-            sensorManager.unregisterListener(sensorEventListener)
+            logging("$wallpaperEngineClassName unregisterSensorListener()", SENSOR_INFO_TAG)
+            sensorManager.unregisterListener(this)
         }
 
         @Deprecated("prob to remove") // todo
@@ -149,12 +165,26 @@ class OpenGLWallpaperService : WallpaperService() {
             glSurfaceView.background = scaledBitmap.toDrawable(resources)
         }
 
+        private fun logOnSensorChanged() {
+            val elapsedMs = SystemClock.elapsedRealtime()
+            val elapsedSec = (elapsedMs - lastLogTime) / 1000
+
+            if (elapsedSec >= sensorLogInterval / 1000) {
+                logging("$wallpaperEngineClassName onSensorChanged()", SENSOR_INFO_TAG)
+                lastLogTime = SystemClock.elapsedRealtime()
+            }
+        }
+
         private inner class WallpaperGLSurfaceView(context: Context) : GLSurfaceView(context) {
 
             override fun getHolder(): SurfaceHolder = surfaceHolder
 
             fun onWallpaperDestroy() {
                 super.onDetachedFromWindow()
+                logging(
+                    "${this::class.java.simpleName} onWallpaperDestroy()",
+                    "WallpaperGLSurfaceView"
+                )
             }
         }
     }
@@ -171,6 +201,8 @@ class OpenGLWallpaperService : WallpaperService() {
         var height = 0
 
         //        firebase keys
-        private const val APP_START_LOG_KEY = "APP_START_LOG_KEY"
+        private const val OPEN_GL_WALLPAPER_SERVICE_ON_CREATE =
+            "OPEN_GL_WALLPAPER_SERVICE_ON_CREATE"
+        private val wallpaperEngineClassName = WallpaperEngine::class.java.simpleName
     }
 }
