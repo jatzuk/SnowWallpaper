@@ -3,6 +3,7 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
@@ -12,15 +13,14 @@ import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_snowflake) {
 
     override fun setUp() {
-        findPreference<IntentPreference>(getString(R.string.pref_key_snowflake_select_texture))!!.apply {
-            setOnPreferenceClickListener {
+        findPreference<IntentPreference>(getString(R.string.pref_key_snowflake_select_texture))!!
+            .setOnPreferenceClickListener {
                 startDialogFragment(SnowflakeDialogFragment())
                 true
             }
-        }
 
-        findPreference<IntentPreference>(getString(R.string.pref_key_snowflake_rotation_axes))!!.apply {
-            setOnPreferenceClickListener {
+        findPreference<IntentPreference>(getString(R.string.pref_key_snowflake_rotation_axes))!!
+            .setOnPreferenceClickListener {
                 startDialogFragment(
                     SnowflakeAxesChooserDialog.newInstance(
                         getString(R.string.snowflake_rotation_axes_title)
@@ -28,10 +28,24 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
                 )
                 true
             }
-        }
     }
 
-    override fun attachObserver() {}
+    override fun attachObserver() {
+        preferenceRepository.snowflakePreference.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (!it) ImageProvider.removeFromCache(ImageProvider.ImageType.SNOWFLAKE_TEXTURE)
+                else if (
+                    ImageProvider.getBitmapFromCache(ImageProvider.ImageType.SNOWFLAKE_TEXTURE) == null
+                ) {
+                    ImageProvider.loadDefaultTextureForImageType(
+                        requireContext(),
+                        ImageProvider.ImageType.SNOWFLAKE_TEXTURE
+                    )
+                }
+            }
+        )
+    }
 
 //    override fun provideDialogFragment(): AbstractDialogFragment? = SnowflakeDialogFragment()
 

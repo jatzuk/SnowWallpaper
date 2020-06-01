@@ -1,45 +1,16 @@
 package dev.jatzuk.snowwallpaper.viewmodels
 
-import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.utilities.TextureCache
 
 class TexturesViewModel : ViewModel() {
 
-//    private var textures: MutableLiveData<HashMap<ImageProvider.ImageType, Bitmap?>> by lazy {
-//        MutableLiveData<HashMap<ImageProvider.ImageType, Bitmap?>>().also { loadTextures() }
-//        loadTextures()
-//    }
+    private var textures: MutableLiveData<TextureCache>? = null
 
-    private var textures: MutableLiveData<HashMap<ImageProvider.ImageType, Bitmap?>>? = null
-
-    init {
-        textures = loadTextures()
-    }
-
-    fun getTextures(): LiveData<HashMap<ImageProvider.ImageType, Bitmap?>>? = textures
-
-    //    todo
-    private fun loadTextures(): MutableLiveData<HashMap<ImageProvider.ImageType, Bitmap?>>? {
-        val snowfallTexture =
-            ImageProvider.getBitmapFromCache(ImageProvider.ImageType.SNOWFALL_TEXTURE)
-        val snowflakeTexture =
-            ImageProvider.getBitmapFromCache(ImageProvider.ImageType.SNOWFLAKE_TEXTURE)
-        val backgroundImageTexture =
-            ImageProvider.getBitmapFromCache(ImageProvider.ImageType.BACKGROUND_IMAGE)
-
-        val map = HashMap<ImageProvider.ImageType, Bitmap?>()
-        map[ImageProvider.ImageType.SNOWFALL_TEXTURE] = snowfallTexture
-        map[ImageProvider.ImageType.SNOWFLAKE_TEXTURE] = snowflakeTexture
-        map[ImageProvider.ImageType.BACKGROUND_IMAGE] = backgroundImageTexture
-        return MutableLiveData(map)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        textures?.value?.clear()
-        textures = null
+    fun getTextures(): LiveData<TextureCache> = synchronized(this) {
+        return textures ?: MutableLiveData(ImageProvider.getTextureCache()).also { textures = it }
     }
 }

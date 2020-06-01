@@ -2,6 +2,7 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.graphics.Color
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
@@ -12,20 +13,31 @@ class BackgroundImagePreferenceFragment :
     AbstractPreferenceFragment(R.xml.preferences_background_image) {
 
     override fun setUp() {
-        findPreference<IntentPreference>(getString(R.string.pref_key_background_image_select_texture))!!.apply {
-            setOnPreferenceClickListener {
+        findPreference<IntentPreference>(getString(R.string.pref_key_background_image_select_texture))!!
+            .setOnPreferenceClickListener {
                 startDialogFragment(BackgroundImageDialogFragment())
                 true
             }
-        }
     }
-
-    override fun attachObserver() {}
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        appBarTitleViewModel.title.value =
-            (getString(R.string.background_image_fragment_title))
+        appBarTitleViewModel.title.value = (getString(R.string.background_image_fragment_title))
+    }
+
+    override fun attachObserver() {
+        preferenceRepository.backgroundImagePreference.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (!it) ImageProvider.removeFromCache(ImageProvider.ImageType.BACKGROUND_IMAGE)
+                else if (ImageProvider.getBitmapFromCache(ImageProvider.ImageType.BACKGROUND_IMAGE) == null) {
+                    ImageProvider.loadDefaultTextureForImageType(
+                        requireContext(),
+                        ImageProvider.ImageType.BACKGROUND_IMAGE
+                    )
+                }
+            }
+        )
     }
 
     override fun provideBackgroundColor(): Int = Color.BLUE

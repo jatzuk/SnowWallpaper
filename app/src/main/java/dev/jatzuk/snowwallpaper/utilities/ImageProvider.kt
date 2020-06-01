@@ -22,9 +22,8 @@ import java.io.IOException
 
 object ImageProvider {
 
-    private const val TAG = "ImageProvider"
     private val textureCache = TextureCache()
-//    var texturesViewModel: TexturesViewModel? = null
+    private const val TAG = "ImageProvider"
 
     fun saveImage(
         context: Context,
@@ -37,13 +36,12 @@ object ImageProvider {
             ydpi.toInt() to xdpi.toInt()
         }
         CoroutineScope(Dispatchers.Main).launch {
-            val bmp = bitmap
-                ?: decodeSampledBitmapFromResource(
-                    context.resources,
-                    resourceId,
-                    height,
-                    width
-                )
+            val bmp = bitmap ?: decodeSampledBitmapFromResource(
+                context.resources,
+                resourceId,
+                height,
+                width
+            )
             val result = storeImage(context, bmp, imageType)
             val message =
                 if (result) context.getString(R.string.toast_image_storage_succeeded)
@@ -55,36 +53,45 @@ object ImageProvider {
     // todo(side thread?)
     fun loadTexture(context: Context, imageType: ImageType): Bitmap? {
         return try {
-            val cachedTexture = textureCache.get(imageType.name)
+            val cachedTexture = textureCache[imageType]
             if (cachedTexture != null) {
-                logging("got image texture ${imageType.name} from cache")
-                return cachedTexture
+                logging("got texture ${imageType.name} from cache", TAG)
+                cachedTexture
             } else {
-                logging("requested texture ${imageType.name} not found in cache, retrieving from disk")
+                logging(
+                    "requested texture ${imageType.name} not found in cache, trying to retrieve from disk",
+                    TAG
+                )
+                BitmapFactory.decodeStream(context.openFileInput(imageType.path)).run {
+                    textureCache[imageType] = this
+                    this
+                }
             }
-
-            putTextureToCache(
-                imageType,
-                BitmapFactory.decodeStream(context.openFileInput(imageType.path))
-            )
         } catch (e: FileNotFoundException) {
-            val resourceId = when (imageType) {
-                ImageType.SNOWFALL_TEXTURE -> R.drawable.texture_snowfall
-                ImageType.SNOWFLAKE_TEXTURE -> R.drawable.texture_snowflake
-                ImageType.BACKGROUND_IMAGE -> R.drawable.background_image
+            logging("texture $imageType not found in disk using default", TAG)
+            val bitmap = loadDefaultTextureForImageType(context, imageType)
+            context.openFileOutput(imageType.path, Context.MODE_PRIVATE).use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
             }
-            putTextureToCache(
-                imageType,
-                ContextCompat.getDrawable(context, resourceId)!!.toBitmap()
-            )
+//            CoroutineScope(Dispatchers.IO).launch {
+//                storeImage(context, bitmap, imageType)
+//            }
+            bitmap
         } catch (e: IOException) {
             errorLog("Failed to load image type: ${imageType.name} from internal storage", TAG, e)
             null
         }
     }
 
-    fun getBitmapFromCache(imageType: ImageType): Bitmap? {
-        return textureCache.get(imageType.name)
+    fun loadDefaultTextureForImageType(context: Context, imageType: ImageType): Bitmap {
+        val resourceId = when (imageType) {
+            ImageType.SNOWFALL_TEXTURE -> R.drawable.texture_snowfall
+            ImageType.SNOWFLAKE_TEXTURE -> R.drawable.texture_snowflake
+            ImageType.BACKGROUND_IMAGE -> R.drawable.background_image
+        }
+        val bitmap = ContextCompat.getDrawable(context, resourceId)!!.toBitmap()
+        textureCache[imageType] = bitmap
+        return bitmap
     }
 
     fun clearStoredImages(context: Context) {
@@ -94,7 +101,7 @@ object ImageProvider {
             } catch (e: IOException) {
                 errorLog("file cannot be deleted", TAG, e)
             }
-            textureCache.evictAll()
+            clearCache()
         }
     }
 
@@ -138,17 +145,25 @@ object ImageProvider {
         bitmap: Bitmap,
         imageType: ImageType
     ): Boolean = withContext(Dispatchers.IO) {
-        putTextureToCache(imageType, bitmap)
+        textureCache[imageType] = bitmap
         context.openFileOutput(imageType.path, Context.MODE_PRIVATE).use {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }
     }
 
-    private fun putTextureToCache(imageType: ImageType, bitmap: Bitmap): Bitmap {
-        textureCache.putBitmap(imageType.name, bitmap)
-//        texturesViewModel?.getTextures()?.value?.set(imageType, bitmap)
-        return bitmap
+    fun getBitmapFromCache(imageType: ImageType): Bitmap? {
+        return textureCache[imageType]
     }
+
+    fun removeFromCache(imageType: ImageType): Boolean {
+        return textureCache.remove(imageType) != null
+    }
+
+    fun clearCache() {
+        textureCache.clear()
+    }
+
+    fun getTextureCache(): TextureCache = textureCache//TextureCache = textureCache
 
     enum class ImageType(val path: String) {
         SNOWFALL_TEXTURE("snowfall_texture.png"),
