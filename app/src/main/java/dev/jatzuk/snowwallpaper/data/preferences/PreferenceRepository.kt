@@ -7,7 +7,6 @@ class PreferenceRepository private constructor(context: Context) {
 
     private val preferenceManager = PreferenceManager.getDefaultSharedPreferences(context)
 
-
     val snowfallPreference = PreferenceLiveData(
         context,
         PREF_KEY_IS_SNOWFALL_ENABLED,

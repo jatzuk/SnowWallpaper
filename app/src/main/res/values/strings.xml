@@ -68,7 +68,7 @@
     <!--    actions-->
     <string name="pick_image">Pick Image</string>
     <string name="toast_image_storage_succeeded">Image successfully stored</string>
-    <string name="toast_image_storage_failed">We got some troubles storing this image as background</string>
+    <string name="toast_image_storage_failed">We got some troubles storing this image</string>
     <string name="dialog_positive_button">Confirm</string>
     <string name="dialog_negative_button">Dismiss</string>
 

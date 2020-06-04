@@ -1,7 +1,6 @@
 package dev.jatzuk.snowwallpaper.opengl.wallpaper
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -13,7 +12,6 @@ import android.view.Display
 import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.WindowManager
-import androidx.core.graphics.drawable.toDrawable
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.utilities.Logger
@@ -22,7 +20,6 @@ import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 class OpenGLWallpaperService : WallpaperService() {
 
     private lateinit var sensorManager: SensorManager
-    private lateinit var sensorEventListener: SensorEventListener
 
     override fun onCreateEngine(): Engine = WallpaperEngine()
 
@@ -100,7 +97,6 @@ class OpenGLWallpaperService : WallpaperService() {
 
         override fun onSensorChanged(event: SensorEvent?) {
             logOnSensorChanged()
-//            if (!isRendererSet) unregisterSensorListener()
             event?.let {
                 logging(
                     "event values: ${it.values}",
@@ -142,29 +138,6 @@ class OpenGLWallpaperService : WallpaperService() {
             sensorManager.unregisterListener(this)
         }
 
-        @Deprecated("prob to remove") // todo
-        private fun scaleBitmap(bitmap: Bitmap) {
-            val scaledBitmap = if (bitmap.width >= bitmap.height) {
-                Bitmap.createBitmap(
-                    bitmap,
-                    bitmap.width / 2 - bitmap.height / 2,
-                    0,
-                    bitmap.height,
-                    bitmap.height
-                )
-            } else {
-                Bitmap.createBitmap(
-                    bitmap,
-                    0,
-                    bitmap.height / 2 - bitmap.width / 2,
-                    bitmap.width,
-                    bitmap.width
-                )
-            }
-
-            glSurfaceView.background = scaledBitmap.toDrawable(resources)
-        }
-
         private fun logOnSensorChanged() {
             val elapsedMs = SystemClock.elapsedRealtime()
             val elapsedSec = (elapsedMs - lastLogTime) / 1000
@@ -200,9 +173,6 @@ class OpenGLWallpaperService : WallpaperService() {
         var width = 0
         var height = 0
 
-        //        firebase keys
-        private const val OPEN_GL_WALLPAPER_SERVICE_ON_CREATE =
-            "OPEN_GL_WALLPAPER_SERVICE_ON_CREATE"
         private val wallpaperEngineClassName = WallpaperEngine::class.java.simpleName
     }
 }

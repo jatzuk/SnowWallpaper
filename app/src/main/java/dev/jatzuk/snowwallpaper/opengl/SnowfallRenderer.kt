@@ -7,8 +7,9 @@ import android.opengl.Matrix.*
 import android.os.SystemClock
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.objects.BackgroundImage
+import dev.jatzuk.snowwallpaper.opengl.objects.OpenGLRenderingObject
 import dev.jatzuk.snowwallpaper.opengl.objects.Snowfall
-import dev.jatzuk.snowwallpaper.opengl.objects.TexturedSnowflake
+import dev.jatzuk.snowwallpaper.opengl.objects.TexturedSnowfall
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.ratio
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
@@ -23,21 +24,13 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private val mvpMatrix = FloatArray(16)
     private val viewProjectionMatrix = FloatArray(16)
 
-    private var snowfall: Snowfall? = null
-    private var texturedSnowflake: TexturedSnowflake? = null
-    private var backgroundImage: BackgroundImage? = null
-
-    private val preferenceRepository = PreferenceRepository.getInstance(context)
+    private val renderingEntity = arrayOfNulls<OpenGLRenderingObject>(3)
 
     private var frameStartMs = 0L
     private var frameLimit = 0
     private var startTimeMs = 0L
 
     private var frames = 0
-
-    private var isSnowfallBackgroundProgramUsed = false
-    private var isSnowflakeProgramUsed = false
-    private var isBackgroundImageUsed = false
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         glClearColor(0f, 0f, 0f, 0f)
@@ -56,39 +49,26 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         val upZ = 0f
 
         setLookAtM(viewMatrix, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ)
+
+        renderingEntity[0] = Snowfall(context, mvpMatrix, modelMatrix, viewProjectionMatrix)
+        renderingEntity[1] = TexturedSnowfall(context, mvpMatrix, modelMatrix, viewProjectionMatrix)
+        renderingEntity[2] = BackgroundImage(context, mvpMatrix, modelMatrix, viewProjectionMatrix)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         glViewport(0, 0, width, height)
+        orthoM(projectionMatrix, 0, -1f, 1f, -1f, 1f, 1f, 10f)
 
         ratio = if (width > height) width.toFloat() / height else height.toFloat() / width
-
         OpenGLWallpaperService.width = width
         OpenGLWallpaperService.height = height
 
-        frameLimit = preferenceRepository.getRendererFrameLimit() // todo fix 60fps x2 speed
+        // todo fix 60fps x2 speed
+        frameLimit = PreferenceRepository.getInstance(context).getRendererFrameLimit()
 
-        isSnowfallBackgroundProgramUsed = preferenceRepository.getIsSnowfallEnabled()
-        isSnowflakeProgramUsed = preferenceRepository.getIsSnowflakeEnabled()
-        isBackgroundImageUsed = preferenceRepository.getIsBackgroundImageEnabled()
-
-        snowfall =
-            if (isSnowfallBackgroundProgramUsed) Snowfall(context) else null
-
-        var usageMessage = if (snowfall != null) IS_USING else IS_NOT_USING
-        logging("snowfall program $usageMessage", TAG)
-
-        texturedSnowflake = if (isSnowflakeProgramUsed) TexturedSnowflake(context) else null
-
-        usageMessage = if (texturedSnowflake != null) IS_USING else IS_NOT_USING
-        logging("snowflake program $usageMessage", TAG)
-
-        backgroundImage = if (isBackgroundImageUsed) BackgroundImage(context) else null
-
-        usageMessage = if (backgroundImage != null) IS_USING else IS_NOT_USING
-        logging("background image $usageMessage", TAG)
-
-        orthoM(projectionMatrix, 0, -1f, 1f, -1f, 1f, 1f, 10f)
+        renderingEntity.forEach {
+            it?.updateValues()
+        }
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -98,9 +78,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
-        backgroundImage?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
-        snowfall?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
-        texturedSnowflake?.draw(mvpMatrix, modelMatrix, viewProjectionMatrix)
+        renderingEntity.forEach { it?.draw() }
     }
 
     private fun limitFrameRate() {
@@ -127,7 +105,5 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     companion object {
         private const val TAG = "SnowfallRenderer"
-        private const val IS_NOT_USING = "is not used"
-        private const val IS_USING = "is used"
     }
 }
