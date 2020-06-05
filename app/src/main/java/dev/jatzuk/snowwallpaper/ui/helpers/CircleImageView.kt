@@ -19,7 +19,7 @@ class CircleImageView : AppCompatImageView {
     private var radius = desiredSize / 2f - 20
     private var bitmap: Bitmap? = null
 
-    var isStrokeEnabled = false
+    private var isStrokeEnabled = false
     private var strokePaint: Paint? = null
 
     fun setPreviewImage(drawable: Drawable, size: Int) {

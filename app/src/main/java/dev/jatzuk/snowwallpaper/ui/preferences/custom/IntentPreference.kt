@@ -15,8 +15,8 @@ class IntentPreference(
 
     var previewImage: Drawable? = null
         set(value) {
-            updatePreview()
             field = value
+            updatePreview()
         }
     private var circleImageView: CircleImageView? = null
 
