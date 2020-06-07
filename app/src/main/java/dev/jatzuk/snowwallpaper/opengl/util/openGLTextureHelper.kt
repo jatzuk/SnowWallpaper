@@ -34,7 +34,6 @@ fun loadTextureToOpenGL(context: Context, textureType: TextureProvider.TextureTy
     glGenerateMipmap(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, 0)
 
-//    bitmap.recycle() // todo throws IllegalArgumentException involves by twice call inside Renderer
     logging("Texture type: ${textureType.name} loaded successfully", TAG)
 
     return textureObjectsIds[0]

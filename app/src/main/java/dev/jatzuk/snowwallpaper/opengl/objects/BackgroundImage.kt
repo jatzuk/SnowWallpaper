@@ -1,19 +1,59 @@
 package dev.jatzuk.snowwallpaper.opengl.objects
 
 import android.content.Context
-import android.opengl.GLES20.*
+import android.opengl.GLES20.GL_TRIANGLE_STRIP
+import android.opengl.GLES20.glDrawArrays
 import android.opengl.Matrix.multiplyMM
 import android.opengl.Matrix.setIdentityM
 import dev.jatzuk.snowwallpaper.opengl.data.VertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.BackgroundImageProgram
 import dev.jatzuk.snowwallpaper.opengl.util.BYTES_PER_FLOAT
-import dev.jatzuk.snowwallpaper.opengl.util.loadTextureForOpenGL
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
-class BackgroundImage(context: Context) {
+class BackgroundImage(
+    context: Context,
+    mvpMatrix: FloatArray,
+    modelMatrix: FloatArray,
+    viewProjectionMatrix: FloatArray
+) : OpenGLSceneObject(context, mvpMatrix, modelMatrix, viewProjectionMatrix) {
 
-    private val backgroundImageProgram = BackgroundImageProgram(context)
-    private val backgroundImageVertexArray = VertexArray(
+    override val shaderProgram = BackgroundImageProgram(context)
+    override val textureType = TextureProvider.TextureType.BACKGROUND_IMAGE
+
+    override fun bindData() {
+        vertexArray.apply {
+            setVertexAttribPointer(
+                0,
+                shaderProgram.aPositionLocation,
+                POSITION_COMPONENT_COUNT,
+                STRIDE
+            )
+
+            setVertexAttribPointer(
+                POSITION_COMPONENT_COUNT,
+                shaderProgram.aTextureLocation,
+                TEXTURE_COMPONENT_COUNT,
+                STRIDE
+            )
+        }
+    }
+
+    override fun draw() {
+        shaderProgram.useProgram()
+        bindData()
+        setIdentityM(modelMatrix, 0)
+        multiplyMM(mvpMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0)
+        shaderProgram.setUniforms(mvpMatrix, textureId)
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
+        unbindData()
+    }
+
+    // stub
+    override fun bindObjectArray() {}
+
+    override fun getObjectCount(): Int = 1
+
+    override fun updateVertexArray(): VertexArray = VertexArray(
         floatArrayOf(
             -1f, 1f, 1f, 0f, 0f,
             -1f, -1f, 1f, 0f, 1f,
@@ -22,42 +62,9 @@ class BackgroundImage(context: Context) {
         ),
         TOTAL_COMPONENT_COUNT
     )
-    private val textureId =
-        loadTextureForOpenGL(context, ImageProvider.ImageType.BACKGROUND_IMAGE)
-
-    private fun bindData() {
-        backgroundImageVertexArray.apply {
-            setVertexAttribPointer(
-                0,
-                backgroundImageProgram.aPositionLocation,
-                POSITION_COMPONENT_COUNT,
-                STRIDE
-            )
-
-            setVertexAttribPointer(
-                POSITION_COMPONENT_COUNT,
-                backgroundImageProgram.aTextureLocation,
-                TEXTURE_COMPONENT_COUNT,
-                STRIDE
-            )
-        }
-    }
-
-    private fun unbindData() {
-        glDisableVertexAttribArray(backgroundImageProgram.aPositionLocation)
-    }
-
-    fun draw(mvpMatrix: FloatArray, modelMatrix: FloatArray, viewProjectionMatrix: FloatArray) {
-        backgroundImageProgram.useProgram()
-        bindData()
-        setIdentityM(modelMatrix, 0)
-        multiplyMM(mvpMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0)
-        backgroundImageProgram.setUniforms(mvpMatrix, textureId)
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
-        unbindData()
-    }
 
     companion object {
+        const val TAG = "BackgroundImage"
         private const val POSITION_COMPONENT_COUNT = 3
         private const val TEXTURE_COMPONENT_COUNT = 2
         private const val TOTAL_COMPONENT_COUNT = (POSITION_COMPONENT_COUNT * BYTES_PER_FLOAT) +

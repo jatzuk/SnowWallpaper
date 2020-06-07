@@ -21,7 +21,7 @@ abstract class ShaderProgram(
     protected val uTextureUnit = "u_TextureUnit"
     protected val uPointSize = "u_PointSize"
 
-    protected val aPosition = "a_Position"
+    private val aPosition = "a_Position"
     protected val aTexture = "a_Texture"
 
     private val uScreenWidth = "u_ScreenWidth"
@@ -29,6 +29,8 @@ abstract class ShaderProgram(
 
     private val uScreenWidthLocation = glGetUniformLocation(program, uScreenWidth)
     private val uScreenHeightLocation = glGetUniformLocation(program, uScreenHeight)
+
+    val aPositionLocation = glGetAttribLocation(program, aPosition)
 
     fun useProgram() {
         glUseProgram(program)

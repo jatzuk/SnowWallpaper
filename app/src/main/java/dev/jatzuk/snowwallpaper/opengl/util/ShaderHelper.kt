@@ -24,44 +24,24 @@ object ShaderHelper {
     }
 
     fun buildProgram(vertexShaderSource: String, fragmentShaderSource: String): Int {
-        val vertexShader =
-            compileVertexShader(
-                vertexShaderSource
-            )
-        val fragmentShader =
-            compileFragmentShader(
-                fragmentShaderSource
-            )
-        val program =
-            linkProgram(
-                vertexShader,
-                fragmentShader
-            )
-        if (isLogging) validateProgram(
-            program
-        )
+        val vertexShader = compileVertexShader(vertexShaderSource)
+        val fragmentShader = compileFragmentShader(fragmentShaderSource)
+        val program = linkProgram(vertexShader, fragmentShader)
+        if (isLogging) validateProgram(program)
         return program
     }
 
     private fun compileVertexShader(shaderCode: String) =
-        compileShader(
-            GL_VERTEX_SHADER,
-            shaderCode
-        )
+        compileShader(GL_VERTEX_SHADER, shaderCode)
 
     private fun compileFragmentShader(shaderCode: String) =
-        compileShader(
-            GL_FRAGMENT_SHADER,
-            shaderCode
-        )
+        compileShader(GL_FRAGMENT_SHADER, shaderCode)
 
     private fun compileShader(shaderType: Int, shaderCode: String): Int {
         val shaderObjectId = glCreateShader(shaderType)
 
         if (shaderObjectId == 0) {
-            errorLog("Could not create a new shader",
-                TAG
-            )
+            errorLog("Could not create a new shader", TAG)
             return 0
         }
 
@@ -76,9 +56,7 @@ object ShaderHelper {
 
         if (compileStatus[0] == 0) {
             glDeleteShader(shaderObjectId)
-            errorLog("Compilation of shader failed",
-                TAG
-            )
+            errorLog("Compilation of shader failed", TAG)
             return 0
         }
 
@@ -89,9 +67,7 @@ object ShaderHelper {
         val programObjectId = glCreateProgram()
 
         if (programObjectId == 0) {
-            errorLog("Could not ling program",
-                TAG
-            )
+            errorLog("Could not link program", TAG)
             return 0
         }
 
@@ -100,15 +76,14 @@ object ShaderHelper {
         glLinkProgram(programObjectId)
         val linkStatus = intArrayOf(0)
         glGetProgramiv(programObjectId, GL_LINK_STATUS, linkStatus, 0)
-        logging("Results of linking program:${linkStatus[0]}${glGetProgramInfoLog(programObjectId)}",
+        logging(
+            "Results of linking program:${linkStatus[0]}${glGetProgramInfoLog(programObjectId)}",
             TAG
         )
 
         if (linkStatus[0] == 0) {
             glDeleteProgram(programObjectId)
-            errorLog("Linking of program failed",
-                TAG
-            )
+            errorLog("Linking of program failed", TAG)
             return 0
         }
 

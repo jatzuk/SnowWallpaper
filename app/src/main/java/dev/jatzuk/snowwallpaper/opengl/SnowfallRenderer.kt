@@ -6,12 +6,14 @@ import android.opengl.GLSurfaceView
 import android.opengl.Matrix.*
 import android.os.SystemClock
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
+import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.opengl.objects.BackgroundImage
-import dev.jatzuk.snowwallpaper.opengl.objects.OpenGLRenderingObject
+import dev.jatzuk.snowwallpaper.opengl.objects.OpenGLSceneObject
 import dev.jatzuk.snowwallpaper.opengl.objects.Snowfall
 import dev.jatzuk.snowwallpaper.opengl.objects.TexturedSnowfall
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.ratio
+import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -24,7 +26,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private val mvpMatrix = FloatArray(16)
     private val viewProjectionMatrix = FloatArray(16)
 
-    private val renderingEntity = arrayOfNulls<OpenGLRenderingObject>(3)
+    private val openGLSceneObjectsHolder = OpenGLSceneObjectHolder()
 
     private var frameStartMs = 0L
     private var frameLimit = 0
@@ -49,10 +51,6 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         val upZ = 0f
 
         setLookAtM(viewMatrix, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ)
-
-        renderingEntity[0] = Snowfall(context, mvpMatrix, modelMatrix, viewProjectionMatrix)
-        renderingEntity[1] = TexturedSnowfall(context, mvpMatrix, modelMatrix, viewProjectionMatrix)
-        renderingEntity[2] = BackgroundImage(context, mvpMatrix, modelMatrix, viewProjectionMatrix)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -63,12 +61,13 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         OpenGLWallpaperService.width = width
         OpenGLWallpaperService.height = height
 
+        openGLSceneObjectsHolder.run {
+            populateActiveOpenGLSceneObjects()
+            openGLSceneObjects.forEach { it?.updateValues() }
+        }
+
         // todo fix 60fps x2 speed
         frameLimit = PreferenceRepository.getInstance(context).getRendererFrameLimit()
-
-        renderingEntity.forEach {
-            it?.updateValues()
-        }
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -78,7 +77,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
 
-        renderingEntity.forEach { it?.draw() }
+        openGLSceneObjectsHolder.openGLSceneObjects.forEach { it?.draw() }
     }
 
     private fun limitFrameRate() {
@@ -103,7 +102,65 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
         frames++
     }
 
+    private inner class OpenGLSceneObjectHolder(sceneObjectsCount: Int = 3) {
+
+        private val preferenceRepository = PreferenceRepository.getInstance(context)
+        val openGLSceneObjects = arrayOfNulls<OpenGLSceneObject>(sceneObjectsCount)
+
+        fun populateActiveOpenGLSceneObjects() {
+            openGLSceneObjects[0] = if (preferenceRepository.getIsBackgroundImageEnabled()) {
+                getOpenGLSceneObjectByTypeTag(BackgroundImage.TAG)
+            } else null
+
+            var usageMessage = if (openGLSceneObjects[0] == null) IS_NOT_USING else IS_USING
+            logging("${BackgroundImage.TAG} program $usageMessage", OPEN_GL_SCENE_RESOLVER_TAG)
+
+            openGLSceneObjects[1] = if (preferenceRepository.getIsSnowfallEnabled()) {
+                getOpenGLSceneObjectByTypeTag(Snowfall.TAG)
+            } else null
+
+            usageMessage = if (openGLSceneObjects[1] == null) IS_NOT_USING else IS_USING
+            logging("${Snowfall.TAG} program $usageMessage", OPEN_GL_SCENE_RESOLVER_TAG)
+
+            openGLSceneObjects[2] = if (preferenceRepository.getIsSnowflakeEnabled()) {
+                getOpenGLSceneObjectByTypeTag(TexturedSnowfall.TAG)
+            } else null
+
+            usageMessage = if (openGLSceneObjects[2] == null) IS_NOT_USING else IS_USING
+            logging("${TexturedSnowfall.TAG} program $usageMessage", OPEN_GL_SCENE_RESOLVER_TAG)
+
+            TextureCache.getInstance().clear()
+        }
+
+        private fun getOpenGLSceneObjectByTypeTag(type: String): OpenGLSceneObject = when (type) {
+            BackgroundImage.TAG -> {
+                if (openGLSceneObjects[0] == null)
+                    BackgroundImage(context, mvpMatrix, modelMatrix, viewProjectionMatrix)
+                else openGLSceneObjects[0]!!
+            }
+            Snowfall.TAG -> {
+                if (openGLSceneObjects[1] == null)
+                    Snowfall(context, mvpMatrix, modelMatrix, viewProjectionMatrix)
+                else openGLSceneObjects[1]!!
+            }
+            TexturedSnowfall.TAG -> {
+                if (openGLSceneObjects[2] == null)
+                    TexturedSnowfall(context, mvpMatrix, modelMatrix, viewProjectionMatrix)
+                else openGLSceneObjects[2]!!
+            }
+            else -> {
+                val message = "Illegal OpenGLSceneObject with type: $type"
+                val e = IllegalArgumentException(message)
+                errorLog(message, OPEN_GL_SCENE_RESOLVER_TAG, e)
+                throw e
+            }
+        }
+    }
+
     companion object {
         private const val TAG = "SnowfallRenderer"
+        private const val OPEN_GL_SCENE_RESOLVER_TAG = "OpenGLSceneResolver"
+        private const val IS_NOT_USING = "is not used"
+        private const val IS_USING = "is used"
     }
 }

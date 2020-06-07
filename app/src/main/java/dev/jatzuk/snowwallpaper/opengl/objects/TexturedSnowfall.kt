@@ -3,29 +3,31 @@ package dev.jatzuk.snowwallpaper.opengl.objects
 import android.content.Context
 import android.opengl.GLES20.*
 import android.opengl.Matrix.*
-import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.data.RectangleVertexArray
+import dev.jatzuk.snowwallpaper.opengl.data.VertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.SnowflakeProgram
 import dev.jatzuk.snowwallpaper.opengl.util.BYTES_PER_FLOAT
-import dev.jatzuk.snowwallpaper.opengl.util.loadTextureForOpenGL
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.height
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.width
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
-class TexturedSnowflake(context: Context) {
+class TexturedSnowfall(
+    context: Context,
+    mvpMatrix: FloatArray,
+    modelMatrix: FloatArray,
+    viewProjectionMatrix: FloatArray
+) : OpenGLSceneObject(context, mvpMatrix, modelMatrix, viewProjectionMatrix) {
 
-    private val snowflakeProgram = SnowflakeProgram(context)
-    private val snowflakeLimit = PreferenceRepository.getInstance(context).getSnowflakeLimit()
-    private val snowflakes = Array(snowflakeLimit) { Snowflake(context, true) }
-    private val snowflakeVertexArray = RectangleVertexArray(snowflakes, TOTAL_COMPONENT_COUNT)
-    private val textureId = loadTextureForOpenGL(context, ImageProvider.ImageType.SNOWFLAKE_TEXTURE)
+    override val shaderProgram = SnowflakeProgram(context)
+    override val textureType = TextureProvider.TextureType.SNOWFLAKE_TEXTURE
+    private lateinit var objectArray: Array<Snowflake>
 
-    private fun bindData() {
-        snowflakeVertexArray.apply {
+    override fun bindData() {
+        (vertexArray as RectangleVertexArray).apply {
             updateBuffer()
             setVertexAttribPointer(
                 0,
-                snowflakeProgram.aPositionLocation,
+                shaderProgram.aPositionLocation,
                 POSITION_COMPONENT_COUNT,
                 STRIDE,
                 true
@@ -33,25 +35,21 @@ class TexturedSnowflake(context: Context) {
 
             setVertexAttribPointer(
                 POSITION_COMPONENT_COUNT,
-                snowflakeProgram.aTextureLocation,
+                shaderProgram.aTextureLocation,
                 TEXTURE_COMPONENT_COUNT,
                 STRIDE
             )
         }
     }
 
-    private fun unbindData() {
-        glDisableVertexAttribArray(snowflakeProgram.aPositionLocation)
-    }
-
-    fun draw(mvpMatrix: FloatArray, modelMatrix: FloatArray, viewProjectionMatrix: FloatArray) {
-        snowflakeProgram.useProgram()
+    override fun draw() {
+        shaderProgram.useProgram()
 
         bindData()
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-        snowflakes.forEachIndexed { index, snowflake ->
+        objectArray.forEachIndexed { index, snowflake ->
             setIdentityM(modelMatrix, 0)
 
             if (snowflake.shouldRotate) {
@@ -61,7 +59,7 @@ class TexturedSnowflake(context: Context) {
                 multiplyMM(mvpMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0)
             }
 
-            snowflakeProgram.setUniforms(mvpMatrix, textureId)
+            shaderProgram.setUniforms(mvpMatrix, textureId)
 
             snowflake.fall()
             glDrawArrays(GL_TRIANGLE_STRIP, index * 4, 4)
@@ -70,6 +68,15 @@ class TexturedSnowflake(context: Context) {
         unbindData()
         glDisable(GL_BLEND)
     }
+
+    override fun bindObjectArray() {
+        objectArray = Array(objectsCount) { Snowflake(context, true) }
+    }
+
+    override fun getObjectCount(): Int = preferenceRepository.getSnowflakeLimit()
+
+    override fun updateVertexArray(): VertexArray =
+        RectangleVertexArray(objectArray, TOTAL_COMPONENT_COUNT)
 
     private fun rotate(
         modelMatrix: FloatArray,
@@ -97,6 +104,7 @@ class TexturedSnowflake(context: Context) {
     }
 
     companion object {
+        const val TAG = "TexturedSnowfall"
         private const val POSITION_COMPONENT_COUNT = 3
         private const val TEXTURE_COMPONENT_COUNT = 2
         private const val TOTAL_COMPONENT_COUNT = (POSITION_COMPONENT_COUNT * BYTES_PER_FLOAT) +

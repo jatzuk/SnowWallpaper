@@ -10,7 +10,6 @@ class SnowflakeProgram(context: Context) :
     private val uMatrixLocation = glGetUniformLocation(program, uMatrix)
     private val uTextureUnitLocation = glGetUniformLocation(program, uTextureUnit)
 
-    val aPositionLocation = glGetAttribLocation(program, aPosition)
     val aTextureLocation = glGetAttribLocation(program, aTexture)
 
     fun setUniforms(matrix: FloatArray, textureId: Int) {
