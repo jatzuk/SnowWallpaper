@@ -69,7 +69,7 @@ class TexturedSnowfall(
         glDisable(GL_BLEND)
     }
 
-    override fun bindObjectArray() {
+    override fun bindObjectArray(context: Context) {
         objectArray = Array(objectsCount) { Snowflake(context, true) }
     }
 

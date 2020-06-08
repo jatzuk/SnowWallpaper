@@ -49,7 +49,7 @@ class BackgroundImage(
     }
 
     // stub
-    override fun bindObjectArray() {}
+    override fun bindObjectArray(context: Context) {}
 
     override fun getObjectCount(): Int = 1
 

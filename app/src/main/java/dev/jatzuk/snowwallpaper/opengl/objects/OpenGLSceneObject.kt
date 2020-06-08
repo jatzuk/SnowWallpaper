@@ -9,7 +9,7 @@ import dev.jatzuk.snowwallpaper.opengl.util.loadTextureToOpenGL
 import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
 abstract class OpenGLSceneObject(
-    protected val context: Context,
+    context: Context,
     protected val mvpMatrix: FloatArray,
     protected val modelMatrix: FloatArray,
     protected val viewProjectionMatrix: FloatArray
@@ -28,13 +28,13 @@ abstract class OpenGLSceneObject(
 
     protected val preferenceRepository = PreferenceRepository.getInstance(context)
 
-    private fun updateTexture() {
+    private fun updateTexture(context: Context) {
         textureId = loadTextureToOpenGL(context, textureType)
     }
 
     protected abstract fun getObjectCount(): Int
 
-    abstract fun bindObjectArray()
+    abstract fun bindObjectArray(context: Context)
 
     protected abstract fun updateVertexArray(): VertexArray
 

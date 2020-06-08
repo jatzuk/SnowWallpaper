@@ -51,7 +51,7 @@ class Snowfall(
         unbindData()
     }
 
-    override fun bindObjectArray() {
+    override fun bindObjectArray(context: Context) {
         objectArray = Array(objectsCount) { Snowflake(context) }
     }
 
