@@ -6,7 +6,6 @@ import android.opengl.GLSurfaceView
 import android.opengl.Matrix.*
 import android.os.SystemClock
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.opengl.objects.BackgroundImage
 import dev.jatzuk.snowwallpaper.opengl.objects.OpenGLSceneObject
 import dev.jatzuk.snowwallpaper.opengl.objects.Snowfall
@@ -15,10 +14,14 @@ import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.ratio
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
+import java.lang.ref.WeakReference
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
+class SnowfallRenderer(context: Context) : GLSurfaceView.Renderer {
+
+    private val contextReference = WeakReference(context)
+    private val preferenceRepository = PreferenceRepository.getInstance(context)
 
     private val projectionMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
@@ -29,7 +32,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private val openGLSceneObjectsHolder = OpenGLSceneObjectHolder()
 
     private var frameStartMs = 0L
-    private var frameLimit = 0
+    private var frameLimit = 30
     private var startTimeMs = 0L
 
     private var frames = 0
@@ -63,11 +66,12 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
         openGLSceneObjectsHolder.run {
             populateActiveOpenGLSceneObjects()
-            openGLSceneObjects.forEach { it?.updateValues() }
+            openGLSceneObjects.forEach { it?.updateValues(contextReference.get()!!) }
         }
 
         // todo fix 60fps x2 speed
-        frameLimit = PreferenceRepository.getInstance(context).getRendererFrameLimit()
+        frameLimit =
+            PreferenceRepository.getInstance(contextReference.get()!!).getRendererFrameLimit()
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -104,7 +108,7 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     private inner class OpenGLSceneObjectHolder(sceneObjectsCount: Int = 3) {
 
-        private val preferenceRepository = PreferenceRepository.getInstance(context)
+        private val context = contextReference.get()!!
         val openGLSceneObjects = arrayOfNulls<OpenGLSceneObject>(sceneObjectsCount)
 
         fun populateActiveOpenGLSceneObjects() {
@@ -128,8 +132,6 @@ class SnowfallRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
             usageMessage = if (openGLSceneObjects[2] == null) IS_NOT_USING else IS_USING
             logging("${TexturedSnowfall.TAG} program $usageMessage", OPEN_GL_SCENE_RESOLVER_TAG)
-
-            TextureCache.getInstance().clear()
         }
 
         private fun getOpenGLSceneObjectByTypeTag(type: String): OpenGLSceneObject = when (type) {

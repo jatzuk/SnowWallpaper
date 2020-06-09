@@ -13,6 +13,7 @@ import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.WindowManager
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
+import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.utilities.Logger
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
@@ -40,12 +41,12 @@ class OpenGLWallpaperService : WallpaperService() {
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
 
-            Logger.initFirebaseAnalytics(applicationContext)
+            Logger.initFirebaseAnalytics(baseContext)
 
             logging("$wallpaperEngineClassName firebaseAnalytics initialized", TAG)
             logging("$wallpaperEngineClassName onCreate()", TAG)
 
-            preferenceRepository = PreferenceRepository.getInstance(applicationContext)
+            preferenceRepository = PreferenceRepository.getInstance(baseContext)
             display = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
 
             updateSensorSensitivityValues()
@@ -55,8 +56,8 @@ class OpenGLWallpaperService : WallpaperService() {
                 sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
             }
 
-            glSurfaceView = WallpaperGLSurfaceView(applicationContext)
-            renderer = SnowfallRenderer(applicationContext)
+            glSurfaceView = WallpaperGLSurfaceView(baseContext)
+            renderer = SnowfallRenderer(baseContext)
 
             glSurfaceView.run {
                 setEGLContextClientVersion(2)
@@ -76,6 +77,7 @@ class OpenGLWallpaperService : WallpaperService() {
                 if (visible) {
                     updateSensorSensitivityValues()
                     registerSensorListener()
+                    if (!isPreview) TextureCache.getInstance().clear()
                     glSurfaceView.onResume()
                 } else {
                     unregisterSensorListener()
@@ -91,6 +93,9 @@ class OpenGLWallpaperService : WallpaperService() {
             display = null
             isRendererSet = false
             unregisterSensorListener()
+//            TextureCache.getInstance().clear()
+//            logging("inPreview: $isPreview", "PREVIEW")
+//            if (isPreview) TextureCache.getInstance().clear()
         }
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
@@ -99,7 +104,7 @@ class OpenGLWallpaperService : WallpaperService() {
             logOnSensorChanged()
             event?.let {
                 logging(
-                    "event values: ${it.values}",
+                    "sensor values: ${it.values?.contentToString()}",
                     SENSOR_INFO_TAG,
                     translateToFirebase = false
                 )

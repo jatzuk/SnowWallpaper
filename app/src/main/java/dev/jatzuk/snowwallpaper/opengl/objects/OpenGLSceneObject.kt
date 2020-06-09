@@ -38,10 +38,10 @@ abstract class OpenGLSceneObject(
 
     protected abstract fun updateVertexArray(): VertexArray
 
-    fun updateValues() {
-        updateTexture()
+    fun updateValues(context: Context) {
+        updateTexture(context)
         objectsCount = getObjectCount()
-        bindObjectArray()
+        bindObjectArray(context)
         vertexArray = updateVertexArray()
     }
 

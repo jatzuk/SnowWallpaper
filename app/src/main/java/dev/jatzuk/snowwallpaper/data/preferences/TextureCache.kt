@@ -9,27 +9,16 @@ class TextureCache private constructor(entriesCount: Int) {
     private val hashMap = HashMap<TextureProvider.TextureType, Bitmap?>(entriesCount, 1f)
 
     private fun add(key: TextureProvider.TextureType, value: Bitmap?) {
-//        val prev = hashMap[key]
-//        logging("recycling bitmap: $prev", "TextureCache")
-//        prev?.recycle()
         hashMap[key] = value
     }
 
     private fun getValue(key: TextureProvider.TextureType): Bitmap? = hashMap[key]
 
-    fun remove(key: TextureProvider.TextureType): Bitmap? {
-//        val bitmap = hashMap.remove(key)
-//        bitmap?.recycle()
-//        return bitmap
-        return hashMap.remove(key)
-    }
+    fun remove(key: TextureProvider.TextureType): Bitmap? = hashMap.remove(key)
 
     fun clear() {
         hashMap.forEach {
-            logging(
-                "recycling bitmap value: ${it.value}, isRecycled: ${it.value?.isRecycled}",
-                "TextureCache"
-            )
+            logging("recycling bitmap with generationID: ${it.value?.generationId}", TAG)
             it.value?.recycle()
         }
         hashMap.clear()
@@ -46,6 +35,7 @@ class TextureCache private constructor(entriesCount: Int) {
     companion object {
         @Volatile
         private var instance: TextureCache? = null
+        private const val TAG = "TextureCache"
 
         fun getInstance(entriesCount: Int = 3): TextureCache =
             instance ?: synchronized(this) {

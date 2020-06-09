@@ -19,6 +19,15 @@ class BackgroundImage(
 
     override val shaderProgram = BackgroundImageProgram(context)
     override val textureType = TextureProvider.TextureType.BACKGROUND_IMAGE
+    private val vertices = VertexArray(
+        floatArrayOf(
+            -1f, 1f, 1f, 0f, 0f,
+            -1f, -1f, 1f, 0f, 1f,
+            1f, 1f, 1f, 1f, 0f,
+            1f, -1f, 1f, 1f, 1f
+        ),
+        TOTAL_COMPONENT_COUNT
+    )
 
     override fun bindData() {
         vertexArray.apply {
@@ -53,15 +62,7 @@ class BackgroundImage(
 
     override fun getObjectCount(): Int = 1
 
-    override fun updateVertexArray(): VertexArray = VertexArray(
-        floatArrayOf(
-            -1f, 1f, 1f, 0f, 0f,
-            -1f, -1f, 1f, 0f, 1f,
-            1f, 1f, 1f, 1f, 0f,
-            1f, -1f, 1f, 1f, 1f
-        ),
-        TOTAL_COMPONENT_COUNT
-    )
+    override fun updateVertexArray(): VertexArray = vertices
 
     companion object {
         const val TAG = "BackgroundImage"
