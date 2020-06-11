@@ -7,24 +7,6 @@ class PreferenceRepository private constructor(context: Context) {
 
     private val preferenceManager = PreferenceManager.getDefaultSharedPreferences(context)
 
-    val snowfallPreference = PreferenceLiveData(
-        context,
-        PREF_KEY_IS_SNOWFALL_ENABLED,
-        SNOWFALL_IS_ENABLED_DEFAULT_VALUE
-    )
-
-    val snowflakePreference = PreferenceLiveData(
-        context,
-        PREF_KEY_IS_SNOWFLAKE_ENABLED,
-        SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE
-    )
-
-    val backgroundImagePreference = PreferenceLiveData(
-        context,
-        PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED,
-        BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE
-    )
-
     fun getIsSnowfallEnabled(): Boolean =
         preferenceManager.getBoolean(
             PREF_KEY_IS_SNOWFALL_ENABLED,
@@ -239,7 +221,7 @@ class PreferenceRepository private constructor(context: Context) {
         @Volatile
         private var instance: PreferenceRepository? = null
 
-        private const val SNOWFALL_IS_ENABLED_DEFAULT_VALUE = true
+        internal const val SNOWFALL_IS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFALL_LIMIT_DEFAULT_VALUE = 80
         private const val SNOWFALL_VELOCITY_FACTOR_DEFAULT_VALUE = 3
         private const val SNOWFALL_IS_UNIQUE_RADIUS_ENABLED_DEFAULT_VALUE = true
@@ -247,7 +229,7 @@ class PreferenceRepository private constructor(context: Context) {
         private const val SNOWFALL_MAX_RADIUS_DEFAULT_VALUE = 30
         private const val SNOWFALL_RADIUS_UNIQUE_DISABLED_DEFAULT_VALUE = 30
 
-        private const val SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE = true
+        internal const val SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE = true
         private const val SNOWFLAKE_LIMIT_DEFAULT_VALUE = 2
         private const val SNOWFLAKE_VELOCITY_DEFAULT_VALUE = 2
         private const val SNOWFLAKE_IS_ROTATION_AXIS_X_ENABLED_DEFAULT_VALUE = false
@@ -259,7 +241,7 @@ class PreferenceRepository private constructor(context: Context) {
         private const val SNOWFLAKE_MAX_RADIUS_DEFAULT_VALUE = 60
         private const val SNOWFLAKE_RADIUS_UNIQUE_DISABLED_DEFAULT_VALUE = 60
 
-        private const val BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE = false
+        internal const val BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE = false
 
         private const val COSINE_DEVIATION_DEFAULT_VALUE = 2
         private const val SENSOR_ROLL_IS_ENABLED_DEFAULT_VALUE = true

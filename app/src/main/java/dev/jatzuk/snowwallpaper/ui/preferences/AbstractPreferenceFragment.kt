@@ -16,7 +16,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceLiveData
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
+import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
@@ -26,6 +28,8 @@ abstract class AbstractPreferenceFragment(
 
     protected lateinit var appBarTitleViewModel: AppBarTitleViewModel
     protected lateinit var preferenceRepository: PreferenceRepository
+    protected lateinit var textureCache: TextureCache
+    protected lateinit var preferenceLiveData: PreferenceLiveData<Boolean>
 
     final override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(xmlRes, rootKey)
@@ -51,6 +55,7 @@ abstract class AbstractPreferenceFragment(
         super.onActivityCreated(savedInstanceState)
         activity?.run {
             preferenceRepository = PreferenceRepository.getInstance(this)
+            textureCache = TextureCache.getInstance()
             appBarTitleViewModel = ViewModelProvider(this).get(AppBarTitleViewModel::class.java)
         }
         setUp()

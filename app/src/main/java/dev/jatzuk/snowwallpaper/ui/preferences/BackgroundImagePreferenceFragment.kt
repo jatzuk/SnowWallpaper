@@ -4,15 +4,24 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceLiveData
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository.Companion.BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository.Companion.PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED
 import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
 @Suppress("unused")
 class BackgroundImagePreferenceFragment :
     AbstractPreferenceFragment(R.xml.preferences_background_image) {
 
     override fun setUp() {
+        preferenceLiveData = PreferenceLiveData(
+            requireContext(),
+            PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED,
+            BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE
+        )
+
         findPreference<IntentPreference>(getString(R.string.pref_key_background_image_select_texture))!!
             .setOnPreferenceClickListener {
                 startDialogFragment(BackgroundImageDialogFragment())
@@ -26,14 +35,14 @@ class BackgroundImagePreferenceFragment :
     }
 
     override fun attachObserver() {
-        preferenceRepository.backgroundImagePreference.observe(
+        preferenceLiveData.observe(
             viewLifecycleOwner,
             Observer {
-                if (!it) ImageProvider.removeFromCache(ImageProvider.ImageType.BACKGROUND_IMAGE)
-                else if (ImageProvider.getBitmapFromCache(ImageProvider.ImageType.BACKGROUND_IMAGE) == null) {
-                    ImageProvider.loadDefaultTextureForImageType(
+                if (!it) textureCache.remove(TextureProvider.TextureType.BACKGROUND_IMAGE)
+                else if (textureCache[TextureProvider.TextureType.BACKGROUND_IMAGE] == null) {
+                    TextureProvider.getDefaultTextureByImageType(
                         requireContext(),
-                        ImageProvider.ImageType.BACKGROUND_IMAGE
+                        TextureProvider.TextureType.BACKGROUND_IMAGE
                     )
                 }
             }
@@ -51,7 +60,7 @@ class BackgroundImagePreferenceFragment :
             R.drawable.b1,
             R.drawable.b2
         ),
-        ImageProvider.ImageType.BACKGROUND_IMAGE
+        TextureProvider.TextureType.BACKGROUND_IMAGE
     ) {
 
         override fun provideTexturePositionSavePosition(position: Int) {

@@ -5,14 +5,23 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceLiveData
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository.Companion.PREF_KEY_IS_SNOWFLAKE_ENABLED
+import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository.Companion.SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE
 import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
 @Suppress("unused")
 class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_snowflake) {
 
     override fun setUp() {
+        preferenceLiveData = PreferenceLiveData(
+            requireContext(),
+            PREF_KEY_IS_SNOWFLAKE_ENABLED,
+            SNOWFLAKE_IS_ENABLED_DEFAULT_VALUE
+        )
+
         findPreference<IntentPreference>(getString(R.string.pref_key_snowflake_select_texture))!!
             .setOnPreferenceClickListener {
                 startDialogFragment(SnowflakeDialogFragment())
@@ -31,16 +40,14 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
     }
 
     override fun attachObserver() {
-        preferenceRepository.snowflakePreference.observe(
+        preferenceLiveData.observe(
             viewLifecycleOwner,
             Observer {
-                if (!it) ImageProvider.removeFromCache(ImageProvider.ImageType.SNOWFLAKE_TEXTURE)
-                else if (
-                    ImageProvider.getBitmapFromCache(ImageProvider.ImageType.SNOWFLAKE_TEXTURE) == null
-                ) {
-                    ImageProvider.loadDefaultTextureForImageType(
+                if (!it) textureCache.remove(TextureProvider.TextureType.SNOWFLAKE_TEXTURE)
+                else if (textureCache[TextureProvider.TextureType.SNOWFLAKE_TEXTURE] == null) {
+                    TextureProvider.getDefaultTextureByImageType(
                         requireContext(),
-                        ImageProvider.ImageType.SNOWFLAKE_TEXTURE
+                        TextureProvider.TextureType.SNOWFLAKE_TEXTURE
                     )
                 }
             }
@@ -65,7 +72,7 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
             R.drawable.category_disabled,
             R.drawable.ic_disabled_64dp
         ),
-        ImageProvider.ImageType.SNOWFLAKE_TEXTURE
+        TextureProvider.TextureType.SNOWFLAKE_TEXTURE
     ) {
 
         override fun provideTexturePositionSavePosition(position: Int) {
