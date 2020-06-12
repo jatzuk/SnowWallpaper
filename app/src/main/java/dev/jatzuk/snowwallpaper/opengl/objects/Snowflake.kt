@@ -13,31 +13,35 @@ import kotlin.random.Random
 
 class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = false) {
 
-    var x: Float
-    var y: Float
-    var z: Float
-    private var isRadiusUnique: Boolean
-    private val minRadius: Int
-    private val maxRadius: Int
-    var radius: Int
-    private var velocityFactor: Int
-    private var velocity: Int
+    var x = 0f
+    var y = 0f
+    var z = 0f
+    private var isRadiusUnique = false
+    private var minRadius = 0
+    private var maxRadius = 0
+    var radius = 0
+    private var velocityFactor = 0
+    private var velocity = 0
     private var angle = assignDefaultAngle()
     var shouldRotate = false
     private var availableRotationAxes = ArrayList<RotationAxis>()
-    var rotationAxis: RotationAxis
-    private val rotationIncrement: Float
+    var rotationAxis = RotationAxis.NONE
+    private var rotationIncrement = 0f
 
-    private var degreeIncrement: Float
-    var rotationDegrees: Float
+    private var degreeIncrement = 0f
+    var rotationDegrees = 0f
 
     private val preferenceRepository = PreferenceRepository.getInstance(context)
 
     private var deviation = preferenceRepository.getCosineDeviation()
 
     init {
+        updatePreferenceConstraints()
+        updatePosition()
+    }
+
+    private fun updateRadiusConstraints() {
         if (isTexturedSnowflake) {
-            velocityFactor = preferenceRepository.getSnowflakeVelocityFactor()
             isRadiusUnique = preferenceRepository.getIsSnowflakeUniqueRadiusEnabled()
             if (isRadiusUnique) {
                 minRadius = preferenceRepository.getSnowflakeMinRadius()
@@ -47,7 +51,6 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
                 maxRadius = minRadius
             }
         } else {
-            velocityFactor = preferenceRepository.getSnowfallVelocityFactor() * 2
             isRadiusUnique = preferenceRepository.getIsSnowfallUniqueRadiusEnabled()
             if (isRadiusUnique) {
                 minRadius = preferenceRepository.getSnowfallMinRadius()
@@ -57,23 +60,6 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
                 maxRadius = minRadius
             }
         }
-
-        velocity = getRandomVelocity()
-
-        radius = getRandomRadius()
-
-        x = getRandomX()
-        y = getRandomY()
-        z = 0f
-
-        checkAvailableRotationAxes()
-        shouldRotate = availableRotationAxes.isNotEmpty()
-        rotationAxis = getRandomRotationAxis()
-
-        rotationIncrement =
-            preferenceRepository.getSnowflakeRotationVelocity().toFloat() / 2
-        degreeIncrement = Random.nextFloat(rotationIncrement, rotationIncrement * 2)
-        rotationDegrees = Random.nextFloat(0f, rotationIncrement)
     }
 
     fun fall() {
@@ -94,12 +80,42 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
     private fun reset() {
         velocity = getRandomVelocity()
         radius = getRandomRadius()
-        x = getRandomX()
-        y = getRandomY()
+        updatePosition()
         angle = assignDefaultAngle()
         rotationAxis = getRandomRotationAxis()
         rotationDegrees = 0f
         degreeIncrement = getRandomDegreeIncrement()
+    }
+
+    private fun updatePosition() {
+        x = getRandomX()
+        y = getRandomY()
+        z = 0f
+    }
+
+    fun updatePreferenceConstraints() {
+        updateRadius()
+        updateVelocity()
+        if (isTexturedSnowflake) updateRotationAxis()
+    }
+
+    private fun updateRadius() {
+        updateRadiusConstraints()
+        radius = getRandomRadius()
+    }
+
+    private fun updateVelocity() {
+        updateVelocityFactor()
+        velocity = getRandomVelocity()
+    }
+
+    private fun updateRotationAxis() {
+        checkAvailableRotationAxes()
+        shouldRotate = availableRotationAxes.isNotEmpty()
+        rotationAxis = getRandomRotationAxis()
+        rotationIncrement = preferenceRepository.getSnowflakeRotationVelocity().toFloat() / 2f
+        degreeIncrement = Random.nextFloat(rotationIncrement, rotationIncrement * 2)
+        rotationDegrees = Random.nextFloat(0f, rotationIncrement)
     }
 
     private fun getRandomX(): Float = Random.nextInt(width).toFloat()
@@ -117,13 +133,19 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
         try {
             availableRotationAxes[Random.nextInt(availableRotationAxes.size)]
         } catch (e: IllegalArgumentException) {
-            RotationAxis.DISABLED
+            RotationAxis.NONE
         }
+
+    private fun updateVelocityFactor() {
+        velocityFactor =
+            if (isTexturedSnowflake) preferenceRepository.getSnowflakeVelocityFactor()
+            else preferenceRepository.getSnowfallVelocityFactor() * 2
+    }
 
     private fun checkAvailableRotationAxes() {
         val availableRotationAxes = preferenceRepository.getSnowflakeAvailableRotationAxes()
         val (isRotatesX, isRotatesY, isRotatesZ) = availableRotationAxes
-        if (!isRotatesX && !isRotatesY && !isRotatesZ) rotationAxis = RotationAxis.DISABLED
+        if (!isRotatesX && !isRotatesY && !isRotatesZ) rotationAxis = RotationAxis.NONE
         else {
             if (isRotatesX) this.availableRotationAxes.add(RotationAxis.X)
             if (isRotatesY) this.availableRotationAxes.add(RotationAxis.Y)
@@ -137,7 +159,7 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
     private fun Random.nextFloat(lower: Float, upper: Float) = nextFloat() * (upper - lower) + lower
 
     enum class RotationAxis {
-        X, Y, Z, DISABLED
+        X, Y, Z, NONE
     }
 
     companion object {
