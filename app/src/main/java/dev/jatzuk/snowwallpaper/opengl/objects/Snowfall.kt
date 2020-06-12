@@ -19,7 +19,7 @@ class Snowfall(
 
     override val shaderProgram = SnowfallProgram(context)
     override val textureType = TextureProvider.TextureType.SNOWFALL_TEXTURE
-    private lateinit var objectArray: Array<Snowflake>
+    private lateinit var snowflakes: Array<Snowflake>
 
     override fun bindData() {
         vertexArray.apply {
@@ -42,7 +42,7 @@ class Snowfall(
         }
         bindData()
         glEnable(GL_BLEND)
-        objectArray.forEachIndexed { index, snowflake ->
+        snowflakes.forEachIndexed { index, snowflake ->
             snowflake.fall()
             shaderProgram.setPointSize(snowflake.radius.toFloat())
             glDrawArrays(GL_POINTS, index, 1)
@@ -51,14 +51,18 @@ class Snowfall(
         unbindData()
     }
 
+    override fun updateContent() {
+        snowflakes.forEach { it.updatePreferenceConstraints() }
+    }
+
     override fun bindObjectArray(context: Context) {
-        objectArray = Array(objectsCount) { Snowflake(context) }
+        snowflakes = Array(objectsCount) { Snowflake(context) }
     }
 
     override fun getObjectCount(): Int = preferenceRepository.getSnowfallLimit()
 
     override fun updateVertexArray(): VertexArray =
-        SnowflakeVertexArray(objectArray, TOTAL_COMPONENT_COUNT)
+        SnowflakeVertexArray(snowflakes, TOTAL_COMPONENT_COUNT)
 
     companion object {
         const val TAG = "Snowfall"

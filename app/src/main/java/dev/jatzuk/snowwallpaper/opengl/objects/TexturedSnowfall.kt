@@ -20,7 +20,7 @@ class TexturedSnowfall(
 
     override val shaderProgram = SnowflakeProgram(context)
     override val textureType = TextureProvider.TextureType.SNOWFLAKE_TEXTURE
-    private lateinit var objectArray: Array<Snowflake>
+    private lateinit var snowflakes: Array<Snowflake>
 
     override fun bindData() {
         (vertexArray as RectangleVertexArray).apply {
@@ -49,7 +49,7 @@ class TexturedSnowfall(
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-        objectArray.forEachIndexed { index, snowflake ->
+        snowflakes.forEachIndexed { index, snowflake ->
             setIdentityM(modelMatrix, 0)
 
             if (snowflake.shouldRotate) {
@@ -69,14 +69,18 @@ class TexturedSnowfall(
         glDisable(GL_BLEND)
     }
 
+    override fun updateContent() {
+        snowflakes.forEach { it.updatePreferenceConstraints() }
+    }
+
     override fun bindObjectArray(context: Context) {
-        objectArray = Array(objectsCount) { Snowflake(context, true) }
+        snowflakes = Array(objectsCount) { Snowflake(context, true) }
     }
 
     override fun getObjectCount(): Int = preferenceRepository.getSnowflakeLimit()
 
     override fun updateVertexArray(): VertexArray =
-        RectangleVertexArray(objectArray, TOTAL_COMPONENT_COUNT)
+        RectangleVertexArray(snowflakes, TOTAL_COMPONENT_COUNT)
 
     private fun rotate(
         modelMatrix: FloatArray,
