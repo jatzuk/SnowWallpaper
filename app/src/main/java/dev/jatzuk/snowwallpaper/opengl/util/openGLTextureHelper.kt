@@ -9,20 +9,23 @@ import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
 private const val TAG = "TextureHelper"
 
-fun loadTextureToOpenGL(context: Context, textureType: TextureProvider.TextureType): Int {
+fun loadTextureToOpenGL(
+    context: Context,
+    textureType: TextureProvider.TextureType
+): Pair<Int, Int>? {
     val textureObjectsIds = intArrayOf(0)
     glGenTextures(1, textureObjectsIds, 0)
 
     if (textureObjectsIds[0] == 0) {
         errorLog("Could not generate a new Open GL texture object", TAG)
-        return 0
+        return null
     }
 
     val bitmap = TextureProvider.loadTexture(context, textureType)
     if (bitmap == null) {
         errorLog("Bitmap type ${textureType.name} could not be loaded", TAG)
         glDeleteTextures(1, textureObjectsIds, 0)
-        return 0
+        return null
     }
 
     glBindTexture(GL_TEXTURE_2D, textureObjectsIds[0])
@@ -34,7 +37,8 @@ fun loadTextureToOpenGL(context: Context, textureType: TextureProvider.TextureTy
     glGenerateMipmap(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, 0)
 
+    logging("bitmap generationID: ${bitmap.generationId}", "OpenGLSceneObject")
     logging("Texture type: ${textureType.name} loaded successfully", TAG)
 
-    return textureObjectsIds[0]
+    return textureObjectsIds[0] to bitmap.generationId
 }
