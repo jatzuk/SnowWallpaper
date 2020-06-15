@@ -1,15 +1,14 @@
 package dev.jatzuk.snowwallpaper.utilities
 
 import android.content.Context
-import android.os.Bundle
 import android.util.Log
-import com.google.firebase.analytics.FirebaseAnalytics
+//import com.google.firebase.analytics.FirebaseAnalytics
 
 object Logger {
     private const val TAG = "Logger"
     var isLogging = true
 
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
+//    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     fun logging(
         message: String,
@@ -36,11 +35,11 @@ object Logger {
     }
 
     private fun firebaseLog(message: String, tag: String) {
-        val bundle = Bundle().apply { putString(tag, message) }
-        firebaseAnalytics.logEvent(tag, bundle)
+//        val bundle = Bundle().apply { putString(tag, message) }
+//        firebaseAnalytics.logEvent(tag, bundle)
     }
 
     fun initFirebaseAnalytics(context: Context) {
-        firebaseAnalytics = FirebaseAnalytics.getInstance(context)
+//        firebaseAnalytics = FirebaseAnalytics.getInstance(context)
     }
 }
