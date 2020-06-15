@@ -2,6 +2,7 @@ package dev.jatzuk.snowwallpaper.ui.imagepicker
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -11,12 +12,12 @@ import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.imagepicker.viewpager.ImageSlidePageFragment
 import dev.jatzuk.snowwallpaper.ui.imagepicker.viewpager.pagetransformers.ZoomOutPageTransformer
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
 class ViewPagerFragment : Fragment() {
 
     private lateinit var viewPager2: ViewPager2
-    private lateinit var imageType: ImageProvider.ImageType
+    private lateinit var textureType: TextureProvider.TextureType
     private var startPosition = 0
     private lateinit var imagesIds: IntArray
 
@@ -28,7 +29,7 @@ class ViewPagerFragment : Fragment() {
         setHasOptionsMenu(true)
 
         arguments?.let {
-            imageType = ImageProvider.ImageType.values()[it.getInt(EXTRA_IMAGE_TYPE)]
+            textureType = TextureProvider.TextureType.values()[it.getInt(EXTRA_IMAGE_TYPE)]
             imagesIds = it.getIntArray(EXTRA_IMAGE_LIST_IDS)!!
             imageId = it.getInt(EXTRA_IMAGE_ID)
             startPosition = imagesIds.indexOf(imageId)
@@ -65,24 +66,29 @@ class ViewPagerFragment : Fragment() {
             R.id.choose_background_image -> {
                 val preferenceRepository = PreferenceRepository.getInstance(context!!)
 
-                when (imageType) {
-                    ImageProvider.ImageType.SNOWFALL_TEXTURE -> {
+                when (textureType) {
+                    TextureProvider.TextureType.SNOWFALL_TEXTURE -> {
                         preferenceRepository.setSnowfallTextureSavedPosition(viewPager2.currentItem)
                     }
-                    ImageProvider.ImageType.SNOWFLAKE_TEXTURE -> {
+                    TextureProvider.TextureType.SNOWFLAKE_TEXTURE -> {
                         preferenceRepository.setSnowflakeTextureSavedPosition(viewPager2.currentItem)
                     }
-                    ImageProvider.ImageType.BACKGROUND_IMAGE -> {
+                    TextureProvider.TextureType.BACKGROUND_IMAGE -> {
                         preferenceRepository.setBackgroundImageSavedPosition(viewPager2.currentItem)
                     }
                 }
 
-                ImageProvider.saveImage(
+                val result = TextureProvider.saveImage(
                     context!!,
-                    imageType,
+                    textureType,
                     null,
                     imagesIds[viewPager2.currentItem]
                 )
+
+                val message =
+                    if (result) requireContext().getString(R.string.toast_image_storage_succeeded)
+                    else requireContext().getString(R.string.toast_image_storage_failed)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
                 parentFragmentManager.popBackStack(
                     null,
@@ -109,13 +115,13 @@ class ViewPagerFragment : Fragment() {
         private const val EXTRA_IMAGE_LIST_IDS = "extraImagesListIds"
 
         fun newInstance(
-            imageType: ImageProvider.ImageType,
+            textureType: TextureProvider.TextureType,
             resourcesIds: IntArray,
             @DrawableRes drawableId: Int
         ) =
             ViewPagerFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(EXTRA_IMAGE_TYPE, imageType.ordinal)
+                    putInt(EXTRA_IMAGE_TYPE, textureType.ordinal)
                     putIntArray(EXTRA_IMAGE_LIST_IDS, resourcesIds)
                     putInt(EXTRA_IMAGE_ID, drawableId)
                 }

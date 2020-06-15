@@ -20,7 +20,7 @@ import java.io.IOException
 object TextureProvider {
 
     private val textureCache = TextureCache.getInstance()
-    private const val TAG = "ImageProvider"
+    private const val TAG = "TextureProvider"
 
     fun saveImage(
         context: Context,
@@ -33,9 +33,8 @@ object TextureProvider {
             ydpi.toInt() to xdpi.toInt()
         }
 
-//        CoroutineScope(Dispatchers.IO).launch {
-        runBlocking {
-
+        var result = false
+        runBlocking(Dispatchers.IO) {
             val bitmapResolvingJob = async {
                 bitmap ?: decodeSampledBitmapFromResource(
                     context.resources,
@@ -48,10 +47,10 @@ object TextureProvider {
             val storeJob = async {
                 storeImage(context, bitmapResolvingJob.await(), textureType)
             }
-        }
 
-//        }
-        return true
+            result = storeJob.await()
+        }
+        return result
     }
 
     // todo(side thread?)
@@ -148,12 +147,12 @@ object TextureProvider {
         context: Context,
         bitmap: Bitmap,
         textureType: TextureType
-    ): Boolean /*= withContext(Dispatchers.IO)*/ {
+    ): Boolean = withContext(Dispatchers.IO) {
         textureCache[textureType] = bitmap
         context.openFileOutput(textureType.path, Context.MODE_PRIVATE).use {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }
-        return true
+//        return true
     }
 
     enum class TextureType(val path: String) {

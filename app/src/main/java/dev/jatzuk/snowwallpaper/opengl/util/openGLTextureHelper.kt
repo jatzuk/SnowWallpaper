@@ -37,7 +37,7 @@ fun loadTextureToOpenGL(
     glGenerateMipmap(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, 0)
 
-    logging("bitmap generationID: ${bitmap.generationId}", "OpenGLSceneObject")
+    logging("Bitmap generationID: ${bitmap.generationId}", TAG)
     logging("Texture type: ${textureType.name} loaded successfully", TAG)
 
     return textureObjectsIds[0] to bitmap.generationId

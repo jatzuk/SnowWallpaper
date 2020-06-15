@@ -26,13 +26,13 @@ import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 import dev.jatzuk.snowwallpaper.ui.helpers.CircleImageView
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 import kotlin.math.abs
 import kotlin.math.max
 
 abstract class TexturedAbstractDialogFragment(
     private val textureIds: IntArray,
-    private val imageType: ImageProvider.ImageType
+    private val textureType: TextureProvider.TextureType
 ) : DialogFragment() {
 
     protected lateinit var preferenceRepository: PreferenceRepository
@@ -179,7 +179,7 @@ abstract class TexturedAbstractDialogFragment(
 
     private fun startImageViewerFragment() {
         val fragment = ViewPagerFragment.newInstance(
-            imageType,
+            textureType,
             textureIds,
             textureIds[viewPagerCurrentPosition]
         )
@@ -194,11 +194,16 @@ abstract class TexturedAbstractDialogFragment(
     private fun storeSelectedImage() {
         provideTexturePositionSavePosition(viewPagerCurrentPosition)
 
-        ImageProvider.saveImage(
+        val result = TextureProvider.saveImage(
             context!!,
-            imageType,
+            textureType,
             textureArray[viewPagerCurrentPosition].toBitmap()
         )
+
+        val message =
+            if (result) requireContext().getString(R.string.toast_image_storage_succeeded)
+            else requireContext().getString(R.string.toast_image_storage_failed)
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -224,7 +229,7 @@ abstract class TexturedAbstractDialogFragment(
         }
     }
 
-    private fun loadUserTexture(): Bitmap? = ImageProvider.loadTexture(context!!, imageType)
+    private fun loadUserTexture(): Bitmap? = TextureProvider.loadTexture(context!!, textureType)
 
     @Suppress("DEPRECATION")
     private fun getBitmapFromUri(uri: Uri): Bitmap =

@@ -12,9 +12,4 @@ class TexturesViewModel : ViewModel() {
     fun getTextures(textureCache: TextureCache): LiveData<TextureCache> = synchronized(this) {
         return textures ?: MutableLiveData(textureCache).also { textures = it }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        textures?.value?.clear()
-    }
 }

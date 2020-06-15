@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.widget.Toast
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
 
 class MainActivity : Activity() {
 
@@ -45,14 +44,5 @@ class MainActivity : Activity() {
             )
         }
         startActivity(intent)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        ImageProvider.clearCache()
-    }
-
-    companion object {
-        private const val TAG = "MainActivity"
     }
 }

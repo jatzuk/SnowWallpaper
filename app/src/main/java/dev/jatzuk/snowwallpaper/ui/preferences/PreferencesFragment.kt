@@ -13,14 +13,13 @@ import androidx.lifecycle.ViewModelProvider
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
-import dev.jatzuk.snowwallpaper.utilities.ImageProvider
+import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 
 class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
     private lateinit var intentPreferences: Array<IntentPreference>
     private lateinit var categoryDisabledDrawable: Drawable
-
     private lateinit var texturesViewModel: TexturesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,14 +57,13 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     }
 
     override fun attachObserver() {
-        texturesViewModel.getTextures().observe(
+        texturesViewModel.getTextures(textureCache).observe(
             viewLifecycleOwner,
             Observer {
                 intentPreferences.forEachIndexed { index, preference ->
-                    val bitmap =
-                        ImageProvider.getBitmapFromCache(ImageProvider.ImageType.values()[index])
-                            ?.toDrawable(resources) ?: categoryDisabledDrawable
-                    preference.previewImage = bitmap
+                    val bitmap = it[TextureProvider.TextureType.values()[index]]
+                    preference.previewImage =
+                        bitmap?.toDrawable(resources) ?: categoryDisabledDrawable
                 }
             }
         )
@@ -82,7 +80,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
             getString(R.string.reset_settings_message)
         ).apply {
             invokeOnPositiveAction {
-                ImageProvider.clearStoredImages(context!!)
+                TextureProvider.clearStoredImages(context!!)
                 preferenceRepository.resetPreferencesToDefault()
                 activity!!.finish()
             }
