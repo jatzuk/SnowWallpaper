@@ -66,7 +66,7 @@ class SnowfallRenderer(context: Context) : GLSurfaceView.Renderer {
 
         openGLSceneObjectsHolder.run {
             populateActiveOpenGLSceneObjects()
-            openGLSceneObjects.forEach { it?.updateValues(contextReference.get()!!) }
+            openGLSceneObjects.forEach { it?.updateOpenGLValues(contextReference.get()!!) }
         }
 
         // todo fix 60fps x2 speed
