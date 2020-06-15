@@ -17,10 +17,8 @@ class TextureCache private constructor(entriesCount: Int) {
     fun remove(key: TextureProvider.TextureType): Bitmap? = hashMap.remove(key)
 
     fun clear() {
-        hashMap.forEach {
-            logging("recycling bitmap with generationID: ${it.value?.generationId}", TAG)
-            it.value?.recycle()
-        }
+        // expecting proper bitmap native memory management instead of manual bitmap.recycle()
+        logging("texture cache is cleared", TAG)
         hashMap.clear()
     }
 
