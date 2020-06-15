@@ -16,6 +16,9 @@ class TextureCache private constructor(entriesCount: Int) {
 
     fun remove(key: TextureProvider.TextureType): Bitmap? = hashMap.remove(key)
 
+    /**
+     * @see <a href="https://developer.android.com/topic/performance/graphics/manage-memory#recycle">link</a>
+     * */
     fun clear() {
         // expecting proper bitmap native memory management instead of manual bitmap.recycle()
         logging("texture cache is cleared", TAG)
