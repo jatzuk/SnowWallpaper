@@ -20,7 +20,7 @@ import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 
 class OpenGLWallpaperService : WallpaperService() {
 
-    private lateinit var sensorManager: SensorManager
+    private var sensorManager: SensorManager? = null
 
     override fun onCreateEngine(): Engine = WallpaperEngine()
 
@@ -128,16 +128,16 @@ class OpenGLWallpaperService : WallpaperService() {
 
         private fun registerSensorListener() {
             logging("Wallpaper Engine registerSensorListener()", SENSOR_INFO_TAG)
-            sensorManager.registerListener(
+            sensorManager?.registerListener(
                 this,
-                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL
             )
         }
 
         private fun unregisterSensorListener() {
             logging("Wallpaper Engine unregisterSensorListener()", SENSOR_INFO_TAG)
-            sensorManager.unregisterListener(this)
+            sensorManager?.unregisterListener(this)
         }
 
         private fun logOnSensorChanged() {
