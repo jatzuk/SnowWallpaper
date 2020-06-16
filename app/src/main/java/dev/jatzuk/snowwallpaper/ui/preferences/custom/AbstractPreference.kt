@@ -46,7 +46,7 @@ abstract class AbstractPreference : Preference {
     }
 
     init {
-//        @Suppress("LeakingThis") // todo
+        @Suppress("LeakingThis")
         layoutResource = provideLayout()
     }
 

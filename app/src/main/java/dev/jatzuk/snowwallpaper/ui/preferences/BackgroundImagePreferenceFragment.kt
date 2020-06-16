@@ -38,12 +38,11 @@ class BackgroundImagePreferenceFragment :
         preferenceLiveData.observe(
             viewLifecycleOwner,
             Observer {
-                if (!it) textureCache.remove(TextureProvider.TextureType.BACKGROUND_IMAGE)
-                else if (textureCache[TextureProvider.TextureType.BACKGROUND_IMAGE] == null) {
-                    TextureProvider.getDefaultTextureByImageType(
-                        requireContext(),
-                        TextureProvider.TextureType.BACKGROUND_IMAGE
-                    )
+                val textureType = TextureProvider.TextureType.BACKGROUND_IMAGE
+                if (!it) textureCache.remove(textureType)
+                else if (textureCache[textureType] == null) {
+                    textureCache[textureType] =
+                        TextureProvider.assignDefaultTexture(requireContext(), textureType)
                 }
             }
         )

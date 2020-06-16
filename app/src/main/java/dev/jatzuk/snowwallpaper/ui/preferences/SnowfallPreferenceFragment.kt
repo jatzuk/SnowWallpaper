@@ -33,12 +33,11 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
         preferenceLiveData.observe(
             viewLifecycleOwner,
             Observer {
-                if (!it) textureCache.remove(TextureProvider.TextureType.SNOWFALL_TEXTURE)
-                else if (textureCache[TextureProvider.TextureType.SNOWFALL_TEXTURE] == null) {
-                    TextureProvider.getDefaultTextureByImageType(
-                        requireContext(),
-                        TextureProvider.TextureType.SNOWFALL_TEXTURE
-                    )
+                val textureType = TextureProvider.TextureType.SNOWFALL_TEXTURE
+                if (!it) textureCache.remove(textureType)
+                else if (textureCache[textureType] == null) {
+                    textureCache[textureType] =
+                        TextureProvider.assignDefaultTexture(requireContext(), textureType)
                 }
             }
         )

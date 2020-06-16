@@ -53,7 +53,6 @@ object TextureProvider {
         return result
     }
 
-    // todo(side thread?)
     fun loadTexture(context: Context, textureType: TextureType): Bitmap? {
         return try {
             val cachedTexture = textureCache[textureType]
@@ -72,13 +71,11 @@ object TextureProvider {
             }
         } catch (e: FileNotFoundException) {
             logging("texture $textureType not found in disk using default", TAG)
-            val bitmap = getDefaultTextureByImageType(context, textureType)
+            val bitmap = assignDefaultTexture(context, textureType)
             context.openFileOutput(textureType.path, Context.MODE_PRIVATE).use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
             }
-//            CoroutineScope(Dispatchers.IO).launch {
-//                storeImage(context, bitmap, imageType)
-//            }
+            textureCache[textureType] = bitmap
             bitmap
         } catch (e: IOException) {
             errorLog("Failed to load image type: ${textureType.name} from internal storage", TAG, e)
@@ -86,15 +83,13 @@ object TextureProvider {
         }
     }
 
-    fun getDefaultTextureByImageType(context: Context, textureType: TextureType): Bitmap {
+    fun assignDefaultTexture(context: Context, textureType: TextureType): Bitmap {
         val resourceId = when (textureType) {
             TextureType.SNOWFALL_TEXTURE -> R.drawable.texture_snowfall
             TextureType.SNOWFLAKE_TEXTURE -> R.drawable.texture_snowflake
             TextureType.BACKGROUND_IMAGE -> R.drawable.background_image
         }
-        val bitmap = ContextCompat.getDrawable(context, resourceId)!!.toBitmap()
-        textureCache[textureType] = bitmap
-        return bitmap
+        return ContextCompat.getDrawable(context, resourceId)!!.toBitmap()
     }
 
     fun clearStoredImages(context: Context) {
@@ -152,7 +147,6 @@ object TextureProvider {
         context.openFileOutput(textureType.path, Context.MODE_PRIVATE).use {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }
-//        return true
     }
 
     enum class TextureType(val path: String) {

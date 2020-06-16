@@ -43,18 +43,15 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
         preferenceLiveData.observe(
             viewLifecycleOwner,
             Observer {
-                if (!it) textureCache.remove(TextureProvider.TextureType.SNOWFLAKE_TEXTURE)
-                else if (textureCache[TextureProvider.TextureType.SNOWFLAKE_TEXTURE] == null) {
-                    TextureProvider.getDefaultTextureByImageType(
-                        requireContext(),
-                        TextureProvider.TextureType.SNOWFLAKE_TEXTURE
-                    )
+                val textureType = TextureProvider.TextureType.SNOWFLAKE_TEXTURE
+                if (!it) textureCache.remove(textureType)
+                else if (textureCache[textureType] == null) {
+                    textureCache[textureType] =
+                        TextureProvider.assignDefaultTexture(requireContext(), textureType)
                 }
             }
         )
     }
-
-//    override fun provideDialogFragment(): AbstractDialogFragment? = SnowflakeDialogFragment()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
