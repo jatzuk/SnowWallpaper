@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPreferenceTitle">
+    android:background="@color/colorPreferenceTitle"
+    tools:ignore="Overdraw"> <!--    decided to use overdraw in rare place-->
 
     <ImageView
         android:id="@+id/image_view"
