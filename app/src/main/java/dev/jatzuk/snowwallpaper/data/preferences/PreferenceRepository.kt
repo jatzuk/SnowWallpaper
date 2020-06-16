@@ -173,16 +173,6 @@ class PreferenceRepository private constructor(context: Context) {
             SENSOR_PITCH_DEFAULT_VALUE
         )
 
-    fun getRendererFrameLimit(): Int =
-        if (getRendererToggleState()) RENDERER_FRAMERATE_MAX_VALUE
-        else RENDERER_FRAMERATE_DEFAULT_VALUE
-
-    fun getRendererToggleState(): Boolean =
-        preferenceManager.getBoolean(
-            PREF_KEY_RENDERER_FRAME_LIMIT,
-            RENDERER_FRAMERATE_STATE_DEFAULT_VALUE
-        )
-
     fun setSnowfallTextureSavedPosition(position: Int) {
         preferenceManager.edit().putInt(SNOWFALL_TEXTURE_SAVED_POSITION, position).apply()
     }
@@ -248,10 +238,6 @@ class PreferenceRepository private constructor(context: Context) {
         private const val SENSOR_PITCH_IS_ENABLED_DEFAULT_VALUE = true
         private const val SENSOR_ROLL_DEFAULT_VALUE = 5
         private const val SENSOR_PITCH_DEFAULT_VALUE = 4
-
-        const val RENDERER_FRAMERATE_DEFAULT_VALUE = 30
-        const val RENDERER_FRAMERATE_MAX_VALUE = 60
-        private const val RENDERER_FRAMERATE_STATE_DEFAULT_VALUE = false
 
         private const val SNOWFALL_TEXTURE_SAVED_POSITION =
             "SNOWFALL_TEXTURE_SAVED_POSITION"
@@ -333,9 +319,6 @@ class PreferenceRepository private constructor(context: Context) {
 
         const val PREF_KEY_PITCH_SENSOR_VALUE =
             "PREF_KEY_PITCH_SENSOR_VALUE"
-
-        const val PREF_KEY_RENDERER_FRAME_LIMIT =
-            "PREF_KEY_RENDERER_FRAME_LIMIT"
 
         fun getInstance(context: Context): PreferenceRepository =
             instance ?: synchronized(this) {

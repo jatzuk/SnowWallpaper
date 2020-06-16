@@ -123,7 +123,8 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
 
     private fun getRandomY(): Float = -Random.nextInt(radius * 2, height / 2).toFloat()
 
-    private fun getRandomVelocity(): Int = Random.nextInt(velocityFactor, velocityFactor * 2 + 1)
+    private fun getRandomVelocity(): Int =
+        Random.nextInt(velocityFactor, velocityFactor + velocityFactor / 2)
 
     private fun getRandomRadius(): Int = Random.nextInt(minRadius, maxRadius + 1)
 
@@ -138,9 +139,10 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
         }
 
     private fun updateVelocityFactor() {
-        velocityFactor =
+        val velocity =
             if (isTexturedSnowflake) preferenceRepository.getSnowflakeVelocityFactor()
-            else preferenceRepository.getSnowfallVelocityFactor() * 2
+            else preferenceRepository.getSnowfallVelocityFactor()
+        velocityFactor = velocity + 1
     }
 
     private fun checkAvailableRotationAxes() {

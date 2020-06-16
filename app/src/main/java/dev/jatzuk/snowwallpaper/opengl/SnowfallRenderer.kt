@@ -31,10 +31,7 @@ class SnowfallRenderer(context: Context) : GLSurfaceView.Renderer {
 
     private val openGLSceneObjectsHolder = OpenGLSceneObjectHolder()
 
-    private var frameStartMs = 0L
-    private var frameLimit = 30
     private var startTimeMs = 0L
-
     private var frames = 0
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
@@ -68,29 +65,13 @@ class SnowfallRenderer(context: Context) : GLSurfaceView.Renderer {
             populateActiveOpenGLSceneObjects()
             openGLSceneObjects.forEach { it?.updateOpenGLValues(contextReference.get()!!) }
         }
-
-        // todo fix 60fps x2 speed
-        frameLimit =
-            PreferenceRepository.getInstance(contextReference.get()!!).getRendererFrameLimit()
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        limitFrameRate()
         logFrameRate()
-
         glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
         multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0)
-
         openGLSceneObjectsHolder.openGLSceneObjects.forEach { it?.draw() }
-    }
-
-    private fun limitFrameRate() {
-        val elapsedMs = SystemClock.elapsedRealtime() - frameStartMs
-        val expectedMs = 1000 / frameLimit
-        val sleepTime = expectedMs - elapsedMs
-
-        if (sleepTime > 0) SystemClock.sleep(sleepTime)
-        frameStartMs = SystemClock.elapsedRealtime()
     }
 
     private fun logFrameRate() {
