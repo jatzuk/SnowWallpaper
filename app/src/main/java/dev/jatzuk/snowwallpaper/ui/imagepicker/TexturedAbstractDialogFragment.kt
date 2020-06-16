@@ -47,10 +47,10 @@ abstract class TexturedAbstractDialogFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setStyle(STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        textureIds.forEach { textureArray.add(ContextCompat.getDrawable(context!!, it)!!) }
-        textureArray.add(ContextCompat.getDrawable(context!!, R.drawable.b0)!!)
+        textureIds.forEach { textureArray.add(ContextCompat.getDrawable(requireContext(), it)!!) }
+        textureArray.add(ContextCompat.getDrawable(requireContext(), R.drawable.b0)!!)
 
-        preferenceRepository = PreferenceRepository.getInstance(context!!)
+        preferenceRepository = PreferenceRepository.getInstance(requireContext())
         viewPagerCurrentPosition = provideTexturePositionLoadPosition()
 
         if (viewPagerCurrentPosition == textureArray.lastIndex) {
@@ -91,7 +91,7 @@ abstract class TexturedAbstractDialogFragment(
             }
         )
 
-        return AlertDialog.Builder(context!!, R.style.DefaultAlertDialog).run {
+        return AlertDialog.Builder(requireContext(), R.style.DefaultAlertDialog).run {
             val inflater = requireActivity().layoutInflater
             val view = inflater.inflate(R.layout.fragment_picker_dialog, null).apply {
                 findViewById<ViewPager2>(R.id.pager).run {
@@ -195,7 +195,7 @@ abstract class TexturedAbstractDialogFragment(
         provideTexturePositionSavePosition(viewPagerCurrentPosition)
 
         val result = TextureProvider.saveImage(
-            context!!,
+            requireContext(),
             textureType,
             textureArray[viewPagerCurrentPosition].toBitmap()
         )
@@ -229,7 +229,8 @@ abstract class TexturedAbstractDialogFragment(
         }
     }
 
-    private fun loadUserTexture(): Bitmap? = TextureProvider.loadTexture(context!!, textureType)
+    private fun loadUserTexture(): Bitmap? =
+        TextureProvider.loadTexture(requireContext(), textureType)
 
     @Suppress("DEPRECATION")
     private fun getBitmapFromUri(uri: Uri): Bitmap =

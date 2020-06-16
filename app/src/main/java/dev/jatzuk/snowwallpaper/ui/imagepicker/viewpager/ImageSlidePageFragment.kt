@@ -28,7 +28,7 @@ class ImageSlidePageFragment : Fragment() {
         arguments?.let { imageId = it.getInt(ARG_IMAGE_ID) }
         val v = inflater.inflate(R.layout.fragment_screen_slide_page, container, false)
         v.findViewById<ImageView>(R.id.image_view).apply {
-            setImageDrawable(ContextCompat.getDrawable(context!!, imageId))
+            setImageDrawable(ContextCompat.getDrawable(requireContext(), imageId))
         }
         return v
     }
@@ -40,12 +40,12 @@ class ImageSlidePageFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar!!.apply {
             title = getString(R.string.pick_image)
 
-            view?.setOnTouchListener { _, event ->
+            view?.setOnTouchListener { view, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
                     if (isShowing) hide()
                     else show()
                 }
-                true
+                !view.performClick()
             }
         }
     }
@@ -56,7 +56,7 @@ class ImageSlidePageFragment : Fragment() {
     }
 
     private fun removeMargin() {
-        activity!!.findViewById<FrameLayout>(R.id.preferences_container)!!.apply {
+        requireActivity().findViewById<FrameLayout>(R.id.preferences_container)!!.apply {
             val params = RelativeLayout.LayoutParams(layoutParams)
             params.topMargin = 0
             layoutParams = params
@@ -65,8 +65,13 @@ class ImageSlidePageFragment : Fragment() {
 
     private fun addMargin() {
         val typedValue = TypedValue()
-        if (activity!!.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
-            activity!!.findViewById<FrameLayout>(R.id.preferences_container)!!.apply {
+        if (requireActivity().theme.resolveAttribute(
+                android.R.attr.actionBarSize,
+                typedValue,
+                true
+            )
+        ) {
+            requireActivity().findViewById<FrameLayout>(R.id.preferences_container)!!.apply {
                 val params = RelativeLayout.LayoutParams(layoutParams)
                 params.topMargin =
                     TypedValue.complexToDimensionPixelSize(

@@ -64,7 +64,7 @@ class ViewPagerFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.choose_background_image -> {
-                val preferenceRepository = PreferenceRepository.getInstance(context!!)
+                val preferenceRepository = PreferenceRepository.getInstance(requireContext())
 
                 when (textureType) {
                     TextureProvider.TextureType.SNOWFALL_TEXTURE -> {
@@ -79,7 +79,7 @@ class ViewPagerFragment : Fragment() {
                 }
 
                 val result = TextureProvider.saveImage(
-                    context!!,
+                    requireContext(),
                     textureType,
                     null,
                     imagesIds[viewPager2.currentItem]

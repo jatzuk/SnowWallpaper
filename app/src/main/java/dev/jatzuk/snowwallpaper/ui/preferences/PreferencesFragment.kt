@@ -25,10 +25,10 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        preferenceRepository = PreferenceRepository.getInstance(context!!)
+        preferenceRepository = PreferenceRepository.getInstance(requireContext())
         texturesViewModel = ViewModelProvider(this).get(TexturesViewModel::class.java)
         categoryDisabledDrawable =
-            ContextCompat.getDrawable(context!!, R.drawable.category_disabled)!!
+            ContextCompat.getDrawable(requireContext(), R.drawable.category_disabled)!!
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -80,9 +80,9 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
             getString(R.string.reset_settings_message)
         ).apply {
             invokeOnPositiveAction {
-                TextureProvider.clearStoredImages(context!!)
+                TextureProvider.clearStoredImages(requireContext())
                 preferenceRepository.resetPreferencesToDefault()
-                activity!!.finish()
+                requireActivity().finish()
             }
         }.also { it.show(requireActivity().supportFragmentManager, null) }
 

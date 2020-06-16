@@ -23,8 +23,6 @@ class PreferencesActivity : AppCompatActivity(),
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-//        val retainFragment = PreferencesFragment.findOrCreateRetainFragment(supportFragmentManager)
-
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(
