@@ -33,7 +33,7 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
 
     private val preferenceRepository = PreferenceRepository.getInstance(context)
 
-    private var deviation = preferenceRepository.getCosineDeviation()
+    private var deviation = 1
 
     init {
         updatePreferenceConstraints()
@@ -97,6 +97,7 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
         updateRadius()
         updateVelocity()
         if (isTexturedSnowflake) updateRotationAxis()
+        deviation = preferenceRepository.getCosineDeviation()
     }
 
     private fun updateRadius() {
