@@ -43,6 +43,15 @@ class MainActivity : Activity() {
                 ComponentName(this@MainActivity, OpenGLWallpaperService::class.java)
             )
         }
-        startActivity(intent)
+        startActivityForResult(intent, EXIT_ON_SET_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK && requestCode == EXIT_ON_SET_REQUEST_CODE) finishAffinity()
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    companion object {
+        private const val EXIT_ON_SET_REQUEST_CODE = 99
     }
 }
