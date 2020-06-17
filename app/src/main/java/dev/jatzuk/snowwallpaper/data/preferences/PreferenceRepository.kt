@@ -217,6 +217,17 @@ class PreferenceRepository private constructor(context: Context) {
         preferenceManager.edit().clear().apply()
     }
 
+    fun isUserInformedAboutBackgroundRestrictions(): Boolean =
+        preferenceManager.getBoolean(
+            PREF_KEY_MANUFACTURER_BACKGROUND_PROCESS_RESTRICTED,
+            false
+        )
+
+    fun setIsUserInformedAboutBackgroundRestrictions(isInformed: Boolean) {
+        preferenceManager.edit()
+            .putBoolean(PREF_KEY_MANUFACTURER_BACKGROUND_PROCESS_RESTRICTED, isInformed).apply()
+    }
+
     companion object {
         @Volatile
         private var instance: PreferenceRepository? = null
@@ -244,8 +255,8 @@ class PreferenceRepository private constructor(context: Context) {
         internal const val BACKGROUND_IMAGE_IS_ENABLED_DEFAULT_VALUE = false
 
         private const val COSINE_DEVIATION_DEFAULT_VALUE = 2
-        private const val SENSOR_ROLL_IS_ENABLED_DEFAULT_VALUE = true
-        private const val SENSOR_PITCH_IS_ENABLED_DEFAULT_VALUE = true
+        private const val SENSOR_ROLL_IS_ENABLED_DEFAULT_VALUE = false
+        private const val SENSOR_PITCH_IS_ENABLED_DEFAULT_VALUE = false
         private const val SENSOR_ROLL_DEFAULT_VALUE = 5
         private const val SENSOR_PITCH_DEFAULT_VALUE = 4
 
@@ -336,6 +347,9 @@ class PreferenceRepository private constructor(context: Context) {
 
         const val PREF_KEY_RENDERER_FRAME_LIMIT =
             "PREF_KEY_RENDERER_FRAME_LIMIT"
+
+        const val PREF_KEY_MANUFACTURER_BACKGROUND_PROCESS_RESTRICTED =
+            "PREF_KEY_MANUFACTURER_BACKGROUND_PROCESS_RESTRICTED"
 
         fun getInstance(context: Context): PreferenceRepository =
             instance ?: synchronized(this) {

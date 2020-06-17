@@ -89,6 +89,10 @@
     <string name="reset_settings_label">Reset settings</string>
     <string name="reset_settings_message">Do you want to proceed?\nThis action will reset your settings to defaults</string>
     <string name="no_title_provided">No title provided</string>
+    <string name="manufacturer_background_restrictions_title">Permission required</string>
+    <string name="manufacturer_background_restrictions_message">Seems like you are running this live wallpaper on a device that restricts background usage.
+        It calls \'doze mode\'. If you wish to use sensors in live wallpaper for proper app functionality
+        highly recommended to whitelist live wallpaper in your device manufacturer settings app.</string>
 
     <!--    live wallpaper-->
     <string name="author">Jatzuk</string>

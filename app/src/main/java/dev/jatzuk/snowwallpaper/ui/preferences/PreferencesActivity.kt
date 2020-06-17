@@ -66,8 +66,4 @@ class PreferencesActivity : AppCompatActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
-
-    companion object {
-        private const val TAG = "PreferencesActivity"
-    }
 }

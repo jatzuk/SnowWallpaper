@@ -3,7 +3,7 @@
     <declare-styleable name="AbstractPreference">
         <attr name="preferenceTitle" format="string" />
         <attr name="preferenceSummary" format="string" />
-        <attr name="preferenceDefaultValue" format="integer|boolean" />
+        <attr name="preferenceDefaultValue" format="integer" />
         <attr name="preferenceBackground" format="reference" />
     </declare-styleable>
 

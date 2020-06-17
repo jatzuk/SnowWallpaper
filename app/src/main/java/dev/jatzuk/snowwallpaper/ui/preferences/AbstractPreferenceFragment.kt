@@ -107,8 +107,6 @@ abstract class AbstractPreferenceFragment(
         }
     }
 
-//    protected abstract fun provideDialogFragment(): AbstractDialogFragment?
-
     @ColorInt
     protected open fun provideBackgroundColor(): Int = Color.TRANSPARENT
 
