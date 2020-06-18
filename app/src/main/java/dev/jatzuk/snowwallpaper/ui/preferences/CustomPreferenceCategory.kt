@@ -30,7 +30,7 @@ class CustomPreferenceCategory : PreferenceGroup {
     }
 
     init {
-        layoutResource = R.layout.preference_category
+        layoutResource = R.layout.preference_category_custom
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {

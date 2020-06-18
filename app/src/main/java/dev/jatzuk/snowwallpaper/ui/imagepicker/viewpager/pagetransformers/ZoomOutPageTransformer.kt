@@ -18,11 +18,11 @@ class ZoomOutPageTransformer : ViewPager2.PageTransformer {
                 position < -1 -> alpha = 0f
                 position <= 1 -> {
                     val scaleFactor = max(MIN_SCALE, 1 - abs(position))
-                    val vertMargin = pageHeight * (1 - scaleFactor) / 2
-                    val horzMargin = pageWidth * (1 - scaleFactor) / 2
+                    val verticalMargin = pageHeight * (1 - scaleFactor) / 2
+                    val horizontalMargin = pageWidth * (1 - scaleFactor) / 2
                     translationX =
-                        if (position < 0) horzMargin - vertMargin / 2
-                        else horzMargin + vertMargin / 2
+                        if (position < 0) horizontalMargin - verticalMargin / 2
+                        else horizontalMargin + verticalMargin / 2
 
                     scaleX = scaleFactor
                     scaleY = scaleFactor
