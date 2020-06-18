@@ -4,7 +4,6 @@
 
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
         app:key="PREF_KEY_IS_SNOWFALL_ENABLED"
-        app:preferenceDefaultValue="true"
         app:preferenceSummary="@string/snowfall_summary"
         app:preferenceTitle="@string/snowfall_title" />
 
@@ -35,7 +34,6 @@
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
         android:dependency="PREF_KEY_IS_SNOWFALL_ENABLED"
         app:key="PREF_KEY_IS_SNOWFALL_UNIQUE_RADIUS_ENABLED"
-        app:preferenceDefaultValue="true"
         app:preferenceSummary="@string/unique_radius_summary"
         app:preferenceTitle="@string/unique_radius_title" />
 

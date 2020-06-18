@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
+import dev.jatzuk.snowwallpaper.utilities.BackgroundRestrictionNotifier
 import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 
@@ -37,13 +38,18 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_reset_settings, menu)
+        inflater.inflate(R.menu.menu_main_preferences_settings, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.reset_settings -> showConfirmDialog()
+            R.id.restriction_dialog_info -> {
+                BackgroundRestrictionNotifier.buildDialog(requireContext())
+                    .show(requireActivity().supportFragmentManager, null)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

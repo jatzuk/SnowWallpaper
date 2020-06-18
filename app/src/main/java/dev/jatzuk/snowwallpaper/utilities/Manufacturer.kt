@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.fragment.app.FragmentActivity
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import java.util.*
 
@@ -76,6 +76,7 @@ class Manufacturer private constructor(
                         packageNames.add("com.asus.mobilemanager")
                         classNames.add("com.asus.mobilemanager.MainActivity")
                     }
+                    else -> return null
                 }
             }
         }
@@ -84,6 +85,7 @@ class Manufacturer private constructor(
             val manufacturer = detectDeviceManufacturer()
             if (manufacturer == null) {
                 logging("Device manufacturer settings app not detected", TAG)
+                (context as FragmentActivity).recreate()
                 return
             }
 
@@ -119,33 +121,8 @@ class Manufacturer private constructor(
                 }
 
                 logging("Matching activity not found", TAG)
+                (context as FragmentActivity).recreate()
             }
         }
     }
 }
-
-/*
-"com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"
-    "com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity"
-
-    "com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity"
-    "com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity"
-    "com.huawei.systemmanager", "com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity"
-
-    "com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"
-    "com.coloros.safecenter", "com.coloros.safecenter.startupapp.StartupAppListActivity"
-
-    "com.oppo.safe", "com.oppo.safe.permission.startup.StartupAppListActivity"
-
-    "com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity"
-    "com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.BgStartUpManager"
-
-    "com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"
-
-    "com.samsung.android.lool", "com.samsung.android.sm.ui.battery.BatteryActivity"
-
-    "com.htc.pitroad", "com.htc.pitroad.landingpage.activity.LandingPageActivity"
-
-    "com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity
-
-* */

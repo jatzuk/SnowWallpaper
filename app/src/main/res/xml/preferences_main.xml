@@ -36,7 +36,6 @@
 
         <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
             app:key="PREF_KEY_RENDERER_FRAME_LIMIT"
-            app:preferenceDefaultValue="false"
             app:preferenceSummary="@string/frames_per_second_summary"
             app:preferenceTitle="@string/frames_per_second_title" />
 
@@ -45,7 +44,6 @@
     <dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory app:preferenceTitle="@string/category_sensors">
         <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
             app:key="PREF_KEY_IS_ROLL_SENSOR_ENABLED"
-            app:preferenceDefaultValue="true"
             app:preferenceSummary="@string/sensor_roll_summary"
             app:preferenceTitle="@string/sensor_roll_title" />
 
@@ -60,7 +58,6 @@
 
         <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
             app:key="PREF_KEY_IS_PITCH_SENSOR_ENABLED"
-            app:preferenceDefaultValue="true"
             app:preferenceSummary="@string/sensor_pitch_summary"
             app:preferenceTitle="@string/sensor_pitch_title" />
 

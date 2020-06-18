@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/overflow_menu"
+        android:icon="@drawable/ic_more_vert_24dp"
+        android:title=""
+        app:showAsAction="always">
+
+        <menu>
+            <item
+                android:id="@+id/restriction_dialog_info"
+                android:icon="@drawable/ic_background_restrictions_info_24dp"
+                android:title="@string/dialog_background_restrictions_info" />
+
+            <item
+                android:id="@+id/reset_settings"
+                android:icon="@drawable/ic_restore_default_settings_24dp"
+                android:title="@string/reset_settings_label" />
+        </menu>
+
+    </item>
+</menu>

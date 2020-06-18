@@ -217,7 +217,7 @@ class PreferenceRepository private constructor(context: Context) {
         preferenceManager.edit().clear().apply()
     }
 
-    fun isUserInformedAboutBackgroundRestrictions(): Boolean =
+    fun isUserInformedAboutBackgroundRestriction(): Boolean =
         preferenceManager.getBoolean(
             PREF_KEY_MANUFACTURER_BACKGROUND_PROCESS_RESTRICTED,
             false

@@ -1,15 +1,45 @@
 <component name="ProjectDictionaryState">
   <dictionary name="jatzuk">
     <words>
+      <w>appcontrol</w>
+      <w>asus</w>
       <w>attrib</w>
+      <w>autoboot</w>
       <w>backgroundimage</w>
+      <w>coloros</w>
+      <w>crashlytics</w>
       <w>framerate</w>
+      <w>huawei</w>
       <w>imagepicker</w>
       <w>imageviewer</w>
+      <w>iqoo</w>
       <w>jatzuk</w>
+      <w>landingpage</w>
+      <w>lateinit</w>
+      <w>leakcanary</w>
+      <w>letv</w>
+      <w>letvsafe</w>
+      <w>lool</w>
+      <w>miui</w>
+      <w>mobilemanager</w>
+      <w>opengl</w>
+      <w>oppo</w>
+      <w>permissionmanager</w>
+      <w>phoneoptimize</w>
+      <w>pitroad</w>
+      <w>powerkeeper</w>
       <w>recyclerview</w>
+      <w>safecenter</w>
+      <w>samsung</w>
       <w>seekbar</w>
       <w>snowwallpaper</w>
+      <w>squareup</w>
+      <w>startupapp</w>
+      <w>startupmgr</w>
+      <w>systemmanager</w>
+      <w>vert</w>
+      <w>vivo</w>
+      <w>xiaomi</w>
     </words>
   </dictionary>
 </component>
