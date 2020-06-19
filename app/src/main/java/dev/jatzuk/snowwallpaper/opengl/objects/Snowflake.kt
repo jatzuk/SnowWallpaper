@@ -4,6 +4,7 @@ import android.content.Context
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.height
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.pitch
+import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.ratio
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.roll
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.width
 import kotlin.math.PI
@@ -75,7 +76,8 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
         }
     }
 
-    private fun isOutside() = x < -radius || x > width + radius || y > height + radius
+    private fun isOutside() =
+        x < -radius * ratio || x > width + radius * ratio || y > height + (radius * ratio)
 
     private fun reset() {
         velocity = getRandomVelocity()
