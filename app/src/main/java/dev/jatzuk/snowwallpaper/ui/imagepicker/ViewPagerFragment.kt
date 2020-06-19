@@ -2,7 +2,6 @@ package dev.jatzuk.snowwallpaper.ui.imagepicker
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -78,17 +77,12 @@ class ViewPagerFragment : Fragment() {
                     }
                 }
 
-                val result = TextureProvider.saveImage(
+                TextureProvider.saveImage(
                     requireContext(),
                     textureType,
                     null,
                     imagesIds[viewPager2.currentItem]
                 )
-
-                val message =
-                    if (result) requireContext().getString(R.string.toast_image_storage_succeeded)
-                    else requireContext().getString(R.string.toast_image_storage_failed)
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
                 parentFragmentManager.popBackStack(
                     null,

@@ -194,16 +194,11 @@ abstract class TexturedAbstractDialogFragment(
     private fun storeSelectedImage() {
         provideTexturePositionSavePosition(viewPagerCurrentPosition)
 
-        val result = TextureProvider.saveImage(
+        TextureProvider.saveImage(
             requireContext(),
             textureType,
             textureArray[viewPagerCurrentPosition].toBitmap()
         )
-
-        val message =
-            if (result) requireContext().getString(R.string.toast_image_storage_succeeded)
-            else requireContext().getString(R.string.toast_image_storage_failed)
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -1,10 +1,10 @@
 package dev.jatzuk.snowwallpaper.utilities
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.DisplayMetrics
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -13,7 +13,10 @@ import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
 import dev.jatzuk.snowwallpaper.utilities.Logger.logging
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.io.IOException
 
@@ -27,30 +30,18 @@ object TextureProvider {
         textureType: TextureType,
         bitmap: Bitmap? = null,
         @DrawableRes resourceId: Int = -1
-    ): Boolean {
-        val (height, width) = DisplayMetrics().run {
-            (context as AppCompatActivity).windowManager.defaultDisplay.getMetrics(this)
-            ydpi.toInt() to xdpi.toInt()
-        }
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val bmp = bitmap ?: decodeSampledBitmapFromResource(context, resourceId)
+            val result = storeImage(context, bmp, textureType)
 
-        var result = false
-        runBlocking(Dispatchers.IO) {
-            val bitmapResolvingJob = async {
-                bitmap ?: decodeSampledBitmapFromResource(
-                    context.resources,
-                    resourceId,
-                    height,
-                    width
-                )
+            launch(Dispatchers.Main) {
+                val message =
+                    if (result) context.getString(R.string.toast_image_storage_succeeded)
+                    else context.getString(R.string.toast_image_storage_failed)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
-
-            val storeJob = async {
-                storeImage(context, bitmapResolvingJob.await(), textureType)
-            }
-
-            result = storeJob.await()
         }
-        return result
     }
 
     fun loadTexture(context: Context, textureType: TextureType): Bitmap? {
@@ -104,17 +95,19 @@ object TextureProvider {
     }
 
     private suspend fun decodeSampledBitmapFromResource(
-        resources: Resources,
-        @DrawableRes resourceId: Int,
-        requiredHeight: Int,
-        requiredWidth: Int
+        context: Context,
+        @DrawableRes resourceId: Int
     ): Bitmap = withContext(Dispatchers.IO) {
+        val (height, width) = DisplayMetrics().run {
+            (context as AppCompatActivity).windowManager.defaultDisplay.getMetrics(this)
+            ydpi.toInt() to xdpi.toInt()
+        }
         BitmapFactory.Options().run {
             inJustDecodeBounds = true
-            BitmapFactory.decodeResource(resources, resourceId, this)
-            inSampleSize = calculateInSampleSize(this, requiredWidth, requiredHeight)
+            BitmapFactory.decodeResource(context.resources, resourceId, this)
+            inSampleSize = calculateInSampleSize(this, width, height)
             inJustDecodeBounds = false
-            BitmapFactory.decodeResource(resources, resourceId, this)
+            BitmapFactory.decodeResource(context.resources, resourceId, this)
         }
     }
 
