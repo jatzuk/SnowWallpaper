@@ -58,11 +58,11 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
         TextureProvider.TextureType.SNOWFALL_TEXTURE
     ) {
 
-        override fun provideTexturePositionSavePosition(position: Int) {
+        override fun setTextureSavedPosition(position: Int) {
             preferenceRepository.setSnowfallTextureSavedPosition(position)
         }
 
-        override fun provideTexturePositionLoadPosition(): Int =
+        override fun getTextureSavedPosition(): Int =
             preferenceRepository.getSnowfallTextureSavedPosition()
     }
 }

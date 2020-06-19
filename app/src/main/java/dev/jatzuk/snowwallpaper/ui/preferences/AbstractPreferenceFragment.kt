@@ -100,7 +100,7 @@ abstract class AbstractPreferenceFragment(
                 TexturedAbstractDialogFragment.SELECT_CUSTOM_IMAGE
             )
             childFragmentManager.beginTransaction()
-                .add(it, dialogFragment::class.java.simpleName)
+                .add(it, it::class.java.simpleName)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
                 .commit()

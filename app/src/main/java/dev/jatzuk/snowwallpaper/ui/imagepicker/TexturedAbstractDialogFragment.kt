@@ -1,6 +1,7 @@
 package dev.jatzuk.snowwallpaper.ui.imagepicker
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
@@ -13,7 +14,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable
@@ -36,43 +36,35 @@ abstract class TexturedAbstractDialogFragment(
 ) : DialogFragment() {
 
     protected lateinit var preferenceRepository: PreferenceRepository
-    private lateinit var positiveButton: Button
     private lateinit var viewPager: ViewPager2
     private var textureAdapter: TextureAdapter<Drawable>? = null
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
     private val textureArray = ArrayList<Drawable>()
     private var viewPagerCurrentPosition = 0
-    private var userPickedImage: Drawable? = null
+    private lateinit var neuralButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setStyle(STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        textureIds.forEach { textureArray.add(ContextCompat.getDrawable(requireContext(), it)!!) }
-        textureArray.add(ContextCompat.getDrawable(requireContext(), R.drawable.b0)!!)
 
         preferenceRepository = PreferenceRepository.getInstance(requireContext())
-        viewPagerCurrentPosition = provideTexturePositionLoadPosition()
+        viewPagerCurrentPosition = getTextureSavedPosition()
 
-        if (viewPagerCurrentPosition == textureArray.lastIndex) {
-            val bitmap = loadUserTexture()
-            bitmap?.let { notifyAdapter(it.toDrawable(resources)) }
-        }
+        textureIds.forEach { textureArray.add(ContextCompat.getDrawable(requireContext(), it)!!) }
 
         onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {}
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                positiveButton.isEnabled = position != textureArray.lastIndex
                 viewPagerCurrentPosition = position
                 textureAdapter?.getParentView()?.children?.forEachIndexed { index, view ->
                     val circleImageView = view.findViewById<CircleImageView>(R.id.circle_image_view)
-                    if (position != index || index == textureArray.lastIndex)
-                        circleImageView.disableStroke()
-                    else {
+                    if (position == index) {
                         circleImageView.setStroke(
                             resources.getDimensionPixelSize(R.dimen.circle_image_view_stroke_width)
                         )
+                    } else {
+                        circleImageView.disableStroke()
                     }
                 }
             }
@@ -85,8 +77,7 @@ abstract class TexturedAbstractDialogFragment(
             textureArray,
             object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
                 override fun onClick(view: View?, position: Int, item: Drawable) {
-                    if (position == textureArray.lastIndex) startImagePickerIntent()
-                    else if (position != textureIds.size) startImageViewerFragment()
+                    if (position < textureIds.size) startImageViewerFragment()
                 }
             }
         )
@@ -142,12 +133,18 @@ abstract class TexturedAbstractDialogFragment(
 
                     viewPager = this
                 }
+
+                retainInstance = true
+                if (viewPagerCurrentPosition == textureIds.size + 1)
+                    loadUserTexture()?.let { notifyAdapter(it.toDrawable(resources)) }
             }
 
             setView(view)
             setTitle(getString(R.string.pick_image))
             setPositiveButton(getString(R.string.dialog_positive_button)) { _, _ -> storeSelectedImage() }
             setNegativeButton(getString(R.string.dialog_negative_button)) { _, _ -> dismiss() }
+            // work around from letting android destroy dialog on image load
+            setNeutralButton(getString(R.string.dialog_add_custom_image_button)) { _, _ -> }
             create()
         }
     }
@@ -156,7 +153,11 @@ abstract class TexturedAbstractDialogFragment(
         super.onStart()
         viewPager.registerOnPageChangeCallback(onPageChangeCallback)
 
-        dialog?.let { positiveButton = (it as AlertDialog).getButton(Dialog.BUTTON_POSITIVE) }
+        requireDialog().run {
+            neuralButton = (this as AlertDialog).getButton(Dialog.BUTTON_NEUTRAL).also {
+                it.setOnClickListener { startImagePickerIntent() }
+            }
+        }
     }
 
     override fun onStop() {
@@ -170,9 +171,8 @@ abstract class TexturedAbstractDialogFragment(
     }
 
     private fun startImagePickerIntent() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
         parentFragment?.startActivityForResult(
-            intent,
+            Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" },
             SELECT_CUSTOM_IMAGE
         )
     }
@@ -192,7 +192,7 @@ abstract class TexturedAbstractDialogFragment(
     }
 
     private fun storeSelectedImage() {
-        provideTexturePositionSavePosition(viewPagerCurrentPosition)
+        setTextureSavedPosition(viewPagerCurrentPosition)
 
         TextureProvider.saveImage(
             requireContext(),
@@ -202,23 +202,19 @@ abstract class TexturedAbstractDialogFragment(
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == AppCompatActivity.RESULT_OK) {
-            when (requestCode) {
-                SELECT_CUSTOM_IMAGE -> {
-                    data?.let {
-                        val cr = context?.contentResolver
-                        val stringType = cr?.getType(it.data!!)
-                        if (stringType?.substringBefore("/") == "image") {
-                            val drawable = getBitmapFromUri(it.data!!).toDrawable(resources)
-                            notifyAdapter(drawable)
-                        } else {
-                            Toast.makeText(
-                                context,
-                                getString(R.string.item_is_not_an_image),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
+        if (resultCode == RESULT_OK && requestCode == SELECT_CUSTOM_IMAGE) {
+            data?.let {
+                val cr = context?.contentResolver
+                val stringType = cr?.getType(it.data!!)
+                if (stringType?.substringBefore("/") == "image") {
+                    val drawable = getBitmapFromUri(it.data!!).toDrawable(resources)
+                    notifyAdapter(drawable)
+                } else {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.item_is_not_an_image),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -232,21 +228,15 @@ abstract class TexturedAbstractDialogFragment(
         MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
 
     private fun notifyAdapter(drawable: Drawable) {
-        if (userPickedImage == null) {
-            textureArray.add(viewPagerCurrentPosition, drawable)
-            textureAdapter?.notifyItemInserted(viewPagerCurrentPosition)
-        } else {
-            textureArray[viewPagerCurrentPosition - 1] = drawable
-            textureAdapter?.notifyItemChanged(viewPagerCurrentPosition - 1)
-            viewPager.currentItem = viewPagerCurrentPosition - 1
-        }
-
-        userPickedImage = drawable
+        textureArray.add(drawable)
+        viewPagerCurrentPosition = textureArray.lastIndex
+        textureAdapter?.notifyItemInserted(viewPagerCurrentPosition)
+        viewPager.setCurrentItem(viewPagerCurrentPosition, false)
     }
 
-    abstract fun provideTexturePositionSavePosition(position: Int)
+    abstract fun setTextureSavedPosition(position: Int)
 
-    abstract fun provideTexturePositionLoadPosition(): Int
+    abstract fun getTextureSavedPosition(): Int
 
     companion object {
         const val SELECT_CUSTOM_IMAGE = 1

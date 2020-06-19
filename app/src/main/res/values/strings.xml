@@ -70,6 +70,7 @@
     <string name="toast_image_storage_failed">We got some troubles storing this image</string>
     <string name="dialog_positive_button">Confirm</string>
     <string name="dialog_negative_button">Dismiss</string>
+    <string name="dialog_add_custom_image_button">Add Image</string>
 
     <!--    texture picker-->
     <string name="texture_picker_select_title">Select image</string>

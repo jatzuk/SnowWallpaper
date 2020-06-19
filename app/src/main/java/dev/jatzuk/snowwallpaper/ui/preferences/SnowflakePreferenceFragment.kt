@@ -72,11 +72,11 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
         TextureProvider.TextureType.SNOWFLAKE_TEXTURE
     ) {
 
-        override fun provideTexturePositionSavePosition(position: Int) {
+        override fun setTextureSavedPosition(position: Int) {
             preferenceRepository.setSnowflakeTextureSavedPosition(position)
         }
 
-        override fun provideTexturePositionLoadPosition(): Int =
+        override fun getTextureSavedPosition(): Int =
             preferenceRepository.getSnowflakeTextureSavedPosition()
     }
 }

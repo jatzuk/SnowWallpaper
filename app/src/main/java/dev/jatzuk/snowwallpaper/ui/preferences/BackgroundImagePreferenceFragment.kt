@@ -62,11 +62,11 @@ class BackgroundImagePreferenceFragment :
         TextureProvider.TextureType.BACKGROUND_IMAGE
     ) {
 
-        override fun provideTexturePositionSavePosition(position: Int) {
+        override fun setTextureSavedPosition(position: Int) {
             preferenceRepository.setBackgroundImageSavedPosition(position)
         }
 
-        override fun provideTexturePositionLoadPosition(): Int =
+        override fun getTextureSavedPosition(): Int =
             preferenceRepository.getBackgroundImageSavedPosition()
     }
 
