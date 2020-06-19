@@ -3,7 +3,6 @@
 
     <!-- category label -->
     <string name="category_renderer">Renderer</string>
-    <string name="category_general">General</string>
     <string name="category_sensors">Sensors</string>
 
     <!-- preference text -->
