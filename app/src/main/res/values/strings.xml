@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">SnowWallpaper</string>
+    <string name="app_name" translatable="false">Snow Wallpaper</string>
 
     <!-- category label -->
-    <string name="category_renderer">Renderer</string>
+    <string name="category_general">General</string>
     <string name="category_sensors">Sensors</string>
 
     <!-- preference text -->
@@ -17,9 +17,6 @@
 
     <string name="cosine_deviation_title">Cosine Deviation</string>
     <string name="cosine_deviation_summary">Cosine summary</string>
-
-    <string name="frames_per_second_title">Frames per second</string>
-    <string name="frames_per_second_summary">30</string>
 
     <string name="sensor_roll_title">Roll sensor</string>
     <string name="sensor_roll_summary">Affects snowflake position around Z axis</string>
@@ -80,15 +77,14 @@
     <string name="preferences">Preferences</string>
     <string name="open_gl20_unsupported_device_info">Your device is not comparable with openGL ES 2.0</string>
     <string name="item_is_not_an_image">Selected item is not an image</string>
-    <string name="no_title">no title provided</string>
-    <string name="no_summary">no summary provided</string>
+    <string name="no_title">No title provided</string>
+    <string name="no_summary">No summary provided</string>
     <string name="x_axis_rotation">Rotate around X-axis</string>
     <string name="y_axis_rotation">Rotate around Y-axis</string>
     <string name="z_axis_rotation">Rotate around Z-axis</string>
     <string name="select">Select</string>
     <string name="reset_settings_label">Reset settings</string>
     <string name="reset_settings_message">Do you want to proceed?\nThis action will reset your settings to defaults</string>
-    <string name="no_title_provided">No title provided</string>
     <string name="manufacturer_background_restrictions_title">Permission required</string>
     <string name="manufacturer_background_restrictions_message">Seems like you are running this live wallpaper on a device that may restrict background usage.
         If you wish to use orientation sensors in live wallpaper for proper app functionality
@@ -96,8 +92,8 @@
     <string name="dialog_background_restrictions_info">Why background restrictions?</string>
 
     <!--    live wallpaper-->
-    <string name="author">Jatzuk</string>
+    <string name="author" translatable="false">Jatzuk</string>
     <string name="description_text">Cute and simple snowfall simulation</string>
-    <string name="wallpaper_icon">wallpaperThumbnail TODO</string>
+    <string name="wallpaper_icon" translatable="false">wallpaperThumbnail TODO</string>
 
 </resources>

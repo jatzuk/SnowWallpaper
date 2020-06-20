@@ -20,7 +20,7 @@ abstract class AbstractSimpleDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            title = it.getString(TITLE_ARGUMENT_KEY) ?: getString(R.string.no_title_provided)
+            title = it.getString(TITLE_ARGUMENT_KEY) ?: getString(R.string.no_title)
             message = it.getString(MESSAGE_ARGUMENT_KEY)
             hasMultiChoiceItems = it.getBoolean(MULTI_CHOICE_KEY)
         }
