@@ -5,7 +5,6 @@ import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,7 +15,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
@@ -37,9 +35,9 @@ abstract class TexturedAbstractDialogFragment(
 
     protected lateinit var preferenceRepository: PreferenceRepository
     private lateinit var viewPager: ViewPager2
-    private var textureAdapter: TextureAdapter<Drawable>? = null
+    private var textureAdapter: TextureAdapter<Bitmap>? = null
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
-    private val textureArray = ArrayList<Drawable>()
+    private val textureArray = ArrayList<Bitmap>()
     private var viewPagerCurrentPosition = 0
     private lateinit var neuralButton: Button
 
@@ -49,7 +47,9 @@ abstract class TexturedAbstractDialogFragment(
         preferenceRepository = PreferenceRepository.getInstance(requireContext())
         viewPagerCurrentPosition = getTextureSavedPosition()
 
-        textureIds.forEach { textureArray.add(ContextCompat.getDrawable(requireContext(), it)!!) }
+        textureIds.forEach {
+            textureArray.add((ContextCompat.getDrawable(requireContext(), it))!!.toBitmap())
+        }
 
         onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {}
@@ -75,8 +75,8 @@ abstract class TexturedAbstractDialogFragment(
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         textureAdapter = TextureAdapter(
             textureArray,
-            object : AbstractRecyclerAdapter.OnViewHolderClick<Drawable> {
-                override fun onClick(view: View?, position: Int, item: Drawable) {
+            object : AbstractRecyclerAdapter.OnViewHolderClick<Bitmap> {
+                override fun onClick(view: View?, position: Int, item: Bitmap) {
                     if (position < textureIds.size) startImageViewerFragment()
                 }
             }
@@ -135,8 +135,10 @@ abstract class TexturedAbstractDialogFragment(
                 }
 
                 retainInstance = true
-                if (viewPagerCurrentPosition == textureIds.size + 1)
-                    loadUserTexture()?.let { notifyAdapter(it.toDrawable(resources)) }
+
+                if (viewPagerCurrentPosition == textureIds.size) {
+                    loadUserTexture()?.let { notifyAdapter(it) }
+                }
             }
 
             setView(view)
@@ -197,18 +199,20 @@ abstract class TexturedAbstractDialogFragment(
         TextureProvider.saveImage(
             requireContext(),
             textureType,
-            textureArray[viewPagerCurrentPosition].toBitmap()
+            textureArray[viewPagerCurrentPosition]
         )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK && requestCode == SELECT_CUSTOM_IMAGE) {
             data?.let {
-                val cr = context?.contentResolver
-                val stringType = cr?.getType(it.data!!)
+                val stringType = context?.contentResolver?.getType(it.data!!)
                 if (stringType?.substringBefore("/") == "image") {
-                    val drawable = getBitmapFromUri(it.data!!).toDrawable(resources)
-                    notifyAdapter(drawable)
+                    val bitmap = getBitmapFromUri(it.data!!)
+                    for (i in textureIds.size until textureArray.size) {
+                        if (bitmap.rowBytes == textureArray[i].rowBytes) return
+                    }
+                    notifyAdapter(bitmap)
                 } else {
                     Toast.makeText(
                         context,
@@ -227,8 +231,8 @@ abstract class TexturedAbstractDialogFragment(
     private fun getBitmapFromUri(uri: Uri): Bitmap =
         MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
 
-    private fun notifyAdapter(drawable: Drawable) {
-        textureArray.add(drawable)
+    private fun notifyAdapter(bitmap: Bitmap) {
+        textureArray.add(bitmap)
         viewPagerCurrentPosition = textureArray.lastIndex
         textureAdapter?.notifyItemInserted(viewPagerCurrentPosition)
         viewPager.setCurrentItem(viewPagerCurrentPosition, false)

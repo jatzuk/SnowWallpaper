@@ -1,7 +1,8 @@
 package dev.jatzuk.snowwallpaper.ui.imagepicker
 
-import android.graphics.drawable.Drawable
+import android.graphics.Bitmap
 import android.view.View
+import androidx.core.graphics.drawable.toDrawable
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 import dev.jatzuk.snowwallpaper.ui.helpers.CircleImageView
@@ -21,7 +22,7 @@ class TextureAdapter<T : Any>(
     override fun onBind(position: Int, listItem: T) {
         circleImageView.run {
             setPreviewImage(
-                (listItem as Drawable),
+                (listItem as Bitmap).toDrawable(resources),
                 resources.getDimensionPixelSize(R.dimen.texture_picker_image_size)
             )
         }
