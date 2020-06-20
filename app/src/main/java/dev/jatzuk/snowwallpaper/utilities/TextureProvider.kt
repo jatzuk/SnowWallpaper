@@ -137,14 +137,18 @@ object TextureProvider {
         textureType: TextureType
     ): Boolean = withContext(Dispatchers.IO) {
         textureCache[textureType] = bitmap
+        val (compressFormat, compressQuality) =
+            if (textureType == TextureType.BACKGROUND_IMAGE) Bitmap.CompressFormat.JPEG to 75
+            else Bitmap.CompressFormat.PNG to 100
+
         context.openFileOutput(textureType.path, Context.MODE_PRIVATE).use {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+            bitmap.compress(compressFormat, compressQuality, it)
         }
     }
 
     enum class TextureType(val path: String) {
         SNOWFALL_TEXTURE("snowfall_texture.png"),
         SNOWFLAKE_TEXTURE("snowflake_texture.png"),
-        BACKGROUND_IMAGE("background_image.png"),
+        BACKGROUND_IMAGE("background_image.jpeg"),
     }
 }
