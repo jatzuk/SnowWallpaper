@@ -59,7 +59,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     }
 
     override fun attachObserver() {
-        texturesViewModel.textures.observe(
+        texturesViewModel.textures?.observe(
             viewLifecycleOwner,
             Observer {
                 intentPreferences.forEachIndexed { index, preference ->
