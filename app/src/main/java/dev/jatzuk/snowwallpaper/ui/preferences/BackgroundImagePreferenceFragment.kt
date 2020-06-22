@@ -43,7 +43,10 @@ class BackgroundImagePreferenceFragment :
                 else if (textureCache[textureType] == null) {
                     textureCache[textureType] =
                         TextureProvider.assignDefaultTexture(requireContext(), textureType)
+                    preferenceRepository.setBackgroundImageSavedPosition(0)
                 }
+
+                texturesViewModel.updateTexture(textureType)
             }
         )
     }

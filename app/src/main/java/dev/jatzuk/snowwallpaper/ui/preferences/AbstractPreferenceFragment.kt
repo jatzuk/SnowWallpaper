@@ -21,6 +21,7 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
+import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 
 abstract class AbstractPreferenceFragment(
     @XmlRes private val xmlRes: Int
@@ -30,6 +31,7 @@ abstract class AbstractPreferenceFragment(
     protected lateinit var preferenceRepository: PreferenceRepository
     protected lateinit var textureCache: TextureCache
     protected lateinit var preferenceLiveData: PreferenceLiveData<Boolean>
+    protected lateinit var texturesViewModel: TexturesViewModel
 
     final override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(xmlRes, rootKey)
@@ -57,6 +59,7 @@ abstract class AbstractPreferenceFragment(
             preferenceRepository = PreferenceRepository.getInstance(this)
             textureCache = TextureCache.getInstance()
             appBarTitleViewModel = ViewModelProvider(this).get(AppBarTitleViewModel::class.java)
+            texturesViewModel = ViewModelProvider(this).get(TexturesViewModel::class.java)
         }
         setUp()
     }

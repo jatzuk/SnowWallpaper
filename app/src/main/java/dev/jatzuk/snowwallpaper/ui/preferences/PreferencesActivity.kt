@@ -2,7 +2,9 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -54,10 +56,21 @@ class PreferencesActivity : AppCompatActivity(),
         }
         supportFragmentManager.beginTransaction()
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            .replace(R.id.preferences_container, fragment)
-            .addToBackStack(null)
+            .handlePreferenceStartFragmentPosition(fragment)
             .commit()
         return true
+    }
+
+    private fun FragmentTransaction.handlePreferenceStartFragmentPosition(
+        fragment: Fragment
+    ): FragmentTransaction {
+        val container = findViewById<FrameLayout>(R.id.preferences_settings_container)
+            ?: findViewById(R.id.preferences_container)
+
+        return apply {
+            replace(container.id, fragment)
+            if (container.id != R.id.preferences_settings_container) addToBackStack(null)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

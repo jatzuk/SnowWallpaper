@@ -1,15 +1,20 @@
 package dev.jatzuk.snowwallpaper.viewmodels
 
-import androidx.lifecycle.LiveData
+import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
+import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
 class TexturesViewModel : ViewModel() {
 
-    private var textures: MutableLiveData<TextureCache>? = null
+    val textures = MutableLiveData<HashMap<TextureProvider.TextureType, Bitmap?>>()
+        get() {
+            field.value = TextureCache.getInstance().hashMap
+            return field
+        }
 
-    fun getTextures(textureCache: TextureCache): LiveData<TextureCache> = synchronized(this) {
-        return textures ?: MutableLiveData(textureCache).also { textures = it }
+    fun updateTexture(textureType: TextureProvider.TextureType) {
+        textures.value?.set(textureType, TextureCache.getInstance()[textureType])
     }
 }

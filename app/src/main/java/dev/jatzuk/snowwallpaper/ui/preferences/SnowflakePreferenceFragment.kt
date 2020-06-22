@@ -48,7 +48,10 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
                 else if (textureCache[textureType] == null) {
                     textureCache[textureType] =
                         TextureProvider.assignDefaultTexture(requireContext(), textureType)
+                    preferenceRepository.setSnowflakeTextureSavedPosition(0)
                 }
+
+                texturesViewModel.updateTexture(textureType)
             }
         )
     }

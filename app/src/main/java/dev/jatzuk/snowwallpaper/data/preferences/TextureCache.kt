@@ -6,7 +6,7 @@ import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
 class TextureCache private constructor(entriesCount: Int) {
 
-    private val hashMap = HashMap<TextureProvider.TextureType, Bitmap?>(entriesCount, 1f)
+    val hashMap = HashMap<TextureProvider.TextureType, Bitmap?>(entriesCount, 1f)
 
     private fun add(key: TextureProvider.TextureType, value: Bitmap?) {
         hashMap[key] = value

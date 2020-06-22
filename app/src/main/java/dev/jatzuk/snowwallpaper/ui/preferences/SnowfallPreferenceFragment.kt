@@ -38,7 +38,10 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
                 else if (textureCache[textureType] == null) {
                     textureCache[textureType] =
                         TextureProvider.assignDefaultTexture(requireContext(), textureType)
+                    preferenceRepository.setSnowfallTextureSavedPosition(0)
                 }
+
+                texturesViewModel.updateTexture(textureType)
             }
         )
     }

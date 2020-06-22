@@ -9,25 +9,21 @@ import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
 import dev.jatzuk.snowwallpaper.utilities.BackgroundRestrictionNotifier
 import dev.jatzuk.snowwallpaper.utilities.TextureProvider
-import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 
 class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
 
     private lateinit var intentPreferences: Array<IntentPreference>
     private lateinit var categoryDisabledDrawable: Drawable
-    private lateinit var texturesViewModel: TexturesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         preferenceRepository = PreferenceRepository.getInstance(requireContext())
-        texturesViewModel = ViewModelProvider(this).get(TexturesViewModel::class.java)
         categoryDisabledDrawable =
             ContextCompat.getDrawable(requireContext(), R.drawable.category_disabled)!!
     }
@@ -63,7 +59,7 @@ class PreferencesFragment : AbstractPreferenceFragment(R.xml.preferences_main) {
     }
 
     override fun attachObserver() {
-        texturesViewModel.getTextures(textureCache).observe(
+        texturesViewModel.textures.observe(
             viewLifecycleOwner,
             Observer {
                 intentPreferences.forEachIndexed { index, preference ->

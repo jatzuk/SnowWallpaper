@@ -18,6 +18,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import dev.jatzuk.snowwallpaper.R
@@ -25,6 +26,7 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 import dev.jatzuk.snowwallpaper.ui.helpers.CircleImageView
 import dev.jatzuk.snowwallpaper.utilities.TextureProvider
+import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -40,6 +42,7 @@ abstract class TexturedAbstractDialogFragment(
     private val textureArray = ArrayList<Bitmap>()
     private var viewPagerCurrentPosition = 0
     private lateinit var neuralButton: Button
+    private lateinit var texturesViewModel: TexturesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +72,8 @@ abstract class TexturedAbstractDialogFragment(
                 }
             }
         }
+
+        texturesViewModel = ViewModelProvider(requireActivity()).get(TexturesViewModel::class.java)
     }
 
     @SuppressLint("InflateParams")
@@ -201,6 +206,8 @@ abstract class TexturedAbstractDialogFragment(
             textureType,
             textureArray[viewPagerCurrentPosition]
         )
+
+        texturesViewModel.updateTexture(textureType)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
