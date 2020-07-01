@@ -32,6 +32,10 @@
             android:name=".ui.preferences.PreferencesActivity"
             android:exported="true" />
 
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+
         <service
             android:name=".opengl.wallpaper.OpenGLWallpaperService"
             android:enabled="true"

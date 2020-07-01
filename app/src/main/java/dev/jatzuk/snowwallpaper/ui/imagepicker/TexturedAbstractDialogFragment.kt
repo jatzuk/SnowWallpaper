@@ -21,10 +21,13 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 import dev.jatzuk.snowwallpaper.ui.helpers.CircleImageView
+import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
 import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 import kotlin.math.abs
@@ -211,24 +214,47 @@ abstract class TexturedAbstractDialogFragment(
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK && requestCode == SELECT_CUSTOM_IMAGE) {
-            data?.let {
-                val stringType = context?.contentResolver?.getType(it.data!!)
-                if (stringType?.substringBefore("/") == "image") {
-                    val bitmap = getBitmapFromUri(it.data!!)
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                SELECT_CUSTOM_IMAGE -> {
+                    data?.let {
+                        val stringType = context?.contentResolver?.getType(it.data!!)
+                        if (stringType?.substringBefore("/") == "image") {
+                            openCropActivity(it.data!!)
+                        } else {
+                            Toast.makeText(
+                                context,
+                                getString(R.string.item_is_not_an_image),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+                CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                    val bitmap = getBitmapFromUri(CropImage.getActivityResult(data).uri)
                     for (i in textureIds.size until textureArray.size) {
                         if (bitmap.rowBytes == textureArray[i].rowBytes) return
                     }
                     notifyAdapter(bitmap)
-                } else {
-                    Toast.makeText(
-                        context,
-                        getString(R.string.item_is_not_an_image),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                }
+                CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE -> {
+                    val result = CropImage.getActivityResult(data)
+                    val errorMessage = "Failed to crop requested image"
+                    errorLog(errorMessage, e = result.error)
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+
                 }
             }
         }
+    }
+
+    private fun openCropActivity(uri: Uri) {
+        parentFragment?.startActivityForResult(
+            CropImage.activity(uri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .getIntent(requireParentFragment().requireContext()),
+            CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE
+        )
     }
 
     private fun loadUserTexture(): Bitmap? =
