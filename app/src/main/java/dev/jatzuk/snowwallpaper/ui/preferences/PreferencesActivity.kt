@@ -2,7 +2,6 @@ package dev.jatzuk.snowwallpaper.ui.preferences
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -11,18 +10,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.databinding.ActivitySettingsBinding
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
 class PreferencesActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
+    private lateinit var binding: ActivitySettingsBinding
     private lateinit var appBarTitleViewModel: AppBarTitleViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
 
-        setSupportActionBar(findViewById(R.id.toolbar))
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (savedInstanceState == null) {
@@ -64,8 +67,7 @@ class PreferencesActivity : AppCompatActivity(),
     private fun FragmentTransaction.handlePreferenceStartFragmentPosition(
         fragment: Fragment
     ): FragmentTransaction {
-        val container = findViewById<FrameLayout>(R.id.preferences_settings_container)
-            ?: findViewById(R.id.preferences_container)
+        val container = binding.preferencesSettingsContainer ?: binding.preferencesContainer
 
         return apply {
             replace(container.id, fragment)

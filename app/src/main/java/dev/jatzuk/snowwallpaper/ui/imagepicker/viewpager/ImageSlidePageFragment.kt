@@ -7,15 +7,18 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import dev.jatzuk.snowwallpaper.R
+import dev.jatzuk.snowwallpaper.databinding.FragmentScreenSlidePageBinding
 
 class ImageSlidePageFragment : Fragment() {
+
+    private var _binding: FragmentScreenSlidePageBinding? = null
+    private val binding get() = _binding!!
 
     @DrawableRes
     private var imageId = 0
@@ -26,11 +29,9 @@ class ImageSlidePageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         arguments?.let { imageId = it.getInt(ARG_IMAGE_ID) }
-        val v = inflater.inflate(R.layout.fragment_screen_slide_page, container, false)
-        v.findViewById<ImageView>(R.id.image_view).apply {
-            setImageDrawable(ContextCompat.getDrawable(requireContext(), imageId))
-        }
-        return v
+        _binding = FragmentScreenSlidePageBinding.inflate(inflater, container, false)
+        binding.imageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), imageId))
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -51,8 +52,9 @@ class ImageSlidePageFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         addMargin()
+        _binding = null
+        super.onDestroyView()
     }
 
     private fun removeMargin() {

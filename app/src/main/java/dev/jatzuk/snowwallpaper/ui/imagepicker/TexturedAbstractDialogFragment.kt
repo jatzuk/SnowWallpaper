@@ -25,6 +25,7 @@ import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
+import dev.jatzuk.snowwallpaper.databinding.FragmentPickerDialogBinding
 import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 import dev.jatzuk.snowwallpaper.ui.helpers.CircleImageView
 import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
@@ -38,8 +39,9 @@ abstract class TexturedAbstractDialogFragment(
     private val textureType: TextureProvider.TextureType
 ) : DialogFragment() {
 
+    private var _binding: FragmentPickerDialogBinding? = null
+    private val binding get() = _binding!!
     protected lateinit var preferenceRepository: PreferenceRepository
-    private lateinit var viewPager: ViewPager2
     private var textureAdapter: TextureAdapter<Bitmap>? = null
     private lateinit var onPageChangeCallback: ViewPager2.OnPageChangeCallback
     private val textureArray = ArrayList<Bitmap>()
@@ -92,8 +94,10 @@ abstract class TexturedAbstractDialogFragment(
 
         return AlertDialog.Builder(requireContext(), R.style.DefaultAlertDialog).run {
             val inflater = requireActivity().layoutInflater
-            val view = inflater.inflate(R.layout.fragment_picker_dialog, null).apply {
-                findViewById<ViewPager2>(R.id.pager).run {
+            val view = inflater.inflate(R.layout.fragment_picker_dialog, null)
+            _binding = FragmentPickerDialogBinding.bind(view)
+            view.apply {
+                binding.viewPager2.run {
                     adapter = textureAdapter
                     orientation = ORIENTATION_HORIZONTAL
                     clipToPadding = false
@@ -138,8 +142,6 @@ abstract class TexturedAbstractDialogFragment(
                         val offset = position * -(2 * offsetPx + pageMarginPx)
                         page.translationX = offset
                     }
-
-                    viewPager = this
                 }
 
                 retainInstance = true
@@ -161,7 +163,7 @@ abstract class TexturedAbstractDialogFragment(
 
     override fun onStart() {
         super.onStart()
-        viewPager.registerOnPageChangeCallback(onPageChangeCallback)
+        binding.viewPager2.registerOnPageChangeCallback(onPageChangeCallback)
 
         requireDialog().run {
             neuralButton = (this as AlertDialog).getButton(Dialog.BUTTON_NEUTRAL).also {
@@ -172,12 +174,13 @@ abstract class TexturedAbstractDialogFragment(
 
     override fun onStop() {
         super.onStop()
-        viewPager.unregisterOnPageChangeCallback(onPageChangeCallback)
+        binding.viewPager2.unregisterOnPageChangeCallback(onPageChangeCallback)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         textureAdapter = null
+        _binding = null
     }
 
     private fun startImagePickerIntent() {
@@ -268,7 +271,7 @@ abstract class TexturedAbstractDialogFragment(
         textureArray.add(bitmap)
         viewPagerCurrentPosition = textureArray.lastIndex
         textureAdapter?.notifyItemInserted(viewPagerCurrentPosition)
-        viewPager.setCurrentItem(viewPagerCurrentPosition, false)
+        binding.viewPager2.setCurrentItem(viewPagerCurrentPosition, false)
     }
 
     abstract fun setTextureSavedPosition(position: Int)
