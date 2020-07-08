@@ -51,6 +51,7 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun startLiveWallpaperPreview() {
+        Toast.makeText(this, getString(R.string.live_wallpaper_starting), Toast.LENGTH_SHORT).show()
         val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER).apply {
             putExtra(
                 WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,

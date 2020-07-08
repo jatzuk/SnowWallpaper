@@ -94,6 +94,7 @@
         If you wish to use orientation sensors in live wallpaper for proper app functionality
         highly recommended to whitelist live wallpaper in your device manufacturer settings app.</string>
     <string name="dialog_background_restrictions_info">Why background restrictions?</string>
+    <string name="live_wallpaper_starting">Loading live wallpaper preview</string>
 
     <!--    live wallpaper-->
     <string name="author">Jatzuk</string>
