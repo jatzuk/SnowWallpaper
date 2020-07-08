@@ -113,13 +113,12 @@ class ViewPagerFragment : Fragment() {
             textureType: TextureProvider.TextureType,
             resourcesIds: IntArray,
             @DrawableRes drawableId: Int
-        ) =
-            ViewPagerFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(EXTRA_IMAGE_TYPE, textureType.ordinal)
-                    putIntArray(EXTRA_IMAGE_LIST_IDS, resourcesIds)
-                    putInt(EXTRA_IMAGE_ID, drawableId)
-                }
+        ) = ViewPagerFragment().apply {
+            arguments = Bundle().apply {
+                putInt(EXTRA_IMAGE_TYPE, textureType.ordinal)
+                putIntArray(EXTRA_IMAGE_LIST_IDS, resourcesIds)
+                putInt(EXTRA_IMAGE_ID, drawableId)
             }
+        }
     }
 }

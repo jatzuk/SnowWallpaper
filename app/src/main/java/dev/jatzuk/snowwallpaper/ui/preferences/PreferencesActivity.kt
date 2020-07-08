@@ -10,19 +10,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.databinding.ActivitySettingsBinding
+import dev.jatzuk.snowwallpaper.databinding.ActivityPreferencesBinding
 import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
 
 class PreferencesActivity : AppCompatActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
-    private lateinit var binding: ActivitySettingsBinding
+    private lateinit var binding: ActivityPreferencesBinding
     private lateinit var appBarTitleViewModel: AppBarTitleViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        binding = ActivityPreferencesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)

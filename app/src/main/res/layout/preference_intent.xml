@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/PreferenceDefault">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/PreferenceDefault"
+    tools:viewBindingIgnore="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/master_layout"
         android:layout_width="match_parent"
-        android:minHeight="@dimen/preference_intent_min_height"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:minHeight="@dimen/preference_intent_min_height">
 
         <include layout="@layout/preference_base" />
 
