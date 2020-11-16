@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.fragment.app.FragmentActivity
 import dev.jatzuk.snowwallpaper.R
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import java.util.*
 
 class Manufacturer private constructor(
@@ -21,7 +20,7 @@ class Manufacturer private constructor(
         private const val TAG = "Manufacturer"
 
         private fun detectDeviceManufacturer(): Manufacturer? {
-            logging("Trying to detect device manufacturer", TAG)
+            Logger.d("Trying to detect device manufacturer", TAG)
             return Manufacturer(Build.MANUFACTURER.toLowerCase(Locale.getDefault())).apply {
                 when (name) {
                     "xiaomi" -> {
@@ -84,12 +83,12 @@ class Manufacturer private constructor(
         fun tryOpenManufacturerBackgroundRestrictionSettings(context: Context) {
             val manufacturer = detectDeviceManufacturer()
             if (manufacturer == null) {
-                logging("Device manufacturer settings app not detected", TAG)
+                Logger.d("Device manufacturer settings app not detected", TAG)
                 (context as FragmentActivity).recreate()
                 return
             }
 
-            logging(
+            Logger.d(
                 "Device manufacturer presented in app settings, " +
                         "trying to start activity: ${manufacturer.packageNames}, " +
                         manufacturer.classNames,
@@ -111,7 +110,7 @@ class Manufacturer private constructor(
                             PackageManager.MATCH_DEFAULT_ONLY
                         ) != null
                     ) {
-                        logging(
+                        Logger.d(
                             "Starting activity ${manufacturer.packageNames[i]}, " +
                                     manufacturer.classNames[i], TAG
                         )
@@ -120,7 +119,7 @@ class Manufacturer private constructor(
                     }
                 }
 
-                logging("Matching activity not found", TAG)
+                Logger.d("Matching activity not found", TAG)
                 (context as FragmentActivity).recreate()
             }
         }

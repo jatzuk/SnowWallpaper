@@ -28,9 +28,9 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.databinding.FragmentPickerDialogBinding
 import dev.jatzuk.snowwallpaper.ui.helpers.AbstractRecyclerAdapter
 import dev.jatzuk.snowwallpaper.ui.helpers.CircleImageView
-import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
+import dev.jatzuk.snowwallpaper.ui.viewmodels.TexturesViewModel
+import dev.jatzuk.snowwallpaper.utilities.Logger
 import dev.jatzuk.snowwallpaper.utilities.TextureProvider
-import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -243,7 +243,7 @@ abstract class TexturedAbstractDialogFragment(
                 CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE -> {
                     val result = CropImage.getActivityResult(data)
                     val errorMessage = "Failed to crop requested image"
-                    errorLog(errorMessage, e = result.error)
+                    Logger.e(errorMessage, e = result.error)
                     Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
 
                 }

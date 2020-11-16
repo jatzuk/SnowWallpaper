@@ -1,7 +1,7 @@
 package dev.jatzuk.snowwallpaper.data.preferences
 
 import android.graphics.Bitmap
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
+import dev.jatzuk.snowwallpaper.utilities.Logger
 import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
 class TextureCache private constructor(entriesCount: Int) {
@@ -21,7 +21,7 @@ class TextureCache private constructor(entriesCount: Int) {
      * */
     fun clear() {
         // expecting proper bitmap native memory management instead of manual bitmap.recycle()
-        logging("texture cache is cleared", TAG)
+        Logger.d("texture cache is cleared", TAG)
         hashMap.clear()
     }
 

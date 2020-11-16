@@ -7,7 +7,7 @@ import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.opengl.data.VertexArray
 import dev.jatzuk.snowwallpaper.opengl.programs.ShaderProgram
 import dev.jatzuk.snowwallpaper.opengl.util.loadTextureToOpenGL
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
+import dev.jatzuk.snowwallpaper.utilities.Logger
 import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 
 abstract class OpenGLSceneObject(
@@ -33,20 +33,20 @@ abstract class OpenGLSceneObject(
 
     private fun updateTexture(context: Context) {
         if (textureGenerationId == -1) {
-            logging("$textureType first bitmap initialization", TAG)
+            Logger.d("$textureType first bitmap initialization", TAG)
             loadTextureToOpenGL(context, textureType)?.run {
                 textureId = first
                 textureGenerationId = second
             } ?: throw IllegalArgumentException("OpenGL binding for $textureType failed")
         } else {
             if (textureGenerationId != TextureCache.getInstance()[textureType]?.generationId) {
-                logging("$textureType has changed, allocating new", TAG)
+                Logger.d("$textureType has changed, allocating new", TAG)
                 loadTextureToOpenGL(context, textureType)?.run {
                     textureId = first
                     textureGenerationId = second
                 }
             } else {
-                logging("$textureType - actual set in OpenGL, using existing", TAG)
+                Logger.d("$textureType - actual set in OpenGL, using existing", TAG)
             }
         }
     }
@@ -67,12 +67,12 @@ abstract class OpenGLSceneObject(
 
         val updatedObjectsCount = getObjectCount()
         if (updatedObjectsCount != objectsCount) {
-            logging("$textureType updated size, reallocating values", TAG)
+            Logger.d("$textureType updated size, reallocating values", TAG)
             objectsCount = updatedObjectsCount
             bindObjectArray(context)
             vertexArray = updateVertexArray()
         } else {
-            logging("$textureType previously size, no need to reallocate", TAG)
+            Logger.d("$textureType previously size, no need to reallocate", TAG)
 
         }
 
@@ -88,6 +88,7 @@ abstract class OpenGLSceneObject(
     abstract fun draw()
 
     companion object {
+
         private const val TAG = "OpenGLSceneObject"
     }
 }

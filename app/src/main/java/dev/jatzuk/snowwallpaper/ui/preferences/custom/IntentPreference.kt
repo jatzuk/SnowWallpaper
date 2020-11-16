@@ -23,7 +23,7 @@ class IntentPreference(
     init {
         if (backgroundImage == null) {
             backgroundImage =
-                ContextCompat.getDrawable(context, R.drawable.background_preference_intent)
+                ContextCompat.getDrawable(context, R.drawable.b0)
         }
     }
 

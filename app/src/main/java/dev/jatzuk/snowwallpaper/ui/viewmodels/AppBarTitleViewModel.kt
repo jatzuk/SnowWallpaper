@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.viewmodels
+package dev.jatzuk.snowwallpaper.ui.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

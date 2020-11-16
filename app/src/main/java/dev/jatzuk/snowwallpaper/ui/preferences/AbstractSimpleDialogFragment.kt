@@ -7,7 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
+import dev.jatzuk.snowwallpaper.utilities.Logger.e
 
 abstract class AbstractSimpleDialogFragment : DialogFragment() {
 
@@ -43,11 +43,11 @@ abstract class AbstractSimpleDialogFragment : DialogFragment() {
     }
 
     private fun invokeOnPositiveAction() {
-        positiveActionCallback?.invoke() ?: errorLog("Positive action callback is null", TAG)
+        positiveActionCallback?.invoke() ?: e("Positive action callback is null", TAG)
     }
 
     private fun invokeOnNegativeAction() {
-        negativeActionCallback?.invoke() ?: errorLog("Negative action callback is null", TAG)
+        negativeActionCallback?.invoke() ?: e("Negative action callback is null", TAG)
         dismiss()
     }
 

@@ -3,9 +3,7 @@ package dev.jatzuk.snowwallpaper.opengl.util
 import android.content.Context
 import android.content.res.Resources
 import android.opengl.GLES20.*
-import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
-import dev.jatzuk.snowwallpaper.utilities.Logger.isLogging
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
+import dev.jatzuk.snowwallpaper.utilities.Logger
 import java.io.IOException
 import java.io.InputStreamReader
 
@@ -27,7 +25,7 @@ object ShaderHelper {
         val vertexShader = compileVertexShader(vertexShaderSource)
         val fragmentShader = compileFragmentShader(fragmentShaderSource)
         val program = linkProgram(vertexShader, fragmentShader)
-        if (isLogging) validateProgram(program)
+        if (Logger.isLogging) validateProgram(program)
         return program
     }
 
@@ -41,7 +39,7 @@ object ShaderHelper {
         val shaderObjectId = glCreateShader(shaderType)
 
         if (shaderObjectId == 0) {
-            errorLog("Could not create a new shader", TAG)
+            Logger.e("Could not create a new shader", TAG)
             return 0
         }
 
@@ -49,14 +47,14 @@ object ShaderHelper {
         glCompileShader(shaderObjectId)
         val compileStatus = intArrayOf(0)
         glGetShaderiv(shaderObjectId, GL_COMPILE_STATUS, compileStatus, 0)
-        logging(
+        Logger.d(
             "Results of compiling shader:\n$shaderCode${glGetShaderInfoLog(shaderObjectId)}",
-            TAG, translateToFirebase = false
+            TAG, sendToFBA = false
         )
 
         if (compileStatus[0] == 0) {
             glDeleteShader(shaderObjectId)
-            errorLog("Compilation of shader failed", TAG)
+            Logger.e("Compilation of shader failed", TAG)
             return 0
         }
 
@@ -67,7 +65,7 @@ object ShaderHelper {
         val programObjectId = glCreateProgram()
 
         if (programObjectId == 0) {
-            errorLog("Could not link program", TAG)
+            Logger.e("Could not link program", TAG)
             return 0
         }
 
@@ -76,14 +74,14 @@ object ShaderHelper {
         glLinkProgram(programObjectId)
         val linkStatus = intArrayOf(0)
         glGetProgramiv(programObjectId, GL_LINK_STATUS, linkStatus, 0)
-        logging(
+        Logger.d(
             "Results of linking program:${linkStatus[0]}${glGetProgramInfoLog(programObjectId)}",
             TAG
         )
 
         if (linkStatus[0] == 0) {
             glDeleteProgram(programObjectId)
-            errorLog("Linking of program failed", TAG)
+            Logger.e("Linking of program failed", TAG)
             return 0
         }
 
@@ -94,10 +92,12 @@ object ShaderHelper {
         glValidateProgram(programObjectId)
         val validateStatus = intArrayOf(0)
         glGetProgramiv(programObjectId, GL_VALIDATE_STATUS, validateStatus, 0)
-        logging(
-            "Result of validating program:${validateStatus[0]}${glGetProgramInfoLog(
-                programObjectId
-            )}", TAG
+        Logger.d(
+            "Result of validating program:${validateStatus[0]}${
+                glGetProgramInfoLog(
+                    programObjectId
+                )
+            }", TAG
         )
 
         return validateStatus[0] != 0

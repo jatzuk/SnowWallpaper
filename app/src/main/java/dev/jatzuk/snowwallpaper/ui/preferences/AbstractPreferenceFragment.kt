@@ -20,8 +20,8 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceLiveData
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.ui.imagepicker.TexturedAbstractDialogFragment
-import dev.jatzuk.snowwallpaper.viewmodels.AppBarTitleViewModel
-import dev.jatzuk.snowwallpaper.viewmodels.TexturesViewModel
+import dev.jatzuk.snowwallpaper.ui.viewmodels.AppBarTitleViewModel
+import dev.jatzuk.snowwallpaper.ui.viewmodels.TexturesViewModel
 
 abstract class AbstractPreferenceFragment(
     @XmlRes private val xmlRes: Int

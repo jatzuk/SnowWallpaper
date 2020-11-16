@@ -1,6 +1,7 @@
 package dev.jatzuk.snowwallpaper.opengl.wallpaper
 
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -16,13 +17,52 @@ import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.utilities.Logger
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 
 class OpenGLWallpaperService : WallpaperService() {
 
     private var sensorManager: SensorManager? = null
 
     override fun onCreateEngine(): Engine = WallpaperEngine()
+
+    override fun onLowMemory() {
+        Logger.d("onLowMemory", TAG)
+        super.onLowMemory()
+    }
+
+    override fun onTrimMemory(level: Int) {
+        Logger.d("onTrimMemory", TAG)
+        super.onTrimMemory(level)
+    }
+
+    override fun onCreate() {
+        Logger.d("onCreate", TAG)
+        super.onCreate()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Logger.d("onStartCommand $intent $flags $startId", TAG)
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    override fun onDestroy() {
+        Logger.d("onDestroy", TAG)
+        super.onDestroy()
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        Logger.d("onUnbind $intent", TAG)
+        return super.onUnbind(intent)
+    }
+
+    override fun onRebind(intent: Intent?) {
+        Logger.d("onRebind $intent", TAG)
+        super.onRebind(intent)
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        Logger.d("onTaskRemoved", TAG)
+        super.onTaskRemoved(rootIntent)
+    }
 
     private inner class WallpaperEngine : Engine(), SensorEventListener {
 
@@ -41,10 +81,8 @@ class OpenGLWallpaperService : WallpaperService() {
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
 
-            Logger.initFirebaseAnalytics(this@OpenGLWallpaperService)
-
-            logging("Wallpaper Engine firebaseAnalytics initialized", WALLPAPER_ENGINE_TAG)
-            logging("Wallpaper Engine onCreate()", WALLPAPER_ENGINE_TAG)
+            Logger.d("Wallpaper Engine firebaseAnalytics initialized", WALLPAPER_ENGINE_TAG)
+            Logger.d("Wallpaper Engine onCreate()", WALLPAPER_ENGINE_TAG)
 
             preferenceRepository = PreferenceRepository.getInstance(this@OpenGLWallpaperService)
             display = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
@@ -52,7 +90,7 @@ class OpenGLWallpaperService : WallpaperService() {
             updateSensorSensitivityValues()
 
             if (isRollSensorEnabled || isPitchSensorEnabled) {
-                logging("Wallpaper Engine createSensorListener()", SENSOR_INFO_TAG)
+                Logger.d("Wallpaper Engine createSensorListener()", SENSOR_INFO_TAG)
                 sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
             }
 
@@ -69,9 +107,8 @@ class OpenGLWallpaperService : WallpaperService() {
 
         override fun onVisibilityChanged(visible: Boolean) {
             super.onVisibilityChanged(visible)
-
-            logging("Wallpaper Engine onVisibilityChanged(): $visible", TAG)
-            logging("Wallpaper Engine isRendererSet: $isRendererSet", TAG)
+            Logger.d("Wallpaper Engine onVisibilityChanged(): $visible", TAG)
+            Logger.d("Wallpaper Engine isRendererSet: $isRendererSet", TAG)
 
             if (isRendererSet) {
                 if (visible) {
@@ -87,7 +124,7 @@ class OpenGLWallpaperService : WallpaperService() {
 
         override fun onDestroy() {
             super.onDestroy()
-            logging("Wallpaper Engine onDestroy() | inPreview: $isPreview", TAG)
+            Logger.d("Wallpaper Engine onDestroy() | inPreview: $isPreview", TAG)
             glSurfaceView.onWallpaperDestroy()
             display = null
             isRendererSet = false
@@ -100,10 +137,10 @@ class OpenGLWallpaperService : WallpaperService() {
         override fun onSensorChanged(event: SensorEvent?) {
             logOnSensorChanged()
             event?.let {
-                logging(
+                Logger.d(
                     "Sensor values: ${it.values?.contentToString()}",
                     SENSOR_INFO_TAG,
-                    translateToFirebase = false
+                    sendToFBA = false
                 )
                 val rollAdjustment = when (display?.rotation) {
                     Surface.ROTATION_90 -> -it.values[1]
@@ -118,7 +155,7 @@ class OpenGLWallpaperService : WallpaperService() {
         }
 
         private fun updateSensorSensitivityValues() {
-            logging("Wallpaper Engine updateSensorSensitivityValues()", SENSOR_INFO_TAG)
+            Logger.d("Wallpaper Engine updateSensorSensitivityValues()", SENSOR_INFO_TAG)
             isRollSensorEnabled = preferenceRepository.getIsRollSensorEnabled()
             isPitchSensorEnabled = preferenceRepository.getIsPitchSensorEnabled()
 
@@ -127,7 +164,7 @@ class OpenGLWallpaperService : WallpaperService() {
         }
 
         private fun registerSensorListener() {
-            logging("Wallpaper Engine registerSensorListener()", SENSOR_INFO_TAG)
+            Logger.d("Wallpaper Engine registerSensorListener()", SENSOR_INFO_TAG)
             sensorManager?.registerListener(
                 this,
                 sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -136,7 +173,7 @@ class OpenGLWallpaperService : WallpaperService() {
         }
 
         private fun unregisterSensorListener() {
-            logging("Wallpaper Engine unregisterSensorListener()", SENSOR_INFO_TAG)
+            Logger.d("Wallpaper Engine unregisterSensorListener()", SENSOR_INFO_TAG)
             sensorManager?.unregisterListener(this)
         }
 
@@ -145,7 +182,7 @@ class OpenGLWallpaperService : WallpaperService() {
             val elapsedSec = (elapsedMs - lastLogTime) / 1000
 
             if (elapsedSec >= sensorLogInterval / 1000) {
-                logging("Wallpaper Engine onSensorChanged()", SENSOR_INFO_TAG)
+                Logger.d("Wallpaper Engine onSensorChanged()", SENSOR_INFO_TAG)
                 lastLogTime = SystemClock.elapsedRealtime()
             }
         }
@@ -156,7 +193,7 @@ class OpenGLWallpaperService : WallpaperService() {
 
             fun onWallpaperDestroy() {
                 super.onDetachedFromWindow()
-                logging(
+                Logger.d(
                     "${this::class.java.simpleName} onWallpaperDestroy()",
                     "WallpaperGLSurfaceView"
                 )
@@ -165,6 +202,7 @@ class OpenGLWallpaperService : WallpaperService() {
     }
 
     companion object {
+
         private const val SENSOR_INFO_TAG = "SENSOR_INFO_TAG"
         private const val TAG = "OpenGLWallpaperService"
         private const val WALLPAPER_ENGINE_TAG = "WALLPAPER_ENGINE_TAG"

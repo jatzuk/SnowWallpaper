@@ -11,8 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
-import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,10 +46,10 @@ object TextureProvider {
         return try {
             val cachedTexture = textureCache[textureType]
             if (cachedTexture != null) {
-                logging("got texture ${textureType.name} from cache", TAG)
+                Logger.d("got texture ${textureType.name} from cache", TAG)
                 cachedTexture
             } else {
-                logging(
+                Logger.d(
                     "requested texture ${textureType.name} not found in cache, trying to retrieve from disk",
                     TAG
                 )
@@ -61,7 +59,7 @@ object TextureProvider {
                 }
             }
         } catch (e: FileNotFoundException) {
-            logging("texture $textureType not found in disk using default", TAG)
+            Logger.d("texture $textureType not found in disk using default", TAG)
             val bitmap = assignDefaultTexture(context, textureType)
             context.openFileOutput(textureType.path, Context.MODE_PRIVATE).use {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
@@ -69,7 +67,7 @@ object TextureProvider {
             textureCache[textureType] = bitmap
             bitmap
         } catch (e: IOException) {
-            errorLog("Failed to load image type: ${textureType.name} from internal storage", TAG, e)
+            Logger.e("Failed to load image type: ${textureType.name} from internal storage", TAG, e)
             null
         }
     }
@@ -88,7 +86,7 @@ object TextureProvider {
             try {
                 context.filesDir.listFiles()?.forEach { it.delete() }
             } catch (e: IOException) {
-                errorLog("file cannot be deleted", TAG, e)
+                Logger.e("file cannot be deleted", TAG, e)
             }
             textureCache.clear()
         }

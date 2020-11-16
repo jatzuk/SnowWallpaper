@@ -12,8 +12,7 @@ import dev.jatzuk.snowwallpaper.opengl.objects.Snowfall
 import dev.jatzuk.snowwallpaper.opengl.objects.TexturedSnowfall
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService
 import dev.jatzuk.snowwallpaper.opengl.wallpaper.OpenGLWallpaperService.Companion.ratio
-import dev.jatzuk.snowwallpaper.utilities.Logger.errorLog
-import dev.jatzuk.snowwallpaper.utilities.Logger.logging
+import dev.jatzuk.snowwallpaper.utilities.Logger
 import java.lang.ref.WeakReference
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -79,7 +78,7 @@ class SnowfallRenderer(context: Context) : GLSurfaceView.Renderer {
         val elapsedSec = (elapsedMs - startTimeMs) / 1000
 
         if (elapsedSec >= 1) {
-            logging("FPS: ${frames / elapsedSec}", TAG, translateToFirebase = false)
+            Logger.d("FPS: ${frames / elapsedSec}", TAG, sendToFBA = false)
             startTimeMs = SystemClock.elapsedRealtime()
             frames = 0
         }
@@ -98,21 +97,21 @@ class SnowfallRenderer(context: Context) : GLSurfaceView.Renderer {
             } else null
 
             var usageMessage = if (openGLSceneObjects[0] == null) IS_NOT_USING else IS_USING
-            logging("${BackgroundImage.TAG} program $usageMessage", OPEN_GL_SCENE_RESOLVER_TAG)
+            Logger.d("${BackgroundImage.TAG} program $usageMessage", OPEN_GL_SCENE_RESOLVER_TAG)
 
             openGLSceneObjects[1] = if (preferenceRepository.getIsSnowfallEnabled()) {
                 getOpenGLSceneObjectByTypeTag(Snowfall.TAG)
             } else null
 
             usageMessage = if (openGLSceneObjects[1] == null) IS_NOT_USING else IS_USING
-            logging("${Snowfall.TAG} program $usageMessage", OPEN_GL_SCENE_RESOLVER_TAG)
+            Logger.d("${Snowfall.TAG} program $usageMessage", OPEN_GL_SCENE_RESOLVER_TAG)
 
             openGLSceneObjects[2] = if (preferenceRepository.getIsSnowflakeEnabled()) {
                 getOpenGLSceneObjectByTypeTag(TexturedSnowfall.TAG)
             } else null
 
             usageMessage = if (openGLSceneObjects[2] == null) IS_NOT_USING else IS_USING
-            logging("${TexturedSnowfall.TAG} program $usageMessage", OPEN_GL_SCENE_RESOLVER_TAG)
+            Logger.d("${TexturedSnowfall.TAG} program $usageMessage", OPEN_GL_SCENE_RESOLVER_TAG)
         }
 
         private fun getOpenGLSceneObjectByTypeTag(type: String): OpenGLSceneObject = when (type) {
@@ -134,13 +133,14 @@ class SnowfallRenderer(context: Context) : GLSurfaceView.Renderer {
             else -> {
                 val message = "Illegal OpenGLSceneObject with type: $type"
                 val e = IllegalArgumentException(message)
-                errorLog(message, OPEN_GL_SCENE_RESOLVER_TAG, e)
+                Logger.e(message, OPEN_GL_SCENE_RESOLVER_TAG, e)
                 throw e
             }
         }
     }
 
     companion object {
+
         private const val TAG = "SnowfallRenderer"
         private const val OPEN_GL_SCENE_RESOLVER_TAG = "OpenGLSceneResolver"
         private const val IS_NOT_USING = "is not used"
