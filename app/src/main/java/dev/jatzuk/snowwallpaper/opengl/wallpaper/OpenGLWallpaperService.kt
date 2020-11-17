@@ -18,11 +18,34 @@ import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.utilities.Logger
 
-class OpenGLWallpaperService : WallpaperService() {
+class OpenGLWallpaperService : WallpaperService(), SensorEventListener {
 
     private var sensorManager: SensorManager? = null
+    private var engine: WallpaperEngine? = null
 
-    override fun onCreateEngine(): Engine = WallpaperEngine()
+    override fun onCreateEngine(): Engine = WallpaperEngine().also { engine = it }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        event?.let {
+            engine?.onSensorChanged(it)
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    private fun registerSensorListener() {
+        Logger.d("Wallpaper Engine registerSensorListener()", SENSOR_INFO_TAG)
+        sensorManager?.registerListener(
+            this,
+            sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
+    }
+
+    private fun unregisterSensorListener() {
+        Logger.d("Wallpaper Engine unregisterSensorListener()", SENSOR_INFO_TAG)
+        sensorManager?.unregisterListener(this)
+    }
 
     override fun onLowMemory() {
         Logger.d("onLowMemory", TAG)
@@ -31,6 +54,8 @@ class OpenGLWallpaperService : WallpaperService() {
 
     override fun onTrimMemory(level: Int) {
         Logger.d("onTrimMemory", TAG)
+        unregisterSensorListener()
+        engine = null
         super.onTrimMemory(level)
     }
 
@@ -64,7 +89,7 @@ class OpenGLWallpaperService : WallpaperService() {
         super.onTaskRemoved(rootIntent)
     }
 
-    private inner class WallpaperEngine : Engine(), SensorEventListener {
+    private inner class WallpaperEngine : Engine() {
 
         private lateinit var preferenceRepository: PreferenceRepository
         private var isRollSensorEnabled = true
@@ -87,10 +112,10 @@ class OpenGLWallpaperService : WallpaperService() {
             preferenceRepository = PreferenceRepository.getInstance(this@OpenGLWallpaperService)
             display = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
 
-            updateSensorSensitivityValues()
+//            updateSensorSensitivityValues()
 
             if (isRollSensorEnabled || isPitchSensorEnabled) {
-                Logger.d("Wallpaper Engine createSensorListener()", SENSOR_INFO_TAG)
+                Logger.d("Wallpaper Engine createSensorListener()", WALLPAPER_ENGINE_TAG)
                 sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
             }
 
@@ -132,26 +157,20 @@ class OpenGLWallpaperService : WallpaperService() {
             TextureCache.getInstance().clear()
         }
 
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-
-        override fun onSensorChanged(event: SensorEvent?) {
+        fun onSensorChanged(event: SensorEvent) {
             logOnSensorChanged()
-            event?.let {
-                Logger.d(
-                    "Sensor values: ${it.values?.contentToString()}",
-                    SENSOR_INFO_TAG,
-                    sendToFBA = false
-                )
-                val rollAdjustment = when (display?.rotation) {
-                    Surface.ROTATION_90 -> -it.values[1]
-                    Surface.ROTATION_270 -> it.values[1]
-                    else -> it.values[0]
-                }
-                roll =
-                    if (isRollSensorEnabled) rollAdjustment * rollSensorSensitivity else 0f
-                pitch =
-                    if (isPitchSensorEnabled) -it.values[2] * pitchSensorSensitivity else 0f
+            Logger.d(
+                "Sensor values: ${event.values?.contentToString()}",
+                SENSOR_INFO_TAG,
+                sendToFBA = false
+            )
+            val rollAdjustment = when (display?.rotation) {
+                Surface.ROTATION_90 -> -event.values[1]
+                Surface.ROTATION_270 -> event.values[1]
+                else -> event.values[0]
             }
+            roll = if (isRollSensorEnabled) rollAdjustment * rollSensorSensitivity else 0f
+            pitch = if (isPitchSensorEnabled) -event.values[2] * pitchSensorSensitivity else 0f
         }
 
         private fun updateSensorSensitivityValues() {
@@ -161,20 +180,6 @@ class OpenGLWallpaperService : WallpaperService() {
 
             rollSensorSensitivity = preferenceRepository.getRollSensorSensitivity() * ROLL_RATIO
             pitchSensorSensitivity = preferenceRepository.getPitchSensorSensitivity() * PITH_RATIO
-        }
-
-        private fun registerSensorListener() {
-            Logger.d("Wallpaper Engine registerSensorListener()", SENSOR_INFO_TAG)
-            sensorManager?.registerListener(
-                this,
-                sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL
-            )
-        }
-
-        private fun unregisterSensorListener() {
-            Logger.d("Wallpaper Engine unregisterSensorListener()", SENSOR_INFO_TAG)
-            sensorManager?.unregisterListener(this)
         }
 
         private fun logOnSensorChanged() {
