@@ -67,8 +67,8 @@ class SnowflakePreferenceFragment : AbstractPreferenceFragment(R.xml.preferences
 
     class SnowflakeDialogFragment : TexturedAbstractDialogFragment(
         intArrayOf(
-            R.drawable.texture_snowflake,
-            R.drawable.texture_snowfall,
+            R.drawable.texture_snowflake_0,
+            R.drawable.texture_snowfall_0,
             R.drawable.category_disabled,
             R.drawable.ic_disabled_64dp
         ),

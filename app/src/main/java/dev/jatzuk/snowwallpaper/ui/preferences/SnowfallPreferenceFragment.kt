@@ -57,7 +57,10 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
     override fun provideBackgroundColor(): Int = Color.CYAN
 
     class SnowfallDialogFragment : TexturedAbstractDialogFragment(
-        intArrayOf(R.drawable.texture_snowflake, R.drawable.texture_snowfall),
+        intArrayOf(
+            R.drawable.texture_snowflake_0,
+            R.drawable.texture_snowfall_0
+        ),
         TextureProvider.TextureType.SNOWFALL_TEXTURE
     ) {
 

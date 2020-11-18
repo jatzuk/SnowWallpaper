@@ -74,9 +74,9 @@ object TextureProvider {
 
     fun assignDefaultTexture(context: Context, textureType: TextureType): Bitmap {
         val resourceId = when (textureType) {
-            TextureType.SNOWFALL_TEXTURE -> R.drawable.texture_snowfall
-            TextureType.SNOWFLAKE_TEXTURE -> R.drawable.texture_snowflake
-            TextureType.BACKGROUND_IMAGE -> R.drawable.background_image
+            TextureType.SNOWFALL_TEXTURE -> R.drawable.texture_snowfall_0
+            TextureType.SNOWFLAKE_TEXTURE -> R.drawable.texture_snowflake_0
+            TextureType.BACKGROUND_IMAGE -> R.drawable.background_image_0
         }
         return ContextCompat.getDrawable(context, resourceId)!!.toBitmap()
     }
@@ -147,6 +147,6 @@ object TextureProvider {
     enum class TextureType(val path: String) {
         SNOWFALL_TEXTURE("snowfall_texture.png"),
         SNOWFLAKE_TEXTURE("snowflake_texture.png"),
-        BACKGROUND_IMAGE("background_image.jpeg"),
+        BACKGROUND_IMAGE("background_image.png"),
     }
 }
