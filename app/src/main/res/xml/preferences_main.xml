@@ -2,17 +2,19 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory app:preferenceTitle="@string/category_renderer">
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomPreferenceCategory app:preferenceTitle="@string/category_renderer">
 
         <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
             app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.SnowfallPreferenceFragment"
             app:key="@string/pref_key_snowfall_category"
+            app:preferenceBackground="@drawable/snowfall_intent_background"
             app:preferenceSummary="@string/snowfall_summary"
             app:preferenceTitle="@string/snowfall_title" />
 
         <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
             app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.SnowflakePreferenceFragment"
             app:key="@string/pref_key_snowflake_category"
+            app:preferenceBackground="@drawable/snowflake_intent_background"
             app:preferenceSummary="@string/snowflakes_summary"
             app:preferenceTitle="@string/snowflakes_title" />
 
@@ -30,9 +32,9 @@
             app:preferenceSummary="@string/cosine_deviation_summary"
             app:preferenceTitle="@string/cosine_deviation_title" />
 
-    </dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory>
+    </dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomPreferenceCategory>
 
-    <dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory app:preferenceTitle="@string/category_sensors">
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomPreferenceCategory app:preferenceTitle="@string/category_sensors">
         <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
             app:key="PREF_KEY_IS_ROLL_SENSOR_ENABLED"
             app:preferenceSummary="@string/sensor_roll_summary"
@@ -60,6 +62,6 @@
             app:preferenceMin="1"
             app:preferenceSummary="@string/sensor_value_picker_summary"
             app:preferenceTitle="@string/sensor_pitch_value_picker_title" />
-    </dev.jatzuk.snowwallpaper.ui.preferences.CustomPreferenceCategory>
+    </dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomPreferenceCategory>
 
 </PreferenceScreen>

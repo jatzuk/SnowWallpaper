@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--    <item>-->
+    <!--        <bitmap android:src="@drawable/preference_background" />-->
+    <!--    </item>-->
+
+    <item>
+        <color android:color="@color/colorPreferenceIntentBackground" />
+    </item>
+
+    <item>
+        <shape>
+            <gradient
+                android:centerColor="@color/colorPreferenceIntentBackground"
+                android:centerX="0.8"
+                android:endColor="@color/colorAccent"
+                android:gradientRadius="150dp"
+                android:startColor="@color/colorAccent"
+                android:type="radial" />
+        </shape>
+    </item>
+
+    <item>
+        <bitmap
+            android:gravity="end"
+            android:src="@drawable/snowflake_background" />
+    </item>
+
+</layer-list>

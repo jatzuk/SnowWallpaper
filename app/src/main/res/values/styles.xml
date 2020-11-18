@@ -28,12 +28,20 @@
         <item name="android:textAppearance">?attr/textAppearanceSearchResultTitle</item>
         <item name="android:textColor">@color/colorPreferenceTitle</item>
         <item name="android:textSize">@dimen/preference_title_size</item>
+        <item name="android:shadowDx">3</item>
+        <item name="android:shadowDy">3</item>
+        <item name="android:shadowRadius">9</item>
+        <item name="android:shadowColor">@android:color/black</item>
     </style>
 
     <style name="PreferenceTextAppearanceSubtitle" parent="PreferenceTextAppearanceTitle">
         <item name="android:textAppearance">?attr/textAppearanceSearchResultSubtitle</item>
         <item name="android:textColor">@color/colorPreferenceSubtitle</item>
         <item name="android:textSize">@dimen/preference_subtitle_size</item>
+        <item name="android:shadowDx">3</item>
+        <item name="android:shadowDy">3</item>
+        <item name="android:shadowRadius">9</item>
+        <item name="android:shadowColor">@android:color/black</item>
     </style>
 
     <style name="PreferenceCategoryTitleText" parent="PreferenceTextAppearanceTitle">
@@ -47,7 +55,7 @@
         <item name="android:animateLayoutChanges">true</item>
         <item name="cardPreventCornerOverlap">false</item>
         <item name="cardCornerRadius">20dp</item>
-        <item name="cardElevation">5dp</item>
+        <item name="cardElevation">15dp</item>
     </style>
 
     <style name="PreferenceSwitcher" parent="PreferenceDefault">
