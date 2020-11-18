@@ -30,7 +30,8 @@ class CustomSeekBarPreference(
 
     init {
         if (backgroundImage == null) {
-            backgroundImage = ContextCompat.getDrawable(context, R.drawable.b1)
+            backgroundImage =
+                ContextCompat.getDrawable(context, R.drawable.seekbar_prefererence_background)
         }
     }
 

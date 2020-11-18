@@ -1,6 +1,5 @@
 package dev.jatzuk.snowwallpaper.ui.preferences.custom
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
@@ -15,7 +14,11 @@ import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository.Companion.PREF_KEY_SNOWFLAKE_DEFAULT_RADIUS_UNIQUE_RADIUS_DISABLED
 
-abstract class AbstractPreference : Preference {
+abstract class AbstractPreference @JvmOverloads constructor(
+    context: Context,
+    attributeSet: AttributeSet?,
+    defStyleAttr: Int = 0
+) : Preference(context, attributeSet, defStyleAttr) {
 
     private var titleString: String? = null
     protected var summaryString: String? = null
@@ -24,15 +27,7 @@ abstract class AbstractPreference : Preference {
     protected var backgroundImage: Drawable? = null
     protected val preferenceRepository = PreferenceRepository.getInstance(context)
 
-    constructor(context: Context) : this(context, null)
-    constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
-
-    @SuppressLint("Recycle") // recycled via "use" extension function
-    constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attributeSet,
-        defStyleAttr
-    ) {
+    init {
         context.obtainStyledAttributes(
             attributeSet, R.styleable.AbstractPreference, defStyleAttr, defStyleAttr
         ).use {
@@ -43,9 +38,7 @@ abstract class AbstractPreference : Preference {
                 it.getInteger(R.styleable.AbstractPreference_preferenceDefaultValue, 0)
             backgroundImage = it.getDrawable(R.styleable.AbstractPreference_preferenceBackground)
         }
-    }
 
-    init {
         @Suppress("LeakingThis")
         layoutResource = provideLayout()
     }
