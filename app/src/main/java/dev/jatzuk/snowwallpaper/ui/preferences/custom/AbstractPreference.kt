@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.res.use
@@ -52,7 +51,7 @@ abstract class AbstractPreference @JvmOverloads constructor(
         }
 
         holder.itemView.run {
-            backgroundImage?.let { findViewById<ViewGroup>(R.id.master_layout).background = it }
+            backgroundImage?.let { background = it }
 
             isClickable = false
             setupPreference(this)

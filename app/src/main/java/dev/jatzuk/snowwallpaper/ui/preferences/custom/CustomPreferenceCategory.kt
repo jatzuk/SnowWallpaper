@@ -24,7 +24,7 @@ class CustomPreferenceCategory @JvmOverloads constructor(
             titleString = it.getString(R.styleable.AbstractPreference_preferenceTitle)
         }
 
-        layoutResource = R.layout.preference_category_custom
+        layoutResource = R.layout.preference_category
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
@@ -35,7 +35,6 @@ class CustomPreferenceCategory @JvmOverloads constructor(
                 text = titleString ?: context.getString(R.string.no_title)
                 background =
                     ContextCompat.getDrawable(context, R.drawable.category_preference_background)
-//                setBackgroundResource(R.color.colorPreferenceCategoryBackground)
             }
         }
     }

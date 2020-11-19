@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/master_layout"
     style="@style/PreferenceDefault"
+    android:minHeight="@dimen/preference_intent_min_height"
     tools:viewBindingIgnore="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/master_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:minHeight="@dimen/preference_intent_min_height">
+    <include layout="@layout/preference_base" />
 
-        <include layout="@layout/preference_base" />
+    <include layout="@layout/image_preview" />
 
-        <include layout="@layout/image_preview" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

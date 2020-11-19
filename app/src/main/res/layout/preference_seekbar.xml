@@ -1,48 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:viewbindingIgnore="true"
+    android:id="@+id/master_layout"
     style="@style/PreferenceDefault">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/master_layout"
+    <include
+        android:id="@+id/base_layout"
+        layout="@layout/preference_base"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/progress"
+        style="@style/PreferenceTextAppearanceTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/b1">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:maxHeight="15dp"
+        android:progressDrawable="@drawable/seek_bar_progress_model"
+        android:splitTrack="false"
+        android:thumb="@drawable/seek_bar_thumb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progress" />
 
-        <include
-            android:id="@+id/base_layout"
-            layout="@layout/preference_base"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/progress"
-            style="@style/PreferenceTextAppearanceTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_weight="0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <SeekBar
-            android:id="@+id/seekbar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:maxHeight="15dp"
-            android:progressDrawable="@drawable/seek_bar_progress_model"
-            android:splitTrack="false"
-            android:thumb="@drawable/seek_bar_thumb"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progress" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
