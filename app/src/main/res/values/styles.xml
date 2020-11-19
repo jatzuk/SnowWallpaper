@@ -46,7 +46,10 @@
 
     <style name="PreferenceCategoryTitleText" parent="PreferenceTextAppearanceTitle">
         <item name="android:layout_marginLeft">0dp</item>
-        <item name="android:textColor">@color/colorPreferenceGeneralTitle</item>
+        <item name="android:textColor">@color/colorPreferenceIntentBackground</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">0</item>
+        <item name="android:shadowRadius">0</item>
     </style>
 
     <style name="PreferenceDefault">

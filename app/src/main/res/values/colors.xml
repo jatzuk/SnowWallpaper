@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#63a4ff</color>
+    <color name="colorAccent">#ADD5FE</color>
 
     <color name="colorToolbar">#032240</color>
 
@@ -11,8 +11,6 @@
 
     <color name="colorPreferenceTitle">#FFCC7F</color>
     <color name="colorPreferenceSubtitle">#BFFFCC7F</color>
-
-    <color name="colorPreferenceGeneralTitle">#000</color>
 
     <color name="colorPreferenceCategoryBackground">#FFB852</color>
     <color name="colorPreferenceIntentBackground">#03305A</color>
