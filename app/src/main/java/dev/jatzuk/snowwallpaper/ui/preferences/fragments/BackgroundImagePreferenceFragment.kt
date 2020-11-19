@@ -1,6 +1,5 @@
-package dev.jatzuk.snowwallpaper.ui.preferences
+package dev.jatzuk.snowwallpaper.ui.preferences.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
@@ -50,10 +49,6 @@ class BackgroundImagePreferenceFragment :
             }
         )
     }
-
-    override fun provideBackgroundColor(): Int = Color.BLUE
-
-//    override fun provideBackground(): Drawable? = ContextCompat.getDrawable(context!!, R.drawable.b1)
 
     class BackgroundImageDialogFragment : TexturedAbstractDialogFragment(
         intArrayOf(

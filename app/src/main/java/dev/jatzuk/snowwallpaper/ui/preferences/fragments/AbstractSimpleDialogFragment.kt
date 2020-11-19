@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.ui.preferences
+package dev.jatzuk.snowwallpaper.ui.preferences.fragments
 
 import android.app.Dialog
 import android.content.DialogInterface

@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.ui.preferences
+package dev.jatzuk.snowwallpaper.ui.preferences.fragments
 
 import android.content.Intent
 import android.graphics.Color
@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.annotation.XmlRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
@@ -111,7 +112,8 @@ abstract class AbstractPreferenceFragment(
     }
 
     @ColorInt
-    protected open fun provideBackgroundColor(): Int = Color.TRANSPARENT
+    protected open fun provideBackgroundColor(): Int =
+        ContextCompat.getColor(requireContext(), R.color.colorAccent)
 
     protected open fun provideBackground(): Drawable? = null
 

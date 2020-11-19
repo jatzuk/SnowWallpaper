@@ -1,4 +1,4 @@
-package dev.jatzuk.snowwallpaper.ui.preferences
+package dev.jatzuk.snowwallpaper.ui
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -11,6 +11,8 @@ import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
 import dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
+import dev.jatzuk.snowwallpaper.ui.preferences.fragments.AbstractPreferenceFragment
+import dev.jatzuk.snowwallpaper.ui.preferences.fragments.ResetPreferenceDialogFragment
 import dev.jatzuk.snowwallpaper.utilities.BackgroundRestrictionNotifier
 import dev.jatzuk.snowwallpaper.utilities.TextureProvider
 

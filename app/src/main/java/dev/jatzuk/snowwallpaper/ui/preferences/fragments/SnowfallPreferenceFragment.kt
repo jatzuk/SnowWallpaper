@@ -1,7 +1,5 @@
-package dev.jatzuk.snowwallpaper.ui.preferences
+package dev.jatzuk.snowwallpaper.ui.preferences.fragments
 
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import dev.jatzuk.snowwallpaper.R
@@ -50,11 +48,6 @@ class SnowfallPreferenceFragment : AbstractPreferenceFragment(R.xml.preferences_
         super.onActivityCreated(savedInstanceState)
         appBarTitleViewModel.title.value = getString(R.string.snowfall_setup_fragment_title)
     }
-
-    override fun provideBackground(): Drawable? = null
-//        BitmapFactory.decodeResource(resources, R.drawable.b2).toDrawable(resources)
-
-    override fun provideBackgroundColor(): Int = Color.CYAN
 
     class SnowfallDialogFragment : TexturedAbstractDialogFragment(
         intArrayOf(

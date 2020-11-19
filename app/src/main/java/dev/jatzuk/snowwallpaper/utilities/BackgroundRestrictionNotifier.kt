@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.data.preferences.PreferenceRepository
-import dev.jatzuk.snowwallpaper.ui.preferences.AbstractSimpleDialogFragment
+import dev.jatzuk.snowwallpaper.ui.preferences.fragments.AbstractSimpleDialogFragment
 
 class BackgroundRestrictionNotifier : AbstractSimpleDialogFragment() {
 
