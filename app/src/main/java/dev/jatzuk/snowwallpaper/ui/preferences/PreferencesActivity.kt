@@ -11,6 +11,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dev.jatzuk.snowwallpaper.R
 import dev.jatzuk.snowwallpaper.databinding.ActivityPreferencesBinding
+import dev.jatzuk.snowwallpaper.ui.PreferencesFragment
 import dev.jatzuk.snowwallpaper.ui.viewmodels.AppBarTitleViewModel
 
 class PreferencesActivity : AppCompatActivity(),
