@@ -148,13 +148,14 @@ class Snowflake(context: Context, private val isTexturedSnowflake: Boolean = fal
     }
 
     private fun checkAvailableRotationAxes() {
-        val availableRotationAxes = preferenceRepository.getSnowflakeAvailableRotationAxes()
-        val (isRotatesX, isRotatesY, isRotatesZ) = availableRotationAxes
+        availableRotationAxes.clear()
+        val (isRotatesX, isRotatesY, isRotatesZ) =
+            preferenceRepository.getSnowflakeAvailableRotationAxes()
         if (!isRotatesX && !isRotatesY && !isRotatesZ) rotationAxis = RotationAxis.NONE
         else {
-            if (isRotatesX) this.availableRotationAxes.add(RotationAxis.X)
-            if (isRotatesY) this.availableRotationAxes.add(RotationAxis.Y)
-            if (isRotatesZ) this.availableRotationAxes.add(RotationAxis.Z)
+            if (isRotatesX) availableRotationAxes.add(RotationAxis.X)
+            if (isRotatesY) availableRotationAxes.add(RotationAxis.Y)
+            if (isRotatesZ) availableRotationAxes.add(RotationAxis.Z)
         }
     }
 
