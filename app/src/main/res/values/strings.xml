@@ -35,22 +35,18 @@
     <string name="background_image_fragment_title">Background Image Setup</string>
 
     <string name="limit_title">Limit</string>
-    <string name="limit_summary">Limit summary</string>
+    <string name="limit_summary">Active objects</string>
 
     <string name="velocity_title">Velocity</string>
     <string name="velocity_summary">Velocity modifier</string>
 
     <string name="unique_radius_title">Unique Radius</string>
-    <string name="unique_radius_summary">Unique radius summary</string>
+    <string name="unique_radius_summary">Unique radius for each snowflake</string>
 
+    <string name="radius_value_summary">Value</string>
     <string name="min_radius_title">Minimum radius</string>
-    <string name="min_radius_summary">Minimum radius summary</string>
-
     <string name="max_radius_title">Maximum radius</string>
-    <string name="max_radius_summary">Maximum radius summary</string>
-
-    <string name="single_radius_title">single radius title</string>
-    <string name="single_radius_summary">single_radius_summary</string>
+    <string name="single_radius_title">Common radius for each snowflake</string>
 
     <string name="snowflake_rotation_axes_title">Select rotation axes</string>
     <string name="snowflake_rotation_axes_summary">Select rotation axes x y z</string>
