@@ -19,62 +19,12 @@ import dev.jatzuk.snowwallpaper.data.preferences.TextureCache
 import dev.jatzuk.snowwallpaper.opengl.SnowfallRenderer
 import dev.jatzuk.snowwallpaper.utilities.Logger
 
-class OpenGLWallpaperService : WallpaperService(), SensorEventListener {
+class OpenGLWallpaperService : WallpaperService() {
 
     private var sensorManager: SensorManager? = null
     private var engine: WallpaperEngine? = null
-    private var isSensorListenerRegistered = false
 
     override fun onCreateEngine(): Engine = WallpaperEngine().also { engine = it }
-
-    override fun onSensorChanged(event: SensorEvent?) {
-        event?.let {
-            engine?.onSensorChanged(it)
-        }
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        val accuracyName = when (accuracy) {
-            SensorManager.SENSOR_STATUS_NO_CONTACT -> "SENSOR_STATUS_NO_CONTACT"
-            SensorManager.SENSOR_STATUS_UNRELIABLE -> "SENSOR_STATUS_UNRELIABLE"
-            SensorManager.SENSOR_STATUS_ACCURACY_LOW -> "SENSOR_STATUS_ACCURACY_LOW"
-            SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> "SENSOR_STATUS_ACCURACY_MEDIUM"
-            SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> "SENSOR_STATUS_ACCURACY_HIGH"
-            else -> "SENSOR_UNKNOWN_STATUS"
-        }
-        Logger.d("Sensor onAccuracyChanged() $sensor | $accuracyName", TAG)
-    }
-
-    private fun registerSensorListener() {
-        Logger.d("Wallpaper Engine registerSensorListener()", SENSOR_INFO_TAG)
-
-        if (!isSensorListenerRegistered) {
-            Logger.d("Sensor not registered, registering new", TAG)
-            isSensorListenerRegistered =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    sensorManager?.registerListener(
-                        this,
-                        sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                        SensorManager.SENSOR_DELAY_UI,
-                        2000
-                    )
-                } else {
-                    sensorManager?.registerListener(
-                        this,
-                        sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                        SensorManager.SENSOR_DELAY_UI
-                    )
-                } ?: false
-        } else {
-            Logger.d("Sensor already registered...", TAG)
-        }
-    }
-
-    private fun unregisterSensorListener() {
-        Logger.d("Wallpaper Engine unregisterSensorListener()", TAG)
-        sensorManager?.unregisterListener(this)
-        isSensorListenerRegistered = false
-    }
 
     override fun onLowMemory() {
         Logger.d("onLowMemory", TAG)
@@ -83,7 +33,7 @@ class OpenGLWallpaperService : WallpaperService(), SensorEventListener {
 
     override fun onTrimMemory(level: Int) {
         Logger.d("onTrimMemory", TAG)
-        unregisterSensorListener()
+        engine?.unregisterSensorListener()
         engine = null
         super.onTrimMemory(level)
     }
@@ -118,7 +68,7 @@ class OpenGLWallpaperService : WallpaperService(), SensorEventListener {
         super.onTaskRemoved(rootIntent)
     }
 
-    private inner class WallpaperEngine : Engine() {
+    private inner class WallpaperEngine : Engine(), SensorEventListener {
 
         private lateinit var preferenceRepository: PreferenceRepository
         private var isRollSensorEnabled = true
@@ -174,17 +124,7 @@ class OpenGLWallpaperService : WallpaperService(), SensorEventListener {
             }
         }
 
-        override fun onDestroy() {
-            super.onDestroy()
-            Logger.d("Wallpaper Engine onDestroy() | inPreview: $isPreview", TAG)
-            glSurfaceView.onWallpaperDestroy()
-            display = null
-            isRendererSet = false
-            unregisterSensorListener()
-            TextureCache.getInstance().clear()
-        }
-
-        fun onSensorChanged(event: SensorEvent) {
+        override fun onSensorChanged(event: SensorEvent) {
             logOnSensorChanged()
             Logger.d(
                 "Sensor values: ${event.values?.contentToString()}",
@@ -198,6 +138,52 @@ class OpenGLWallpaperService : WallpaperService(), SensorEventListener {
             }
             roll = if (isRollSensorEnabled) rollAdjustment * rollSensorSensitivity else 0f
             pitch = if (isPitchSensorEnabled) -event.values[2] * pitchSensorSensitivity else 0f
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+            val accuracyName = when (accuracy) {
+                SensorManager.SENSOR_STATUS_NO_CONTACT -> "SENSOR_STATUS_NO_CONTACT"
+                SensorManager.SENSOR_STATUS_UNRELIABLE -> "SENSOR_STATUS_UNRELIABLE"
+                SensorManager.SENSOR_STATUS_ACCURACY_LOW -> "SENSOR_STATUS_ACCURACY_LOW"
+                SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> "SENSOR_STATUS_ACCURACY_MEDIUM"
+                SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> "SENSOR_STATUS_ACCURACY_HIGH"
+                else -> "SENSOR_UNKNOWN_STATUS"
+            }
+            Logger.d("Sensor onAccuracyChanged() $sensor | $accuracyName", TAG)
+        }
+
+        private fun registerSensorListener() {
+            Logger.d("Wallpaper Engine registerSensorListener()", SENSOR_INFO_TAG)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                sensorManager?.registerListener(
+                    this,
+                    sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                    SensorManager.SENSOR_DELAY_UI,
+                    2000
+                )
+            } else {
+                sensorManager?.registerListener(
+                    this,
+                    sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                    SensorManager.SENSOR_DELAY_UI
+                )
+            }
+        }
+
+        fun unregisterSensorListener() {
+            Logger.d("Wallpaper Engine unregisterSensorListener()", TAG)
+            sensorManager?.unregisterListener(this)
+        }
+
+        override fun onDestroy() {
+            super.onDestroy()
+            Logger.d("Wallpaper Engine onDestroy() | inPreview: $isPreview", TAG)
+            glSurfaceView.onWallpaperDestroy()
+            display = null
+            isRendererSet = false
+            unregisterSensorListener()
+            TextureCache.getInstance().clear()
         }
 
         private fun updateSensorSensitivityValues() {
