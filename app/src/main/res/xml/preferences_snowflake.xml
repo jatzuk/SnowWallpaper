@@ -58,7 +58,7 @@
         app:preferenceDefaultValue="30"
         app:preferenceMax="50"
         app:preferenceMin="25"
-        app:preferenceSummary="@string/min_radius_summary"
+        app:preferenceSummary="@string/radius_value_summary"
         app:preferenceTitle="@string/min_radius_title" />
 
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
@@ -67,7 +67,7 @@
         app:preferenceDefaultValue="60"
         app:preferenceMax="100"
         app:preferenceMin="51"
-        app:preferenceSummary="@string/max_radius_summary"
+        app:preferenceSummary="@string/radius_value_summary"
         app:preferenceTitle="@string/max_radius_title" />
 
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSeekBarPreference
@@ -78,7 +78,7 @@
         app:preferenceDefaultValue="30"
         app:preferenceMax="100"
         app:preferenceMin="10"
-        app:preferenceSummary="@string/single_radius_summary"
+        app:preferenceSummary="@string/radius_value_summary"
         app:preferenceTitle="@string/single_radius_title" />
 
 </PreferenceScreen>
