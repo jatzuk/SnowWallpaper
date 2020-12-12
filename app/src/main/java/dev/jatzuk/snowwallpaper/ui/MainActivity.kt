@@ -59,6 +59,9 @@ class MainActivity : FragmentActivity() {
             )
         }
         startActivityForResult(intent, EXIT_ON_SET_REQUEST_CODE)
+
+//        val intent = Intent(this, PreferencesActivity::class.java)
+//        startActivity(intent)
     }
 
     private fun showBackgroundRestrictionInfoDialog() {
