@@ -9,6 +9,7 @@
 
         <item name="windowActionBarOverlay">true</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@color/colorAccent</item>
 
         <item name="android:itemBackground">@color/colorToolbar</item>
         <item name="android:itemTextAppearance">@style/MenuTextAppearance</item>
