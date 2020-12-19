@@ -4,6 +4,7 @@
 
     <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomSwitchPreference
         app:key="PREF_KEY_IS_BACKGROUND_IMAGE_ENABLED"
+        app:defaultValue="true"
         app:preferenceSummary="@string/background_image_summary"
         app:preferenceTitle="@string/background_image_title" />
 

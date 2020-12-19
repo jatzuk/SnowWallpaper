@@ -53,10 +53,14 @@ class BackgroundImagePreferenceFragment :
     class BackgroundImageDialogFragment : TexturedAbstractDialogFragment(
         intArrayOf(
             R.drawable.background_image_0,
-            R.drawable.background_image,
-            R.drawable.b0,
-            R.drawable.b1,
-            R.drawable.b2
+            R.drawable.background_image_1,
+            R.drawable.background_image_2,
+            R.drawable.background_image_3,
+            R.drawable.background_image_4,
+            R.drawable.background_image_5,
+            R.drawable.background_image_6,
+            R.drawable.background_image_7,
+            R.drawable.background_image_8,
         ),
         TextureProvider.TextureType.BACKGROUND_IMAGE
     ) {

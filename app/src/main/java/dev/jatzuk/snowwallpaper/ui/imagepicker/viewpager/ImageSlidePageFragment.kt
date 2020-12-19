@@ -3,7 +3,6 @@ package dev.jatzuk.snowwallpaper.ui.imagepicker.viewpager
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -37,22 +36,20 @@ class ImageSlidePageFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        removeMargin()
         (activity as AppCompatActivity).supportActionBar!!.apply {
             title = getString(R.string.pick_image)
 
-            view?.setOnTouchListener { view, event ->
-                if (event.action == MotionEvent.ACTION_UP) {
-                    if (isShowing) hide()
-                    else show()
-                }
-                !view.performClick()
-            }
+//            view?.setOnTouchListener { view, event ->
+//                if (event.action == MotionEvent.ACTION_UP) {
+//                    if (isShowing) hide()
+//                    else show()
+//                }
+//                !view.performClick()
+//            }
         }
     }
 
     override fun onDestroyView() {
-        addMargin()
         _binding = null
         super.onDestroyView()
     }

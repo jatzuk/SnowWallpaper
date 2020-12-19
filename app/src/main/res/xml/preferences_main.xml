@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomPreferenceCategory app:preferenceTitle="@string/category_renderer">
+    <dev.jatzuk.snowwallpaper.ui.preferences.custom.CustomPreferenceCategory app:preferenceTitle="@string/category_general">
 
         <dev.jatzuk.snowwallpaper.ui.preferences.custom.IntentPreference
             app:fragment="dev.jatzuk.snowwallpaper.ui.preferences.fragments.SnowfallPreferenceFragment"
