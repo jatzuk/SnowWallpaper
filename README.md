@@ -8,7 +8,7 @@ Yet another live wallpaper created with OpenGL ES.
 
 Features:
 
-- Upload own images.
+- Upload your own images.
 - Snowfall adjustment using sensors.
 
 ## Screenshots
